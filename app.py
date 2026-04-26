@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, jsonify, session
 from flask_cors import CORS
+from psycopg2.extras import RealDictCursor
 import bcrypt
 import re
 import os
@@ -265,6 +266,8 @@ def signup():
         print("Signup error:", e); return jsonify({'error': str(e)}), 500
 
 
+from psycopg2.extras import RealDictCursor
+
 @app.route('/api/login', methods=['POST'])
 def login():
     try:
@@ -277,37 +280,47 @@ def login():
             return jsonify({'error': 'Email/Phone and password required'}), 400
 
         conn = get_connection()
-        cur  = conn.cursor()
+        cur  = conn.cursor(cursor_factory=RealDictCursor)
+
         cur.execute(
             "SELECT id, role, first_name, last_name, email, phone, password_hash, profile_img "
             "FROM users WHERE (email=%s OR phone=%s) AND role=%s",
             (login_id, login_id, role)
         )
-        row = cur.fetchone()
-        cur.close(); conn.close()
 
-        user = dict_row(row)
-        if not user or not bcrypt.checkpw(password.encode(), user['password_hash'].encode()):
+        user = cur.fetchone()
+
+        cur.close()
+        conn.close()
+
+        if not user:
             return jsonify({'error': 'Invalid credentials'}), 401
 
-        session['user_id']    = user['id']
-        session['role']       = user['role']
-        session['name']       = f"{user['first_name']} {user['last_name']}"
-        session['email']      = user['email']
-        session['profile_img']= user.get('profile_img') or ''
+        if not bcrypt.checkpw(password.encode(), user['password_hash'].encode()):
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+        session['user_id'] = user['id']
+        session['role'] = user['role']
+        session['name'] = f"{user['first_name']} {user['last_name']}"
+        session['email'] = user['email']
+        session['profile_img'] = user.get('profile_img') or ''
 
         return jsonify({
             'success': True,
             'message': f"Welcome back {user['first_name']}!",
             'user': {
-                'id': user['id'], 'role': user['role'],
-                'name': session['name'], 'email': user['email'],
+                'id': user['id'],
+                'role': user['role'],
+                'name': session['name'],
+                'email': user['email'],
                 'profile_img': session['profile_img']
             },
             'dashboard_url': f"/dashboard/{user['role']}"
         })
+
     except Exception as e:
-        print("Login error:", e); return jsonify({'error': 'Login failed'}), 500
+        print("Login error:", e)
+        return jsonify({'error': 'Login failed'}), 500
 
 
 @app.route('/api/validate-session')
