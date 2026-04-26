@@ -1,45 +1,33 @@
-"""
-database.py — SQLite3 database helper for AgroHub
-Replaces MySQL with a portable SQLite3 database (agrohub.db)
-that works on any laptop/PC without any database server.
-"""
-
-import sqlite3
 import os
+import psycopg2
+import psycopg2.extras
 import bcrypt
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'agrohub.db')
-
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def get_connection():
-    """Return a SQLite3 connection with row_factory for dict-like access."""
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON")
-    conn.execute("PRAGMA journal_mode = WAL")
+    conn = psycopg2.connect(DATABASE_URL)
     return conn
 
 
 def dict_row(row):
-    """Convert a sqlite3.Row to a plain dict (or return None)."""
     if row is None:
         return None
     return dict(row)
 
 
 def dict_rows(rows):
-    """Convert a list of sqlite3.Row objects to plain dicts."""
     return [dict(r) for r in rows]
 
 
 def init_db():
     """Create all tables if they don't exist yet."""
     conn = get_connection()
-    c = conn.cursor()
+    c = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     c.executescript("""
     CREATE TABLE IF NOT EXISTS users (
-        id               INTEGER PRIMARY KEY AUTOINCREMENT,
+        id               SERIAL PRIMARY KEY,
         role             TEXT NOT NULL DEFAULT 'farmer',
         first_name       TEXT NOT NULL,
         last_name        TEXT NOT NULL,
@@ -67,7 +55,7 @@ def init_db():
         vehicle_type     TEXT,
         vehicle_reg_expiry TEXT,
         insurance        TEXT,
-        created_at       TEXT DEFAULT (datetime('now'))
+        created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS admin_users (

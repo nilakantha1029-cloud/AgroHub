@@ -1087,4 +1087,4 @@ def admin_delete_contact(cid):
     conn=get_connection(); conn.execute("DELETE FROM contact_messages WHERE id=?",(cid,)); conn.commit(); conn.close(); return jsonify({'success':True})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=10000)
