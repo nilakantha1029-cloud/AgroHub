@@ -25,7 +25,7 @@ def init_db():
     conn = get_connection()
     c = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-    c.executescript("""
+    c.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id               SERIAL PRIMARY KEY,
         role             TEXT NOT NULL DEFAULT 'farmer',
@@ -59,15 +59,15 @@ def init_db():
     );
 
     CREATE TABLE IF NOT EXISTS admin_users (
-        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        id            SERIAL PRIMARY KEY,
         name          TEXT NOT NULL,
         email         TEXT NOT NULL UNIQUE,
         password_hash TEXT NOT NULL,
-        created_at    TEXT DEFAULT (datetime('now'))
+        created_at    TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS listings (
-        id             INTEGER PRIMARY KEY AUTOINCREMENT,
+        id             SERIAL PRIMARY KEY,
         user_id        INTEGER NOT NULL,
         produce        TEXT NOT NULL,
         variety        TEXT,
@@ -86,12 +86,12 @@ def init_db():
         description    TEXT,
         image_urls     TEXT DEFAULT '',
         status         TEXT DEFAULT 'active',
-        created_at     TEXT DEFAULT (datetime('now')),
+        created_at     TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
     CREATE TABLE IF NOT EXISTS cart_items (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        id         SERIAL PRIMARY KEY,
         user_id    INTEGER NOT NULL,
         listing_id INTEGER NOT NULL,
         quantity   REAL DEFAULT 1,
@@ -101,7 +101,7 @@ def init_db():
     );
 
     CREATE TABLE IF NOT EXISTS orders (
-        id               INTEGER PRIMARY KEY AUTOINCREMENT,
+        id               SERIAL PRIMARY KEY,
         customer_id      INTEGER NOT NULL,
         farmer_id        INTEGER NOT NULL,
         listing_id       INTEGER NOT NULL,
@@ -110,24 +110,24 @@ def init_db():
         total_price      REAL DEFAULT 0,
         delivery_address TEXT,
         status           TEXT DEFAULT 'pending',
-        created_at       TEXT DEFAULT (datetime('now')),
+        created_at       TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (customer_id) REFERENCES users(id),
         FOREIGN KEY (farmer_id)   REFERENCES users(id),
         FOREIGN KEY (listing_id)  REFERENCES listings(id)
     );
 
     CREATE TABLE IF NOT EXISTS notifications (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        id         SERIAL PRIMARY KEY,
         user_id    INTEGER NOT NULL,
         message    TEXT NOT NULL,
         type       TEXT DEFAULT 'info',
-        is_read    INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT (datetime('now')),
+        is_read    BOOLEAN DEFAULT FALSE,
+        created_at TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
     CREATE TABLE IF NOT EXISTS support_tickets (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        id         SERIAL PRIMARY KEY,
         user_id    INTEGER NOT NULL,
         subject    TEXT NOT NULL,
         category   TEXT DEFAULT 'general',
@@ -135,23 +135,23 @@ def init_db():
         priority   TEXT DEFAULT 'medium',
         status     TEXT DEFAULT 'open',
         reply      TEXT,
-        created_at TEXT DEFAULT (datetime('now')),
-        updated_at TEXT DEFAULT (datetime('now')),
+        created_at TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
     CREATE TABLE IF NOT EXISTS faq (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        id         SERIAL PRIMARY KEY,
         question   TEXT NOT NULL,
         answer     TEXT NOT NULL,
         category   TEXT DEFAULT 'general',
         role       TEXT DEFAULT 'all',
-        sort_order INTEGER DEFAULT 0,
+        sort_order BOOLEAN DEFAULT FALSE,
         is_active  INTEGER DEFAULT 1
     );
 
     CREATE TABLE IF NOT EXISTS service_listings (
-        id              INTEGER PRIMARY KEY AUTOINCREMENT,
+        id              SERIAL PRIMARY KEY,
         user_id         INTEGER NOT NULL,
         service_type    TEXT DEFAULT 'transport',
         name            TEXT NOT NULL,
@@ -176,13 +176,13 @@ def init_db():
         features        TEXT DEFAULT '[]',
         description     TEXT,
         image_urls      TEXT DEFAULT '[]',
-        created_at      TEXT DEFAULT (datetime('now')),
-        updated_at      TEXT DEFAULT (datetime('now')),
+        created_at      TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at      TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
     CREATE TABLE IF NOT EXISTS service_bookings (
-        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        id            SERIAL PRIMARY KEY,
         listing_id    INTEGER NOT NULL,
         customer_id   INTEGER NOT NULL,
         booking_date  TEXT,
@@ -192,8 +192,8 @@ def init_db():
         notes         TEXT,
         amount        REAL DEFAULT 0,
         status        TEXT DEFAULT 'pending',
-        created_at    TEXT DEFAULT (datetime('now')),
-        updated_at    TEXT DEFAULT (datetime('now')),
+        created_at    TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at    TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (listing_id)  REFERENCES service_listings(id),
         FOREIGN KEY (customer_id) REFERENCES users(id)
     );
@@ -201,11 +201,11 @@ def init_db():
     CREATE TABLE IF NOT EXISTS market_prices (
         id         INTEGER PRIMARY KEY,
         data       TEXT NOT NULL,
-        updated_at TEXT DEFAULT (datetime('now'))
+        updated_at TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS user_addresses (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        id         SERIAL PRIMARY KEY,
         user_id    INTEGER NOT NULL,
         type       TEXT DEFAULT 'home',
         name       TEXT,
@@ -215,26 +215,26 @@ def init_db():
         district   TEXT,
         pincode    TEXT,
         state      TEXT,
-        is_default INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT (datetime('now')),
-        updated_at TEXT DEFAULT (datetime('now')),
+        is_default BOOLEAN DEFAULT FALSE,
+        created_at TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
     CREATE TABLE IF NOT EXISTS contact_messages (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        id         SERIAL PRIMARY KEY,
         name       TEXT NOT NULL,
         email      TEXT NOT NULL,
         role       TEXT DEFAULT 'other',
         message    TEXT NOT NULL,
-        is_read    INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT (datetime('now'))
+        is_read    BOOLEAN DEFAULT FALSE,
+        created_at TEXT DEFAULT TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
 
     conn.commit()
     conn.close()
-    print("✅ SQLite database initialized:", DB_PATH)
+    print("✅ SQLite database initialized:")
 
 
 if __name__ == '__main__':
