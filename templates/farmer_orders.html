@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>AgroHub – Order History</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='farmer_orders.css') }}">
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/dashboard/farmer">
+    <div class="nav-logo-icon">🌾</div>
+    <div class="nav-logo-text"><span class="brand">AgroHub</span><span class="tagline">Farmer Platform</span></div>
+  </a>
+  <div class="nav-spacer"></div>
+  <a class="nav-back" href="/dashboard/farmer">← Dashboard</a>
+  <div class="nav-profile">
+    <div class="nav-avatar" id="navAvatar">--</div>
+    <span class="nav-uname" id="navName">Loading…</span>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="menu-title">Dashboard</div>
+    <div class="menu"><a href="/dashboard/farmer"><span class="m-icon">🏠</span> Home</a></div>
+    <div class="menu-title">Marketplace</div>
+    <div class="menu">
+      <a href="/sellmygoods"><span class="m-icon">🛒</span> Sell My Goods</a>
+      <a href="/farmer-orders" class="active"><span class="m-icon">📦</span> Order History</a>
+      <a href="#" onclick="return false"><span class="m-icon">💹</span> Market Prices</a>
+    </div>
+    <div class="menu-title">Services</div>
+    <div class="menu">
+      <a href="/book-vehicle"><span class="m-icon">🚚</span> Book Vehicle</a>
+      <a href="/rent-equipment"><span class="m-icon">🛠️</span> Rent Equipment</a>
+      <a href="/book-warehouse"><span class="m-icon">🏭</span> Book Warehouse</a>
+    </div>
+    <div class="menu-title">Finance</div>
+    <div class="menu">
+      <a class="cs"><span class="m-icon">🏦</span> Loans & Credit<span class="sb-cs">SOON</span></a>
+      <a class="cs"><span class="m-icon">🛡️</span> Crop Insurance<span class="sb-cs">SOON</span></a>
+      <a class="cs"><span class="m-icon">🏛️</span> Govt. Schemes<span class="sb-cs">SOON</span></a>
+    </div>
+    <div class="menu-title">Support</div>
+    <div class="menu">
+      <a class="cs"><span class="m-icon">🔬</span> Expert Advice<span class="sb-cs">SOON</span></a>
+      <a class="cs"><span class="m-icon">☁️</span> Weather Forecast<span class="sb-cs">SOON</span></a>
+      <a href="/help-support"><span class="m-icon">❓</span> Help & Support</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="hero-left">
+        <h1>📦 Order History</h1>
+        <p>All incoming orders from buyers — manage, track, and update every order</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-val" id="statTotal">0</div><div class="hstat-lab">Total Orders</div></div>
+        <div class="hstat"><div class="hstat-val" id="statDelivered">0</div><div class="hstat-lab">Delivered</div></div>
+        <div class="hstat"><div class="hstat-val" id="statRevenue">₹0</div><div class="hstat-lab">Revenue Earned</div></div>
+        <div class="hstat"><div class="hstat-val" id="statPending">0</div><div class="hstat-lab">Pending Now</div></div>
+      </div>
+    </div>
+
+    <!-- SUMMARY PILLS (clickable filters) -->
+    <div class="summary-row" id="summaryRow">
+      <div class="sum-pill" onclick="setFilterByStatus('all',this)" id="pill-all">
+        <span class="sum-icon">📋</span><div><div class="sum-val" id="sumAll">0</div><div class="sum-lab">All Orders</div></div>
+      </div>
+      <div class="sum-pill" onclick="setFilterByStatus('pending',this)" id="pill-pending">
+        <span class="sum-icon">⏳</span><div><div class="sum-val" id="sumPending">0</div><div class="sum-lab">Pending</div></div>
+      </div>
+      <div class="sum-pill" onclick="setFilterByStatus('accepted',this)" id="pill-accepted">
+        <span class="sum-icon">✅</span><div><div class="sum-val" id="sumAccepted">0</div><div class="sum-lab">Accepted</div></div>
+      </div>
+      <div class="sum-pill" onclick="setFilterByStatus('transit',this)" id="pill-transit">
+        <span class="sum-icon">📦</span><div><div class="sum-val" id="sumReady">0</div><div class="sum-lab">Ready/Shipped</div></div>
+      </div>
+      <div class="sum-pill" onclick="setFilterByStatus('delivered',this)" id="pill-delivered">
+        <span class="sum-icon">🎉</span><div><div class="sum-val" id="sumDelivered">0</div><div class="sum-lab">Delivered</div></div>
+      </div>
+      <div class="sum-pill" onclick="setFilterByStatus('rejected',this)" id="pill-rejected">
+        <span class="sum-icon">❌</span><div><div class="sum-val" id="sumRejected">0</div><div class="sum-lab">Rejected</div></div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <span style="font-size:16px;color:var(--text-light)">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search produce, customer, order ID…" oninput="applyFilters()"/>
+      </div>
+      <div class="filter-div"></div>
+      <div class="status-pills">
+        <button class="sp active" data-s="all" onclick="setFilter(this)">All</button>
+        <button class="sp sp-pending" data-s="pending" onclick="setFilter(this)">⏳ Pending</button>
+        <button class="sp sp-accepted" data-s="accepted" onclick="setFilter(this)">✅ Accepted</button>
+        <button class="sp sp-ready" data-s="ready_to_ship" onclick="setFilter(this)">📦 Ready</button>
+        <button class="sp sp-shipped" data-s="shipped" onclick="setFilter(this)">🚚 Shipped</button>
+        <button class="sp sp-delivered" data-s="delivered" onclick="setFilter(this)">🎉 Delivered</button>
+        <button class="sp sp-rejected" data-s="rejected" onclick="setFilter(this)">❌ Rejected</button>
+      </div>
+      <div class="filter-div"></div>
+      <select class="sort-sel" id="sortSel" onchange="applyFilters()">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="price_high">Amount: High → Low</option>
+        <option value="price_low">Amount: Low → High</option>
+      </select>
+    </div>
+
+    <!-- ORDERS CONTAINER -->
+    <div id="ordersContainer">
+      <!-- Shimmer placeholders while loading -->
+      <div class="orders-list" id="shimmerList">
+        <div class="shimmer-card"><div class="sh-img"></div><div class="sh-lines"><div class="sh-line w40"></div><div class="sh-line w70"></div><div class="sh-line w55"></div></div></div>
+        <div class="shimmer-card"><div class="sh-img"></div><div class="sh-lines"><div class="sh-line w70"></div><div class="sh-line w40"></div><div class="sh-line w55"></div></div></div>
+        <div class="shimmer-card"><div class="sh-img"></div><div class="sh-lines"><div class="sh-line w55"></div><div class="sh-line w70"></div><div class="sh-line w40"></div></div></div>
+      </div>
+    </div>
+
+    <div class="pagination" id="pagination" style="display:none"></div>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='farmer_orders.js') }}"></script>
+</body>
+</html>

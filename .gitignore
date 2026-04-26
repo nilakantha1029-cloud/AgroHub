@@ -1,0 +1,16 @@
+.env
+__pycache__
+*.pyc
+
+venv/
+env/
+.venv/
+Agrohub_venv/        
+
+view_db.py
+agrohub.db
+
+instance/
+flask_session/
+.DS_Store
+.vscode/

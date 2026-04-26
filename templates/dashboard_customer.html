@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>AgroHub – Customer Dashboard</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_customer.css') }}">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">🥬</div>
+    <div class="nav-logo-text">
+      <div class="brand">AgroHub</div>
+      <div class="sub">Farm to You</div>
+    </div>
+  </a>
+
+  <div class="nav-links">
+    <a class="nav-link active" href="#top"><span>🏠</span><span>Home</span></a>
+    <a class="nav-link" href="#orders-section"><span>📦</span><span>My Orders</span></a>
+    <a class="nav-link" href="#farmers-section"><span>👩‍🌾</span><span>Farmers</span></a>
+    <a class="nav-link" href="#tips-section"><span>📚</span><span>Tips</span></a>
+    <a class="nav-link" onclick="showModal('marketModal')"><span>💹</span><span>Market Prices</span></a>
+  </div>
+
+  <div class="nav-right">
+    <!-- Notifications -->
+    <div class="notif-wrap" id="notifWrap">
+      <div class="nav-icon-btn" onclick="toggleDrop('notifWrap')" title="Notifications">
+        🔔<span class="nav-badge" id="notifBadge" style="display:none">0</span>
+      </div>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="drop-header"><h4>Notifications</h4><a onclick="markAllRead()">Mark all read</a></div>
+        <div id="notifList"><div style="text-align:center;padding:20px;color:var(--text-light)">Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- Cart -->
+    <div class="cart-wrap" id="cartWrap">
+      <div class="nav-icon-btn" onclick="toggleDrop('cartWrap')" title="My Cart">
+        🛒<span class="nav-badge gold" id="cartBadge">0</span>
+      </div>
+      <div class="cart-dropdown" id="cartDropdown">
+        <div class="drop-header"><h4>My Cart</h4></div>
+        <div style="text-align:center;padding:18px;color:var(--text-light)">Your cart is empty 🛒</div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="profile-wrap" id="profileWrap">
+      <div class="profile-btn" onclick="toggleDrop('profileWrap')">
+        <div class="profile-avatar" id="profileAvatar">--</div>
+        <span class="profile-name" id="profileName">Loading…</span>
+        <span class="profile-chevron">▼</span>
+      </div>
+      <div class="profile-dropdown">
+        <div class="pd-head">
+          <div class="pd-name" id="profileNameDropdown">--</div>
+          <div class="pd-loc">📍 Customer</div>
+        </div>
+        <a class="pd-item" href="/customerprofile">👤 My Profile</a>
+        <a class="pd-item" href="/customer-orders">📦 All Orders</a>
+        <a class="pd-item" onclick="openAddressModal();closeDrop()">📍 Addresses</a>
+        <a class="pd-item" href="/customer-helpandsupport">❓ Help & Support</a>
+        <a class="pd-item" onclick="openSettings();closeDrop()">⚙️ Settings</a>
+        <a class="pd-item" style="color:var(--red)" onclick="showDeleteModal();closeDrop()">🗑️ Delete Account</a>
+        <a class="pd-item logout" onclick="logoutUser()">🚪 Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<div class="layout">
+<main id="top">
+
+  <!-- Hero Search -->
+  <div class="hero-search">
+    <h2>Fresh from Farm to Your Door 🌿</h2>
+    <p>Buy directly from verified farmers · Zero middlemen · Best prices guaranteed</p>
+    <div class="hero-search-box">
+      <input class="hs-input" type="text" id="heroSearchInput" placeholder="Search crops, vegetables, grains…"/>
+      <select class="hs-select" id="heroState" onchange="updateDistricts()">
+        <option value="">🏛️ State</option>
+        <option value="MH">Maharashtra</option>
+        <option value="TG">Telangana</option>
+        <option value="KA">Karnataka</option>
+        <option value="OD">Odisha</option>
+      </select>
+      <select class="hs-select" id="heroDistrict"><option value="">📍 District</option></select>
+      <button class="hs-btn" onclick="searchProducts()">🔍 Search</button>
+    </div>
+    <div class="hero-tags">
+      <span class="hero-tag" onclick="quickSearch('vegetables','Tomatoes')">🍅 Tomatoes</span>
+      <span class="hero-tag" onclick="quickSearch('vegetables','Onions')">🧅 Onions</span>
+      <span class="hero-tag" onclick="quickSearch('grains','Wheat')">🌾 Wheat</span>
+      <span class="hero-tag" onclick="quickSearch('vegetables','Carrots')">🥕 Carrots</span>
+      <span class="hero-tag" onclick="quickSearch('grains','Maize')">🌽 Maize</span>
+      <span class="hero-tag" onclick="quickSearch('organic','Organic')">🍃 Organic</span>
+      <span class="hero-tag" onclick="quickSearch('spices','Chillies')">🌶️ Chillies</span>
+      <span class="hero-tag" onclick="quickSearch('vegetables','Potato')">🥔 Potato</span>
+    </div>
+  </div>
+
+  <!-- Categories + Tracker -->
+  <div class="cat-tracker-row">
+    <div class="cat-section">
+      <div class="sec-title"><h3>Browse Categories</h3></div>
+      <div class="cat-row">
+        <a class="cat-pill active" href="#" onclick="setCat(event,this,'')"><span class="cat-emoji">🌿</span><span class="cat-name">All</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'vegetables')"><span class="cat-emoji">🥦</span><span class="cat-name">Vegetables</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'fruits')"><span class="cat-emoji">🥭</span><span class="cat-name">Fruits</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'grains')"><span class="cat-emoji">🌾</span><span class="cat-name">Grains</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'pulses')"><span class="cat-emoji">🫘</span><span class="cat-name">Pulses</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'spices')"><span class="cat-emoji">🌶️</span><span class="cat-name">Spices</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'organic')"><span class="cat-emoji">🍃</span><span class="cat-name">Organic</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'dairy')"><span class="cat-emoji">🫙</span><span class="cat-name">Dairy</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'dry_fruits')"><span class="cat-emoji">🥜</span><span class="cat-name">Dry Fruits</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'oilseeds')"><span class="cat-emoji">🌻</span><span class="cat-name">Oilseeds</span></a>
+        <a class="cat-pill" href="#" onclick="setCat(event,this,'herbs')"><span class="cat-emoji">🌿</span><span class="cat-name">Herbs</span></a>
+      </div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-hd"><span>🚚 Track Your Order</span></div>
+      <div class="tracker-body">
+        <input id="orderSearchInput" class="track-input" type="text" placeholder="Order ID e.g. KB-12"/>
+        <button class="track-btn" onclick="trackOrder()">Track</button>
+      </div>
+      <div class="tracker-result" id="orderTrackResult">
+        <div class="tracker-inner" id="orderTrackContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Listings -->
+  <div class="listings-section section-anchor" id="listings-section">
+    <div class="sec-title">
+      <h3>Fresh Listings <span id="listingSubtitle">Direct from farmers</span></h3>
+      <a class="sec-link" onclick="setCat(event,document.querySelector('.cat-pill'),'')">View all →</a>
+    </div>
+    <div id="productGrid" class="product-grid">
+      <div class="no-products"><div class="np-icon">🌾</div><p>Loading fresh listings…</p></div>
+    </div>
+  </div>
+
+  <!-- COMING SOON BANNER (was Seasonal Picks) -->
+  <div class="coming-soon-banner">
+    <div class="csb-text">
+      <div class="cs-badge">🚧 Coming Soon</div>
+      <h3>🌿 Seasonal Picks — Rabi Harvest</h3>
+      <p>Curated seasonal produce deals, best buys of the harvest — launching very soon!</p>
+    </div>
+    <div class="csb-btn">Notify Me 🔔</div>
+  </div>
+
+  <!-- My Orders — show only 4, link to full page -->
+  <div id="orders-section" class="section-anchor" style="margin-bottom:22px">
+    <div class="sec-title">
+      <h3>📦 My Orders</h3>
+      <a class="sec-link" href="/customer-orders">View all →</a>
+    </div>
+    <div class="card" id="ordersCard">
+      <div style="text-align:center;padding:36px;color:var(--text-light)">Loading your orders…</div>
+    </div>
+  </div>
+
+  <!-- Farmers — show 6, popup for all -->
+  <div id="farmers-section" class="section-anchor" style="margin-bottom:22px">
+    <div class="card">
+      <div class="card-hd">
+        <h4>👩‍🌾 Farmers on AgroHub</h4>
+        <a class="sec-link" onclick="openAllFarmersModal()">Explore all →</a>
+      </div>
+      <div class="card-bd">
+        <div class="farmers-grid" id="farmersGrid">
+          <div style="color:var(--text-light);font-size:13px;padding:8px 0">Loading farmers…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tips — link to research page -->
+  <div id="tips-section" class="section-anchor">
+    <div class="sec-title">
+      <h3>📚 Smart Buying Tips & Research <span>Curated for customers</span></h3>
+      <a class="sec-link" href="/buying-tips">All guides →</a>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="tips-grid">
+        <a class="tip-card" href="/buying-tips#fresh-vegetables"><div class="tip-top a">🛒</div><div class="tip-bot"><div class="tip-tag">Buying Guide</div><div class="tip-title">How to Pick Fresh Vegetables at the Best Price</div><div class="tip-desc">Check firmness, colour, and fragrance. Local farm produce lasts 2–3× longer.</div></div></a>
+        <a class="tip-card" href="/buying-tips#storage-tips"><div class="tip-top b">📦</div><div class="tip-bot"><div class="tip-tag">Storage Tips</div><div class="tip-title">Store Onions & Potatoes the Right Way</div><div class="tip-desc">Cool, dry place with airflow. Avoid refrigerating onions — it turns them mushy.</div></div></a>
+        <a class="tip-card" href="/buying-tips#market-insight"><div class="tip-top c">💹</div><div class="tip-bot"><div class="tip-tag">Market Insight</div><div class="tip-title">When to Buy Tomatoes for Maximum Savings</div><div class="tip-desc">Tomato prices dip 30–40% in Feb–March after Rabi harvest. Stock up now!</div></div></a>
+        <a class="tip-card" href="/buying-tips#organic-benefits"><div class="tip-top d">🌿</div><div class="tip-bot"><div class="tip-tag">Organic Benefits</div><div class="tip-title">Why Organic Produce Costs More</div><div class="tip-desc">No pesticides, natural fertilizers. Nutritional density 20–30% higher.</div></div></a>
+        <a class="tip-card" href="/buying-tips#seasonal-eating"><div class="tip-top e">🍎</div><div class="tip-bot"><div class="tip-tag">Seasonal Eating</div><div class="tip-title">Seasonal Vegetables This Month</div><div class="tip-desc">Best buys: Peas, Cauliflower, Spinach, Fenugreek, Carrots, Beetroot.</div></div></a>
+        <a class="tip-card" href="/buying-tips#direct-farming"><div class="tip-top f">🤝</div><div class="tip-bot"><div class="tip-tag">Direct Farming</div><div class="tip-title">Benefits of Buying Directly from Farmers</div><div class="tip-desc">Save 25–40% vs supermarkets. Get fresher produce with full traceability.</div></div></a>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- ══ MARKET PRICES MODAL (REDESIGNED) ══ -->
+<div class="modal-overlay" id="marketModal">
+  <div class="modal market-modal-wrap" style="width:760px">
+    <div class="market-hd">
+      <div class="market-hd-left">
+        <h2>💹 Live Market Prices <span class="live-dot"></span></h2>
+        <p>APMC / eNAM Data · Admin verified</p>
+      </div>
+      <button class="market-close-btn" onclick="closeModal('marketModal')">✕</button>
+    </div>
+    <!-- Search + Filter -->
+    <div class="market-search-bar">
+      <input class="market-search-input" id="marketSearchInput" type="text" placeholder="Search crop or market location…" oninput="renderMarketGrid()"/>
+      <div class="market-filter-pills">
+        <span class="mfp active" data-cat="all" onclick="setMarketFilter(this)">All</span>
+        <span class="mfp" data-cat="vegetables" onclick="setMarketFilter(this)">🥦 Vegetables</span>
+        <span class="mfp" data-cat="grains" onclick="setMarketFilter(this)">🌾 Grains</span>
+        <span class="mfp" data-cat="fruits" onclick="setMarketFilter(this)">🥭 Fruits</span>
+        <span class="mfp" data-cat="spices" onclick="setMarketFilter(this)">🌶️ Spices</span>
+      </div>
+    </div>
+    <!-- Price Grid -->
+    <div class="market-price-grid" id="marketPriceGrid">
+      <div style="padding:30px;color:var(--text-light);text-align:center;grid-column:1/-1">Loading prices…</div>
+    </div>
+    <div class="market-footer">
+      <span class="market-footer-note" id="marketFooterNote">Source: eNAM / APMC · Prices in ₹</span>
+      <span style="font-size:11px;color:var(--text-light)" id="marketUpdatedAt"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ALL FARMERS MODAL ══ -->
+<div class="modal-overlay" id="allFarmersModal">
+  <div class="modal" style="width:640px">
+    <div class="modal-hd">
+      <h2>👩‍🌾 All Farmers on AgroHub</h2>
+      <button class="modal-close" onclick="closeModal('allFarmersModal')">✕</button>
+    </div>
+    <div class="modal-bd">
+      <input class="fm-input" id="farmerSearchInput" type="text" placeholder="Search farmer name or location…" oninput="renderAllFarmers()" style="margin-bottom:14px"/>
+      <div class="farmers-modal-grid" id="allFarmersGrid">
+        <div style="color:var(--text-light);text-align:center;padding:30px;grid-column:span 2">Loading…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRODUCT DETAIL MODAL ══ -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal" style="width:480px">
+    <div class="modal-hd"><h2 id="pmTitle">Product Details</h2><button class="modal-close" onclick="closeModal('productModal')">✕</button></div>
+    <div class="modal-bd" id="productModalBody"></div>
+  </div>
+</div>
+
+<!-- ══ CHECKOUT MODAL ══ -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal" style="width:500px">
+    <div class="modal-hd"><h2>🛒 Checkout</h2><button class="modal-close" onclick="closeModal('checkoutModal')">✕</button></div>
+    <div class="modal-bd">
+      <div id="checkoutItems"></div>
+      <div class="fm-group" style="margin-top:13px">
+        <label class="fm-label">Delivery Address</label>
+        <select class="fm-select" id="deliveryAddressSelect" onchange="toggleCustomAddress(this.value)" style="margin-bottom:7px"></select>
+        <input class="fm-input" id="deliveryAddress" type="text" placeholder="Or type your delivery address here"/>
+      </div>
+      <div id="checkoutTotal" style="background:var(--cream);padding:11px;border-radius:9px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12.5px;font-weight:600;color:var(--text-mid)">Total</span>
+        <span id="checkoutTotalVal" style="font-size:17px;font-weight:800;color:var(--saffron);font-family:'Outfit',sans-serif">₹0</span>
+      </div>
+      <button class="btn-main" onclick="placeOrders()">✅ Confirm & Place Orders</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADDRESS MODAL ══ -->
+<div class="modal-overlay" id="addressModal">
+  <div class="modal" style="width:520px">
+    <div class="modal-hd"><h2>📍 Add New Address</h2><button class="modal-close" onclick="closeModal('addressModal')">✕</button></div>
+    <div class="modal-bd">
+      <div id="savedAddressList" style="margin-bottom:14px"></div>
+      <hr style="border:none;border-top:1px solid var(--border);margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:11px">➕ Add New Address</div>
+      <form id="addressForm" onsubmit="saveNewAddress(event)">
+        <div class="fm-group">
+          <label class="fm-label">Address Type</label>
+          <select class="fm-select" id="addr_type"><option value="home">🏠 Home</option><option value="work">🏢 Work</option><option value="farm">🌾 Farm</option><option value="other">📍 Other</option></select>
+        </div>
+        <div class="addr-form-grid">
+          <div class="fm-group"><label class="fm-label">Full Name</label><input class="fm-input" type="text" id="addr_name" placeholder="Recipient name" required/></div>
+          <div class="fm-group"><label class="fm-label">Phone</label><input class="fm-input" type="tel" id="addr_phone" placeholder="+91 XXXXX XXXXX"/></div>
+        </div>
+        <div class="fm-group"><label class="fm-label">Street / Area</label><input class="fm-input" type="text" id="addr_street" placeholder="House no., Street, Area" required/></div>
+        <div class="addr-form-grid three">
+          <div class="fm-group"><label class="fm-label">Village / City</label><input class="fm-input" type="text" id="addr_village" placeholder="City or village" required/></div>
+          <div class="fm-group"><label class="fm-label">District</label><input class="fm-input" type="text" id="addr_district" placeholder="District"/></div>
+          <div class="fm-group"><label class="fm-label">Pincode</label><input class="fm-input" type="text" id="addr_pincode" placeholder="6-digit PIN" maxlength="6"/></div>
+        </div>
+        <div class="fm-group">
+          <label class="fm-label">State</label>
+          <select class="fm-select" id="addr_state" required>
+            <option value="">Select state</option>
+            <option>Maharashtra</option><option>Telangana</option><option>Karnataka</option><option>Odisha</option><option>Andhra Pradesh</option><option>Tamil Nadu</option><option>Kerala</option><option>Gujarat</option><option>Rajasthan</option><option>Uttar Pradesh</option><option>Madhya Pradesh</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>West Bengal</option><option>Other</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:13px">
+          <input type="checkbox" id="addr_default" style="accent-color:var(--saffron);width:14px;height:14px">
+          <label for="addr_default" style="font-size:12px;font-weight:600;color:var(--text-mid);cursor:pointer">Set as default delivery address</label>
+        </div>
+        <button type="submit" class="btn-main">💾 Save Address</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DELETE ACCOUNT MODAL ══ -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="width:400px">
+    <div class="modal-hd danger"><h2>⚠️ Delete Account</h2><button class="modal-close" onclick="closeModal('deleteModal')">✕</button></div>
+    <div class="modal-bd">
+      <div style="background:var(--red-light);border-radius:11px;padding:13px 15px;margin-bottom:16px">
+        <div style="font-size:12.5px;font-weight:700;color:var(--red);margin-bottom:5px">⚠️ This is permanent & irreversible</div>
+        <div style="font-size:11.5px;color:#7f1d1d;line-height:1.6">All data including orders, cart, notifications and profile will be permanently deleted.</div>
+      </div>
+      <div class="fm-group">
+        <label class="fm-label">Confirm with your password</label>
+        <div class="pw-show">
+          <input class="fm-input" type="password" id="deletePassword" placeholder="Enter your password"/>
+          <button type="button" class="pw-toggle" onclick="togglePw('deletePassword',this)">👁</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:9px;margin-top:3px">
+        <button onclick="closeModal('deleteModal')" style="flex:1;padding:10px;border-radius:9px;background:var(--cream);border:1.5px solid var(--border);font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer">Cancel</button>
+        <button onclick="deleteAccount()" style="flex:1;padding:10px;border-radius:9px;background:var(--red);color:#fff;border:none;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer">🗑️ Delete Forever</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS SIDEBAR ══ -->
+<div class="settings-overlay" id="settingsOverlay" onclick="checkSettingsClose(event)">
+  <div class="settings-sidebar">
+    <div class="settings-hd"><h3>⚙️ Settings</h3><button class="settings-close" onclick="closeSettings()">✕</button></div>
+    <div class="settings-body">
+      <div class="settings-section">
+        <div class="settings-section-title">Account</div>
+        <a class="settings-item" href="/customerprofile"><div class="si-left"><div class="si-icon orange">👤</div><div class="si-text"><div class="si-title">My Profile</div><div class="si-desc">Edit name, photo, bio</div></div></div><span class="si-arrow">›</span></a>
+        <a class="settings-item" href="/customerprofile#panel-security"><div class="si-left"><div class="si-icon orange">🔒</div><div class="si-text"><div class="si-title">Change Password</div><div class="si-desc">Update your password</div></div></div><span class="si-arrow">›</span></a>
+        <a class="settings-item" onclick="openAddressModal();closeSettings()"><div class="si-left"><div class="si-icon green">📍</div><div class="si-text"><div class="si-title">Manage Addresses</div><div class="si-desc">Add or edit delivery addresses</div></div></div><span class="si-arrow">›</span></a>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Preferences</div>
+        <div class="settings-item" style="cursor:default"><div class="si-left"><div class="si-icon orange">🔔</div><div class="si-text"><div class="si-title">Notifications</div><div class="si-desc">Order updates & offers</div></div></div><label class="toggle"><input type="checkbox" checked id="toggleNotif"><div class="toggle-track"></div></label></div>
+        <div class="settings-item" style="cursor:default"><div class="si-left"><div class="si-icon green">📧</div><div class="si-text"><div class="si-title">Email Alerts</div><div class="si-desc">Price drop & new listings</div></div></div><label class="toggle"><input type="checkbox" id="toggleEmail"><div class="toggle-track"></div></label></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Support</div>
+        <a class="settings-item" href="/customer-helpandsupport"><div class="si-left"><div class="si-icon blue">❓</div><div class="si-text"><div class="si-title">Help & Support</div><div class="si-desc">FAQs and tickets</div></div></div><span class="si-arrow">›</span></a>
+        <a class="settings-item" onclick="logoutUser()"><div class="si-left"><div class="si-icon" style="background:#fff3cd">🚪</div><div class="si-text"><div class="si-title" style="color:var(--text-dark)">Logout</div><div class="si-desc">Sign out of your account</div></div></div></a>
+      </div>
+    </div>
+    <div class="settings-danger">
+      <div class="settings-danger-title">⚠ Danger Zone</div>
+      <div class="settings-danger-item" onclick="showDeleteModal()"><div class="si-icon red">🗑️</div><div class="si-text"><div class="si-title">Delete My Account</div><div class="si-desc" style="color:#ef9999">Permanently remove your account</div></div></div>
+    </div>
+    <div style="height:18px"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='dashboard_customer.js') }}"></script>
+</body>
+</html>

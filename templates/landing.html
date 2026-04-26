@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroHub - Smart Agricultural Supply Chain Platform</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo">
+  <img src="{{ url_for('static', filename='Assets/logo.png') }}" alt="AgroHub" style="height:48px; width:auto;">
+</div>
+
+      <div class="nav-menu" id="navMenu">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+
+      <div class="nav-actions">
+
+        <a onclick="openAdminLogin()" class="nav-link" style="cursor:pointer">Login as Admin</a>
+        <a href="/login" class="nav-link">Login</a>
+        <!-- <a href="#login" class="btn-link">Login</a> -->
+        <a href="/signup" class="nav-link">Sign Up</a>
+        <!-- <a href="#signup" class="btn-link">Sign Up</a> -->
+        <!-- <a href="#signup" class="btn btn-primary">Sign Up</a> -->
+      </div>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+
+ <!-- Admin Login Modal -->
+<div id="adminLoginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;place-items:center;">
+  <div style="background:#0d1a0e;border:1px solid #1e3320;border-radius:20px;width:400px;max-width:95vw;overflow:hidden;font-family:sans-serif;">
+    
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#1a3a1e 0%,#0d1a0e 100%);padding:36px 36px 28px;text-align:center;border-bottom:1px solid #1e3320;">
+      <div style="width:56px;height:56px;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;">👑</div>
+      <div style="font-size:20px;font-weight:800;color:#dcfce7;margin-bottom:4px;">Admin Control Panel</div>
+      <div style="font-size:11px;color:#4ade80;letter-spacing:2px;text-transform:uppercase;">AgroHub Platform</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:5px 14px;border:1px solid #166534;border-radius:20px;background:rgba(22,101,52,0.3);">
+        <div style="width:7px;height:7px;background:#22c55e;border-radius:50%;animation:admBlink 1.6s ease-in-out infinite;"></div>
+        <span style="font-size:11px;color:#86efac;">Secure admin access only</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:28px 36px 32px;">
+
+      <!-- Email -->
+      <label style="display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4ade80;margin-bottom:7px;">Admin Email</label>
+      <div style="position:relative;margin-bottom:18px;">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;">✉️</span>
+        <input id="adm_login_email" type="email" placeholder="admin@agrohub.com"
+          style="width:100%;background:#111f12;border:1px solid #1e3320;border-radius:10px;padding:12px 14px 12px 42px;font-size:14px;color:#dcfce7;font-family:sans-serif;box-sizing:border-box;outline:none;"
+          onfocus="this.style.borderColor='#22c55e';this.style.boxShadow='0 0 0 3px rgba(34,197,94,0.15)'"
+          onblur="this.style.borderColor='#1e3320';this.style.boxShadow='none'"/>
+      </div>
+
+      <!-- Password -->
+      <label style="display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4ade80;margin-bottom:7px;">Password</label>
+      <div style="position:relative;margin-bottom:20px;">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;">🔒</span>
+        <input id="adm_login_pass" type="password" placeholder="••••••••••••"
+          style="width:100%;background:#111f12;border:1px solid #1e3320;border-radius:10px;padding:12px 14px 12px 42px;font-size:14px;color:#dcfce7;font-family:sans-serif;box-sizing:border-box;outline:none;"
+          onfocus="this.style.borderColor='#22c55e';this.style.boxShadow='0 0 0 3px rgba(34,197,94,0.15)'"
+          onblur="this.style.borderColor='#1e3320';this.style.boxShadow='none'"/>
+      </div>
+
+      <!-- Divider -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+        <div style="flex:1;height:1px;background:#1e3320;"></div>
+        <span style="font-size:10px;color:#2d5a35;white-space:nowrap;">Restricted — Authorized Personnel Only</span>
+        <div style="flex:1;height:1px;background:#1e3320;"></div>
+      </div>
+
+      <!-- Login Button -->
+      <button onclick="doAdminLogin()"
+        style="width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);color:#000;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:sans-serif;letter-spacing:0.5px;"
+        onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+        Login as Admin →
+      </button>
+
+      <!-- Cancel -->
+      <button onclick="document.getElementById('adminLoginModal').style.display='none'"
+        style="width:100%;background:transparent;border:none;color:#2d5a35;font-size:12px;cursor:pointer;margin-top:12px;font-family:sans-serif;padding:4px;"
+        onmouseover="this.style.color='#4ade80'" onmouseout="this.style.color='#2d5a35'">
+        ✕ Cancel
+      </button>
+
+      <!-- Error -->
+      <div id="adm_err" style="color:#f87171;font-size:12px;margin-top:10px;text-align:center;"></div>
+
+      <!-- Footer -->
+      <div style="text-align:center;margin-top:18px;font-size:11px;color:#1e3320;display:flex;align-items:center;justify-content:center;gap:6px;">
+        🔐 <span>256-bit encrypted · Session secured</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blinking dot animation -->
+<style>
+@keyframes admBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+</style>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <div class="hero-pattern"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge">
+          <span class="badge-icon">🚀</span>
+          <span>Transforming Agriculture Supply Chain</span>
+        </div>
+
+        <h1 class="hero-title">
+          Bridge the Gap Between
+          <span class="highlight">Farms & Markets</span>
+        </h1>
+
+        <p class="hero-description">
+          A comprehensive digital platform connecting farmers, dealers, and service providers.
+          Trade crops, book transport, rent equipment, and secure storage—all with complete
+          transparency and fair pricing.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="/signup" class="btn btn-hero-primary">
+            Get Started
+            <span class="btn-arrow">→</span>
+          </a>
+          <a href="#how-it-works" class="btn btn-hero-secondary">
+            <span class="play-icon">▶</span>
+            See How It Works
+          </a>
+        </div>
+
+        <div class="hero-stats">
+  <div class="stat-item">
+    <div class="stat-number" id="stat-farmers">0</div>
+    <div class="stat-label">Active Farmers</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-item">
+    <div class="stat-number" id="stat-customers">0</div>
+    <div class="stat-label">Verified Customers</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-item">
+    <div class="stat-number" id="stat-orders">0</div>
+    <div class="stat-label">Transactions</div>
+  </div>
+</div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card hero-card-1">
+          <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=400&fit=crop"
+            alt="Fresh vegetables">
+          <div class="card-overlay">
+            <span class="card-tag">Fresh Produce</span>
+          </div>
+        </div>
+
+        <div class="hero-card hero-card-2">
+          <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=600&h=400&fit=crop"
+            alt="Farmer with crops">
+          <div class="card-overlay">
+            <span class="card-tag">Direct from Farm</span>
+          </div>
+        </div>
+
+        <div class="floating-element floating-1">
+  <div class="float-icon">📦</div>
+  <div class="float-text">
+    <div class="float-title">Storage Available</div>
+    <div class="float-value" id="stat-storage">0</div>
+  </div>
+</div>
+
+<div class="floating-element floating-2">
+  <div class="float-icon">🚜</div>
+  <div class="float-text">
+    <div class="float-title">Equipment Ready</div>
+    <div class="float-value" id="stat-equipment">0</div>
+  </div>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Platform Features</span>
+        <h2 class="section-title">Everything You Need in <span class="highlight-green">One Platform</span></h2>
+        <p class="section-description">
+          From crop trading to equipment rental, we've built a complete ecosystem
+          that addresses every need in the agricultural supply chain.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-1">
+            <img src="static/Assets/Digital_MarketPlace.png">
+          </div>
+          <h3 class="feature-title">Digital Marketplace</h3>
+          <p class="feature-description">
+            Sell crops directly to dealers and customers. List your produce with photos,
+            set prices, and reach buyers across the region without middlemen.
+          </p>
+          <ul class="feature-list">
+            <li>Zero commission on direct sales</li>
+            <li>Real-time price updates</li>
+            <li>Quality verification system</li>
+          </ul>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-icon feature-icon-2">
+            <img src="https://miro.medium.com/1*1TAO6AN7LirIQHK_hIQE5A.jpeg" alt="Transport">
+          </div>
+          <h3 class="feature-title">Transport Booking</h3>
+          <p class="feature-description">
+            Book vehicles for crop transportation with real-time tracking. Compare prices,
+            check vehicle availability, and schedule pickups instantly.
+          </p>
+          <ul class="feature-list">
+            <li>GPS tracking & live updates</li>
+            <li>Multiple vehicle options</li>
+            <li>Instant booking confirmation</li>
+          </ul>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-icon feature-icon-3">
+            <img src="static/Assets/Equipment.png" alt="Equipment">
+          </div>
+          <h3 class="feature-title">Equipment Rental</h3>
+          <p class="feature-description">
+            Rent tractors, harvesters, and cultivation machines by the hour or day.
+            Access modern farming equipment without heavy investment.
+          </p>
+          <ul class="feature-list">
+            <li>Flexible rental periods</li>
+            <li>Well-maintained equipment</li>
+            <li>Delivery to your farm</li>
+          </ul>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-icon feature-icon-4">
+            <img src="static/Assets/Rental_Storage.png" alt="Storage">
+          </div>
+          <h3 class="feature-title">Storage Facilities</h3>
+          <p class="feature-description">
+            Book climate-controlled storage for your harvest. Protect crops from spoilage
+            and sell when market prices are favorable.
+          </p>
+          <ul class="feature-list">
+            <li>Temperature-controlled units</li>
+            <li>24/7 security monitoring</li>
+            <li>Flexible booking durations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section" id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">For Everyone</span>
+        <h2 class="section-title">Tailored Solutions for Every <span class="highlight-green">Stakeholder</span></h2>
+      </div>
+
+      <div class="services-tabs">
+        <button class="tab-btn active" data-tab="farmers">
+          <span class="tab-icon">👨‍🌾</span>
+          <span>For Farmers</span>
+        </button>
+        <button class="tab-btn" data-tab="dealers">
+          <span class="tab-icon">🏪</span>
+          <span>For Customers</span>
+        </button>
+        <button class="tab-btn" data-tab="providers">
+          <span class="tab-icon">🚚</span>
+          <span>For Providers</span>
+        </button>
+      </div>
+
+      <div class="tab-content active" id="farmers">
+        <div class="service-layout">
+          <div class="service-image">
+            <img src="static/Assets/Farmer_Dashboard.png" alt="Farmer Dashboard">
+            <div class="image-badge">
+              <span class="badge-icon">✓</span>
+              <span>Verified Platform</span>
+            </div>
+          </div>
+
+          <div class="service-content">
+            <h3 class="service-title">Empowering Farmers with Digital Tools</h3>
+            <p class="service-description">
+              Take control of your agricultural business with our comprehensive farmer dashboard.
+              From listing crops to managing logistics, everything you need is at your fingertips.
+            </p>
+
+            <div class="service-features">
+              <div class="service-feature-item">
+                <div class="feature-icon-small">🌾</div>
+                <div>
+                  <h4>Sell Your Crops</h4>
+                  <p>List rice, wheat, vegetables, and more. Set your prices and connect with buyers directly.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">🚛</div>
+                <div>
+                  <h4>Book Transport</h4>
+                  <p>Schedule vehicle pickups for your produce. Track deliveries in real-time.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">🚜</div>
+                <div>
+                  <h4>Rent Equipment</h4>
+                  <p>Access tractors, harvesters, and cultivation machinery when you need them.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">📦</div>
+                <div>
+                  <h4>Secure Storage</h4>
+                  <p>Book warehouse space to protect your harvest and optimize selling timing.</p>
+                </div>
+              </div>
+            </div>
+
+            <a href="/signup?role=farmer" class="btn btn-primary">Start as a Farmer</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="dealers">
+        <div class="service-layout">
+          <div class="service-image">
+            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=700&h=800&fit=crop"
+              alt="Dealer dashboard">
+            <div class="image-badge">
+              <span class="badge-icon">✓</span>
+              <span>Quality Assured</span>
+            </div>
+          </div>
+
+          <div class="service-content">
+            <h3 class="service-title">Direct Access to Fresh Produce</h3>
+            <p class="service-description">
+              Connect directly with farmers and access verified, quality produce. Eliminate middlemen,
+              reduce costs, and ensure freshness from farm to your business.
+            </p>
+
+            <div class="service-features">
+              <div class="service-feature-item">
+                <div class="feature-icon-small">🔍</div>
+                <div>
+                  <h4>Browse & Compare</h4>
+                  <p>Search crops by type, region, and price. Compare offerings from multiple farmers.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">✅</div>
+                <div>
+                  <h4>Quality Verification</h4>
+                  <p>Every listing includes quality certificates, photos, and farmer ratings.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">💰</div>
+                <div>
+                  <h4>Fair Pricing</h4>
+                  <p>Transparent pricing with no hidden fees. Negotiate directly with farmers.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">📊</div>
+                <div>
+                  <h4>Order Management</h4>
+                  <p>Track orders, manage deliveries, and maintain purchase history in one place.</p>
+                </div>
+              </div>
+            </div>
+
+            <a href="/signup?role=customer" class="btn btn-primary">Join as a Customer</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="providers">
+        <div class="service-layout">
+          <div class="service-image">
+            <img
+              src="https://images.squarespace-cdn.com/content/v1/6792f525599ed84703268592/97c6505b-6e57-40b8-8a83-8efe5aa6d59e/dk8lqays.png"
+              alt="Service provider">
+            <div class="image-badge">
+              <span class="badge-icon">✓</span>
+              <span>Trusted Network</span>
+            </div>
+          </div>
+
+          <div class="service-content">
+            <h3 class="service-title">Grow Your Service Business</h3>
+            <p class="service-description">
+              Whether you provide transport, equipment rental, or storage facilities, our platform
+              connects you with thousands of farmers and dealers who need your services.
+            </p>
+
+            <div class="service-features">
+              <div class="service-feature-item">
+                <div class="feature-icon-small">📋</div>
+                <div>
+                  <h4>List Your Services</h4>
+                  <p>Showcase vehicles, equipment, and storage facilities with pricing and availability.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">📅</div>
+                <div>
+                  <h4>Manage Bookings</h4>
+                  <p>Real-time booking calendar, automated scheduling, and instant confirmations.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">💳</div>
+                <div>
+                  <h4>Quick Payments</h4>
+                  <p>Receive payments securely with automated invoicing and transaction tracking.</p>
+                </div>
+              </div>
+
+              <div class="service-feature-item">
+                <div class="feature-icon-small">📈</div>
+                <div>
+                  <h4>Business Analytics</h4>
+                  <p>Track utilization, revenue, and customer feedback to optimize your operations.</p>
+                </div>
+              </div>
+            </div>
+
+            <a href="/signup?role=service_provider" class="btn btn-primary">Register as Provider</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Simple Process</span>
+        <h2 class="section-title">How <span class="highlight-green">AgroHub</span> Works</h2>
+        <p class="section-description">Get started in minutes and transform the way you do agricultural business</p>
+      </div>
+
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <div class="step-icon">
+            <img src="static/Assets/SignUp_HomePage.png" alt="Register">
+          </div>
+          <h3 class="step-title">Create Your Account</h3>
+          <p class="step-description">
+            Sign up in 2 minutes. Choose your role—farmer, dealer, or service provider.
+            Complete your profile with basic details.
+          </p>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <div class="step-icon">
+            <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?w=300&h=300&fit=crop" alt="Browse">
+          </div>
+          <h3 class="step-title">List or Browse</h3>
+          <p class="step-description">
+            Farmers: List your crops and needs. Dealers: Browse available produce.
+            Providers: List your services and equipment.
+          </p>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <div class="step-icon">
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=300&fit=crop" alt="Connect">
+          </div>
+          <h3 class="step-title">Connect & Transact</h3>
+          <p class="step-description">
+            Make direct connections, negotiate terms, book services, and complete
+            transactions—all through our secure platform.
+          </p>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <div class="step-card">
+          <div class="step-number">04</div>
+          <div class="step-icon">
+            <img src="https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=300&h=300&fit=crop" alt="Track">
+          </div>
+          <h3 class="step-title">Track & Manage</h3>
+          <p class="step-description">
+            Monitor deliveries, manage bookings, track payments, and access analytics—all
+            from your personalized dashboard.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits-section">
+    <div class="container">
+      <span class="section-label">Benefit</span>
+      <h2 class="section-titles">Why Choose Our Platform</h2>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">🎯</div>
+          <h3>Direct Market Access</h3>
+          <p>Eliminate middlemen and connect directly with buyers or sellers for better margins</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">💰</div>
+          <h3>Fair Pricing</h3>
+          <p>Transparent pricing model ensures everyone gets fair value without hidden costs</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">🔒</div>
+          <h3>Secure Payments</h3>
+          <p>Protected transactions with escrow system and multiple payment options</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">📱</div>
+          <h3>Easy to Use</h3>
+          <p>Simple, intuitive interface designed for users of all technical backgrounds</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">⚡</div>
+          <h3>Real-Time Updates</h3>
+          <p>Live tracking, instant notifications, and real-time availability information</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">🌱</div>
+          <h3>Sustainable Practices</h3>
+          <p>Promoting eco-friendly farming and reducing waste through efficient logistics</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Transform Your Agricultural Business?</h2>
+      <p class="cta-description">
+        Join thousands of farmers, dealers, and service providers who are already benefiting
+        from our platform. Start today—it's free to register!
+      </p>
+      <div class="cta-buttons">
+        <a href="/signup" class="btn btn-cta-primary">Create Free Account</a>
+        <a href="#contact" class="btn btn-cta-secondary">Contact Sales Team</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <div class="contact-layout">
+        <div class="contact-info">
+          <h2 class="contact-title">Get In Touch</h2>
+          <p class="contact-description"> Have questions? Need support? Our team is here to help you succeed. </p>
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="contact-icon">📧</div>
+              <div class="contact-text">
+                <h4>Email Us</h4>
+                <p>support@agrohub.com</p>
+                <p>sales@agrohub.com</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">📱</div>
+              <div class="contact-text">
+                <h4>Call Us</h4>
+                <p>+91 9864728927</p>
+                <p>Mon - Sat: 8:00 AM - 6:00 PM</p>
+              </div>
+            </div>
+            <!-- <div class="contact-item"> <div class="contact-icon">📍</div> <div class="contact-text"> <h4>Visit Us</h4> <p>NMIET, Patrapada</p> <p>Bhubaneswar, Odisha</p> </div> </div> -->
+          </div>
+          <!-- <div class="social-links"> <a href="https://www.facebook.com/" class="social-link">Facebook</a> <a href="https://x.com/" class="social-link">X</a> <a href="#" class="social-link">LinkedIn</a> <a href="https://www.instagram.com/" class="social-link">Instagram</a> </div> -->
+          <div class="social-links"> <a href="https://www.facebook.com/" class="social-link" target="_blank"> <i
+                class="fa-brands fa-facebook-f"></i> Facebook </a> <a href="https://x.com/" class="social-link"
+              target="_blank"> <i class="fa-brands fa-x-twitter"></i> </a>
+            <!-- <a href="#" class="social-link"> <i class="fa-brands fa-linkedin-in"></i> LinkedIn </a> --> <a
+              href="https://www.instagram.com/" class="social-link" target="_blank"> <i
+                class="fa-brands fa-instagram"></i> Instagram </a> </div>
+        </div>
+        <div class="contact-form-container">
+          <form class="contact-form" id="contactForm">
+            <div class="form-group"> <label for="name">Full Name</label> <input type="text" id="name" name="name"
+                required> </div>
+            <div class="form-group"> <label for="email">Email Address</label> <input type="email" id="email"
+                name="email" required> </div>
+            <div class="form-group"> <label for="role">I am a...</label> <select id="role" name="role" required>
+                <option value="">Select your role</option>
+                <option value="farmer">Farmer</option>
+                <option value="dealer">Customer</option>
+                <option value="provider">Service Provider</option>
+                <option value="other">Other</option>
+              </select> </div>
+            <div class="form-group"> <label for="message">Message</label> <textarea id="message" name="message" rows="4"
+                required></textarea> </div> <button type="submit" class="btn btn-form-submit">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <div class="footer-logo">
+  <img src="{{ url_for('static', filename='Assets/logo.png') }}" alt="AgroHub" style="height:42px; width:auto; ">
+</div>
+<p class="footer-description">
+            Transforming agriculture through technology. Building bridges between farms and markets
+            for a sustainable future.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Platform</h4>
+          <ul class="footer-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="/terms#section-7">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#services">Careers</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <ul class="footer-links">
+            <li><a href="/terms#section-10">Privacy Policy</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+            <li><a href="/terms#section-11">Cookie Policy</a></li>
+            <li><a href="/terms#section-8">Refund Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 AgroHub | Involving Technology, Empowering Agriculture.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='landing.js') }}" defer></script>
+</body>
+
+</html>

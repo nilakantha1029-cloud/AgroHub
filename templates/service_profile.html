@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Profile – AgroHub Service Provider</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='service_profile.css') }}">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/dashboard/service_provider">
+    <div class="nav-logo-icon">🛠️</div>
+    <div class="nav-logo-text"><span class="brand">AgroHub</span><span class="tagline">Service Provider</span></div>
+  </a>
+  <div class="nav-right-items">
+    <div class="nav-user">
+      <div class="nav-avatar" id="navAvatar"><span id="navInitials">--</span></div>
+      <span class="nav-uname" id="navName">Loading…</span>
+    </div>
+    <a class="nav-back" href="/dashboard/service_provider">← Back to Dashboard</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="profile-hero">
+    <div class="ph-avatar-wrap" onclick="triggerImgUpload()">
+      <div class="ph-avatar" id="heroAvatar"><span id="heroInitials">--</span></div>
+      <div class="ph-cam">📷</div>
+      <input type="file" id="heroImgInput" accept="image/*" style="display:none" onchange="previewImage(this)">
+    </div>
+    <div class="ph-info">
+      <div class="ph-name" id="heroName">Loading…</div>
+      <div class="ph-email" id="heroEmail">—</div>
+      <div class="ph-tags">
+        <span class="ph-tag">🛠️ Service Provider</span>
+        <span class="ph-tag green" id="heroSince">Member</span>
+        <span class="ph-tag" id="heroPhone">—</span>
+        <span class="ph-tag" id="heroKycBadge">🪪 KYC Pending</span>
+      </div>
+    </div>
+    <button class="ph-edit-btn" id="editToggleBtn" onclick="toggleEdit()">✏️ Edit Profile</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="statListings">0</div><div class="stat-lbl">Services Listed</div></div>
+    <div class="stat-card"><div class="stat-val" id="statBookings">0</div><div class="stat-lbl">Bookings Done</div></div>
+    <div class="stat-card"><div class="stat-val" id="statRating">—</div><div class="stat-lbl">Avg. Rating</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('personal',this)">👤 Personal Info</button>
+    <button class="tab-btn" onclick="switchTab('documents',this)">🪪 ID & Documents</button>
+    <button class="tab-btn" onclick="switchTab('security',this)">🔒 Change Password</button>
+  </div>
+
+  <!-- ── PERSONAL INFO ── -->
+  <div class="tab-panel active" id="tab-personal">
+    <form onsubmit="savePersonal(event)">
+      <div class="card">
+        <div class="card-hd"><h3>📸 Profile Photo</h3></div>
+        <div class="card-bd">
+          <div class="photo-upload-row">
+            <div class="avatar-preview" id="avatarPreview"><span id="avatarInitials">--</span></div>
+            <div class="upload-area" onclick="triggerImgUpload()">
+              <div class="ua-icon">📸</div>
+              <div class="ua-text">Click to change profile photo</div>
+              <div class="ua-hint" id="photoHint">JPG or PNG, max 5MB.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>👤 Basic Information</h3></div>
+        <div class="card-bd">
+          <div class="form-grid">
+            <div class="fm-group"><label class="fm-label">First Name *</label><input class="fm-input" type="text" id="inp_first_name" placeholder="First name" required disabled/></div>
+            <div class="fm-group"><label class="fm-label">Last Name *</label><input class="fm-input" type="text" id="inp_last_name" placeholder="Last name" required disabled/></div>
+            <div class="fm-group"><label class="fm-label">Gender</label><select class="fm-select" id="inp_gender" disabled><option value="">Prefer not to say</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
+            <div class="fm-group"><label class="fm-label">Date of Birth</label><input class="fm-input" type="date" id="inp_dob" disabled/></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>📞 Contact Details</h3></div>
+        <div class="card-bd">
+          <div class="form-grid">
+            <div class="fm-group"><label class="fm-label">Email Address</label><input class="fm-input readonly" type="email" id="inp_email" readonly/><span class="fm-hint">Email cannot be changed</span></div>
+            <div class="fm-group"><label class="fm-label">Phone Number</label><input class="fm-input" type="tel" id="inp_phone" placeholder="+91 XXXXX XXXXX" disabled/></div>
+          </div>
+          <div class="fm-group"><label class="fm-label">Bio / About Your Services</label><textarea class="fm-input" id="inp_bio" rows="3" placeholder="Describe your transport, equipment or storage services…" disabled style="resize:vertical"></textarea></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>📍 Address</h3></div>
+        <div class="card-bd">
+          <div class="fm-group"><label class="fm-label">Street / Area</label><input class="fm-input" type="text" id="inp_address" placeholder="House no., Street, Area" disabled/></div>
+          <div class="form-grid three" style="margin-top:0">
+            <div class="fm-group"><label class="fm-label">Village / Town</label><input class="fm-input" type="text" id="inp_village" placeholder="Village or town" disabled/></div>
+            <div class="fm-group"><label class="fm-label">District</label><input class="fm-input" type="text" id="inp_district" placeholder="District" disabled/></div>
+            <div class="fm-group"><label class="fm-label">PIN Code</label><input class="fm-input" type="text" id="inp_pincode" placeholder="6-digit PIN" maxlength="6" disabled/></div>
+          </div>
+          <div class="fm-group"><label class="fm-label">State</label><select class="fm-select" id="inp_state" disabled><option value="">Select state</option><option>Maharashtra</option><option>Telangana</option><option>Karnataka</option><option>Odisha</option><option>Punjab</option><option>Haryana</option><option>Uttar Pradesh</option><option>Madhya Pradesh</option><option>Rajasthan</option><option>Gujarat</option><option>Tamil Nadu</option><option>Andhra Pradesh</option><option>West Bengal</option><option>Bihar</option><option>Jharkhand</option></select></div>
+        </div>
+        <div class="save-bar" id="personalSaveBar" style="display:none">
+          <button type="button" class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+          <button type="submit" class="btn-save" id="personalSaveBtn">💾 Save Changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── ID & DOCUMENTS ── -->
+  <div class="tab-panel" id="tab-documents">
+    <form onsubmit="saveDocuments(event)">
+      <div class="info-box info"><span class="info-box-icon">🔐</span><span>Your identity documents are encrypted. <strong>Driving Licence</strong> is required to list transport/equipment.</span></div>
+      <div class="card">
+        <div class="card-hd"><h3>🏛️ Government Identification</h3><span id="kycStatus"></span></div>
+        <div class="card-bd">
+          <div class="form-grid">
+            <div class="fm-group"><label class="fm-label">Aadhaar Number</label><input class="fm-input" type="text" id="inp_aadhar" placeholder="XXXX XXXX XXXX" maxlength="14" oninput="formatAadhar(this)" disabled/><span class="fm-hint">12-digit Aadhaar card number</span></div>
+            <div class="fm-group"><label class="fm-label">PAN Number</label><input class="fm-input" type="text" id="inp_pan" placeholder="ABCDE1234F" maxlength="10" oninput="this.value=this.value.toUpperCase()" disabled/><span class="fm-hint">10-character PAN card number</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>🪪 Driving Licence <span id="dlBadge" style="margin-left:8px"></span></h3></div>
+        <div class="card-bd">
+          <div class="info-box warn" id="dlWarnBox" style="display:none"><span class="info-box-icon">⚠️</span><span>Driving Licence is <strong>required</strong> to list transport vehicles and equipment.</span></div>
+          <div class="form-grid">
+            <div class="fm-group"><label class="fm-label">Driving Licence Number *</label><input class="fm-input" type="text" id="inp_dl_number" placeholder="e.g. MH1520210012345" maxlength="20" oninput="this.value=this.value.toUpperCase()" disabled/><span class="fm-hint">State-issued Driving Licence number</span></div>
+            <div class="fm-group"><label class="fm-label">DL Expiry Date</label><input class="fm-input" type="date" id="inp_dl_expiry" disabled/></div>
+            <div class="fm-group"><label class="fm-label">DL Type / Category</label><select class="fm-select" id="inp_dl_type" disabled><option value="">Select type</option><option value="LMV">LMV – Light Motor Vehicle</option><option value="HMV">HMV – Heavy Motor Vehicle</option><option value="HTV">HTV – Heavy Transport Vehicle</option><option value="MCWG">MCWG – Motorcycle with Gear</option><option value="TRANS">Transport Vehicle</option></select></div>
+            <div class="fm-group"><label class="fm-label">Issuing RTO</label><input class="fm-input" type="text" id="inp_dl_rto" placeholder="e.g. Nashik RTO" disabled/></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>🚗 Primary Vehicle Registration</h3></div>
+        <div class="card-bd">
+          <div class="form-grid">
+            <div class="fm-group"><label class="fm-label">Vehicle Registration Number</label><input class="fm-input" type="text" id="inp_vehicle_reg" placeholder="e.g. MH 15 AB 1234" maxlength="15" oninput="this.value=this.value.toUpperCase()" disabled/></div>
+            <div class="fm-group"><label class="fm-label">Vehicle Type</label><select class="fm-select" id="inp_vehicle_type" disabled><option value="">Select type</option><option>Mini Truck (1-3 ton)</option><option>Medium Truck (5-8 ton)</option><option>Large Truck (10+ ton)</option><option>Tractor Trolley</option><option>Pickup Truck</option><option>Tractor</option><option>Other</option></select></div>
+            <div class="fm-group"><label class="fm-label">Registration Expiry</label><input class="fm-input" type="date" id="inp_vehicle_reg_expiry" disabled/></div>
+            <div class="fm-group"><label class="fm-label">Insurance Number</label><input class="fm-input" type="text" id="inp_insurance" placeholder="Vehicle insurance policy number" disabled/></div>
+          </div>
+        </div>
+        <div class="save-bar" id="documentsSaveBar" style="display:none">
+          <button type="button" class="btn-cancel" onclick="cancelDocEdit()">Cancel</button>
+          <button type="submit" class="btn-save" id="docSaveBtn">💾 Save Documents</button>
+        </div>
+      </div>
+      <div style="text-align:right;margin-top:-10px;margin-bottom:20px">
+        <button type="button" onclick="toggleDocEdit()" id="docEditBtn" style="padding:8px 18px;border-radius:9px;background:linear-gradient(135deg,#e8f5ee,#d4f0e0);color:var(--primary-mid);border:1.5px solid var(--primary-pale);font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer">✏️ Edit Documents</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── SECURITY ── -->
+  <div class="tab-panel" id="tab-security">
+    <div class="card">
+      <div class="card-hd"><h3>🔒 Change Password</h3></div>
+      <div class="card-bd">
+
+        <!-- Step 1 — Fill passwords -->
+        <div id="sp_pwStep1" style="max-width:420px">
+          <div class="fm-group pw-show">
+            <label class="fm-label">Current Password</label>
+            <input class="fm-input" type="password" id="inp_cur_pw" placeholder="Current password"/>
+            <button type="button" class="pw-toggle" onclick="togglePw('inp_cur_pw',this)">👁</button>
+          </div>
+          <div class="fm-group pw-show">
+            <label class="fm-label">New Password</label>
+            <input class="fm-input" type="password" id="inp_new_pw" placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special" oninput="checkPwStrength(this.value)"/>
+            <button type="button" class="pw-toggle" onclick="togglePw('inp_new_pw',this)">👁</button>
+            <div class="pw-strength"><div class="pw-bar" id="pb1"></div><div class="pw-bar" id="pb2"></div><div class="pw-bar" id="pb3"></div><div class="pw-bar" id="pb4"></div></div>
+            <div class="pw-hint" id="pwHint" style="color:var(--text-light)">Enter password to check strength</div>
+          </div>
+          <div class="fm-group pw-show">
+            <label class="fm-label">Confirm New Password</label>
+            <input class="fm-input" type="password" id="inp_conf_pw" placeholder="Re-enter new password"/>
+            <button type="button" class="pw-toggle" onclick="togglePw('inp_conf_pw',this)">👁</button>
+          </div>
+          <button type="button" class="btn-save" style="width:100%" id="spSendOtpBtn" onclick="spSendOtp()">📧 Send OTP to Email</button>
+        </div>
+
+        <!-- Step 2 — OTP -->
+        <div class="otp-step" id="sp_pwStep2" style="max-width:420px">
+          <div class="otp-step-title">🔑 Verify with OTP</div>
+          <div class="otp-step-sub" id="spOtpSentMsg">A 6-digit OTP has been sent to your registered email address.</div>
+          <div class="otp-info-strip"><span>🛡️</span><span>Enter the OTP to confirm it's you before the password is changed.</span></div>
+          <input class="otp-input" id="sp_otp" type="text" maxlength="6" placeholder="──────" oninput="this.value=this.value.replace(/\D/g,'')"/>
+          <div class="otp-timer" id="spOtpTimerWrap">⏱️ OTP expires in <span id="spOtpTimerVal">10:00</span></div>
+          <button class="otp-resend" id="spResendOtpBtn" onclick="spSendOtp(true)" disabled>Resend OTP</button>
+          <div class="otp-actions">
+            <button type="button" class="btn-save" id="spChangePwBtn" onclick="spChangePassword()">🔐 Verify & Change Password</button>
+            <button type="button" class="btn-cancel" onclick="spCancelOtp()">✕ Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="danger-zone">
+      <div class="dz-title">⚠️ Danger Zone</div>
+      <div class="dz-desc">Permanently delete your account and all service listings, bookings, and data. This cannot be undone.</div>
+      <button class="btn-danger" onclick="showModal('deleteModal')">🗑️ Delete My Account</button>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-hd danger"><h2>⚠️ Delete Account</h2><button class="modal-close" onclick="closeModal('deleteModal')">✕</button></div>
+    <div class="modal-bd">
+      <div class="info-box red" style="margin-bottom:16px"><span class="info-box-icon">🚨</span><span>All service listings, bookings, notifications and profile will be <strong>permanently deleted</strong>.</span></div>
+      <div class="fm-group pw-show" style="margin-bottom:16px"><label class="fm-label">Confirm with your password</label><input class="fm-input" type="password" id="deletePassword" placeholder="Enter your password"/><button type="button" class="pw-toggle" onclick="togglePw('deletePassword',this)">👁</button></div>
+      <div style="display:flex;gap:10px"><button class="btn-cancel" style="flex:1;padding:11px" onclick="closeModal('deleteModal')">Cancel</button><button class="btn-danger" style="flex:1;padding:11px" onclick="deleteAccount()">🗑️ Delete Forever</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='service_profile.js') }}"></script>
+</body>
+</html>

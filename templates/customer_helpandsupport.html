@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Help & Support – AgroHub</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='customer_helpandsupport.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="/dashboard/customer">
+    <div class="nav-logo-icon">🥬</div>
+    <div class="nav-logo-text">
+      <div class="brand">AgroHub</div>
+      <div class="sub">Farm to You</div>
+    </div>
+  </a>
+  <a class="nav-back" href="/dashboard/customer">← Back to Dashboard</a>
+</nav>
+
+<div class="layout">
+<main>
+
+  <!-- HERO -->
+  <div class="hero fadeup">
+    <h1>Help & Support 🌿</h1>
+    <p>We're here to help. Search for answers or reach out to our team.</p>
+    <div class="hero-search">
+      <input type="text" id="faqSearchInput" placeholder="Search FAQs — e.g. how to track order…" oninput="filterFAQ(this.value)"/>
+      <button onclick="filterFAQ(document.getElementById('faqSearchInput').value)">🔍 Search</button>
+    </div>
+    <div class="hero-stats">
+      <span class="hero-stat">✅ Avg response time: under 24 hrs</span>
+      <span class="hero-stat">📋 <span id="faqCount">–</span> FAQs available</span>
+      <span class="hero-stat">🎫 <span id="myTicketCount">–</span> my tickets</span>
+    </div>
+  </div>
+
+  <!-- QUICK CONTACT -->
+  <div class="contact-row fadeup" style="animation-delay:.05s">
+    <a class="contact-card" href="tel:18001234567">
+      <div class="contact-icon orange">📞</div>
+      <div class="contact-info">
+        <div class="ci-title">Call Us</div>
+        <div class="ci-sub">Mon – Sat, 9 AM – 6 PM</div>
+        <div class="ci-val">1800-123-4567 (Toll Free)</div>
+      </div>
+    </a>
+    <a class="contact-card" href="mailto:support@AgroHub.in">
+      <div class="contact-icon blue">📧</div>
+      <div class="contact-info">
+        <div class="ci-title">Email Us</div>
+        <div class="ci-sub">We reply within 24 hrs</div>
+        <div class="ci-val">support@AgroHub.in</div>
+      </div>
+    </a>
+    <div class="contact-card" onclick="scrollToTicket()">
+      <div class="contact-icon green">🎫</div>
+      <div class="contact-info">
+        <div class="ci-title">Raise a Ticket</div>
+        <div class="ci-sub">Track your issue end-to-end</div>
+        <div class="ci-val">Submit below ↓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICE STATUS -->
+  <div class="status-banner ok fadeup" style="animation-delay:.1s">
+    <span class="sb-icon">🟢</span>
+    <span class="sb-text">All systems operational — Orders, payments & notifications are running smoothly.</span>
+  </div>
+
+  <!-- FAQ + TICKET FORM -->
+  <div class="two-col fadeup" style="animation-delay:.12s">
+
+    <!-- FAQ PANEL -->
+    <div class="card" id="faqPanel">
+      <div class="card-hd">
+        <h3>❓ Frequently Asked Questions</h3>
+        <span id="faqCountInner">Loading…</span>
+      </div>
+      <div class="faq-tabs" id="faqTabs">
+        <span class="faq-tab active" data-cat="all" onclick="setFaqTab(this,'all')">All</span>
+        <span class="faq-tab" data-cat="orders" onclick="setFaqTab(this,'orders')">Orders</span>
+        <span class="faq-tab" data-cat="listings" onclick="setFaqTab(this,'listings')">Listings</span>
+        <span class="faq-tab" data-cat="account" onclick="setFaqTab(this,'account')">Account</span>
+        <span class="faq-tab" data-cat="payments" onclick="setFaqTab(this,'payments')">Payments</span>
+        <span class="faq-tab" data-cat="profile" onclick="setFaqTab(this,'profile')">Profile</span>
+      </div>
+      <div class="faq-list" id="faqList">
+        <div class="loading-state">⏳ Loading FAQs…</div>
+      </div>
+    </div>
+
+    <!-- TICKET FORM -->
+    <div class="card" id="ticketFormPanel">
+      <div class="card-hd">
+        <h3>🎫 Submit a Support Ticket</h3>
+        <span>We'll respond within 24 hrs</span>
+      </div>
+      <div class="card-bd">
+        <form id="ticketForm" onsubmit="submitTicket(event)">
+          <div class="fm-group">
+            <label class="fm-label">Category</label>
+            <select class="fm-select" id="tk_category">
+              <option value="order">📦 Order Issue</option>
+              <option value="payment">💳 Payment</option>
+              <option value="product">🥦 Product / Listing</option>
+              <option value="account">👤 Account</option>
+              <option value="delivery">🚚 Delivery</option>
+              <option value="refund">↩️ Refund</option>
+              <option value="general">🌿 General Enquiry</option>
+            </select>
+          </div>
+          <div class="fm-row">
+            <div class="fm-group">
+              <label class="fm-label">Priority</label>
+              <select class="fm-select" id="tk_priority">
+                <option value="low">🟢 Low</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="high">🔴 High</option>
+              </select>
+            </div>
+            <div class="fm-group">
+              <label class="fm-label">Order ID (optional)</label>
+              <input class="fm-input" type="text" id="tk_order_ref" placeholder="e.g. KB-45"/>
+            </div>
+          </div>
+          <div class="fm-group">
+            <label class="fm-label">Subject</label>
+            <input class="fm-input" type="text" id="tk_subject" placeholder="Brief description of your issue" maxlength="200" required oninput="updateCharCount(this,'subjectChars',200)"/>
+            <div class="char-count"><span id="subjectChars">0</span>/200</div>
+          </div>
+          <div class="fm-group">
+            <label class="fm-label">Describe Your Issue</label>
+            <textarea class="fm-textarea" id="tk_message" placeholder="Please describe your issue in detail. Include any order numbers, dates, or relevant information…" maxlength="2000" required oninput="updateCharCount(this,'msgChars',2000)"></textarea>
+            <div class="char-count"><span id="msgChars">0</span>/2000</div>
+          </div>
+          <button type="submit" class="btn-main" id="submitTicketBtn">🎫 Submit Ticket</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY TICKETS -->
+  <div class="card fadeup" style="animation-delay:.15s;margin-bottom:24px" id="myTicketsCard">
+    <div class="card-hd">
+      <h3>📋 My Support Tickets</h3>
+      <a style="font-size:12px;color:var(--saffron);font-weight:700;cursor:pointer" onclick="loadTickets()">Refresh ↻</a>
+    </div>
+    <div id="ticketsList" style="padding:6px 20px 14px">
+      <div class="loading-state">⏳ Loading tickets…</div>
+    </div>
+  </div>
+
+  <!-- QUICK TIPS -->
+  <div class="card fadeup" style="animation-delay:.18s;margin-bottom:0">
+    <div class="card-hd"><h3>💡 Quick Buying Tips</h3></div>
+    <div class="card-bd">
+      <div class="tip-quick"><div class="tip-emoji">🔍</div><div class="tip-quick-info"><div class="tq-title">Track your order in the dashboard</div><div class="tq-sub">Enter your Order ID in the tracker on the home page to check delivery status in real time.</div></div></div>
+      <div class="tip-quick"><div class="tip-emoji">📦</div><div class="tip-quick-info"><div class="tq-title">Save your delivery address</div><div class="tq-sub">Add your address in Profile Settings once, and it will auto-fill at checkout every time.</div></div></div>
+      <div class="tip-quick"><div class="tip-emoji">🔔</div><div class="tip-quick-info"><div class="tq-title">Enable notifications</div><div class="tq-sub">Turn on order notifications in Settings to receive live updates when your order status changes.</div></div></div>
+      <div class="tip-quick"><div class="tip-emoji">💬</div><div class="tip-quick-info"><div class="tq-title">Contact farmer directly</div><div class="tq-sub">For produce-specific queries, you can reach the farmer via the listing detail page after placing an order.</div></div></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='customer_helpandsupport.js') }}"></script>
+</body>
+</html>

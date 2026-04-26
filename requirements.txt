@@ -1,0 +1,8 @@
+Flask==2.3.3
+Flask-CORS==4.0.0
+Flask-Mail==0.10.0
+bcrypt==4.0.1
+python-dotenv==1.0.0
+Werkzeug==2.3.7
+itsdangerous==2.2.0
+cloudinary==1.36.0

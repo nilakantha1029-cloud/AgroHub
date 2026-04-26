@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>My Profile – AgroHub</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/dashboard/farmer">
+    <div class="nav-logo-icon">🌾</div>
+    <div class="nav-logo-text"><span class="brand">AgroHub</span><span class="tagline">Farmer Platform</span></div>
+  </a>
+  <a class="nav-back" href="/dashboard/farmer">← Back to Dashboard</a>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-title">My Profile</div>
+  <div class="page-sub">Manage your personal information, identification, and account security</div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('personal')">👤 Personal Info</button>
+    <button class="tab" onclick="switchTab('farm')">🌾 Farm Details</button>
+    <button class="tab" onclick="switchTab('identification')">🪪 Identification</button>
+    <button class="tab" onclick="switchTab('security')" id="securityTab">🔒 Change Password</button>
+  </div>
+
+  <!-- ── PERSONAL INFO ── -->
+  <div class="card visible" id="tab-personal">
+    <div class="avatar-section">
+      <div class="avatar-big" id="profileAvatarBig">
+        <span id="profileInitialsBig">--</span>
+        <div class="avatar-upload-btn" onclick="document.getElementById('profileImgInput').click()">📷</div>
+      </div>
+      <input type="file" id="profileImgInput" accept="image/*" style="display:none" onchange="previewProfileImg(this)"/>
+      <div class="avatar-info">
+        <h4 id="profileFullName">Loading…</h4>
+        <p id="profileRole">Farmer</p>
+        <div class="member-since">🗓️ Member since <span id="memberSince">—</span></div>
+        <div style="margin-top:8px" id="profileVerBadge"></div>
+      </div>
+    </div>
+    <div class="card-bd">
+      <form onsubmit="savePersonalInfo(event)">
+        <div class="section-gap">
+          <div class="section-title">Basic Information</div>
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label">First Name *</label><input class="form-input" id="p_first_name" type="text" placeholder="First name" required/></div>
+            <div class="form-group"><label class="form-label">Last Name *</label><input class="form-input" id="p_last_name" type="text" placeholder="Last name" required/></div>
+            <div class="form-group"><label class="form-label">Gender</label><select class="form-select" id="p_gender"><option value="">Select gender</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option><option value="prefer_not">Prefer not to say</option></select></div>
+            <div class="form-group"><label class="form-label">Date of Birth</label><input class="form-input" id="p_dob" type="date"/></div>
+          </div>
+        </div>
+        <div class="section-gap">
+          <div class="section-title">Contact Information</div>
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" id="p_email" type="email" disabled/><div style="font-size:11px;color:var(--text-light);margin-top:4px">Email cannot be changed</div></div>
+            <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="p_phone" type="tel" placeholder="10-digit mobile number"/></div>
+          </div>
+        </div>
+        <div class="section-gap">
+          <div class="section-title">Address</div>
+          <div class="form-grid full"><div class="form-group"><label class="form-label">Street / Village Address</label><input class="form-input" id="p_address" type="text" placeholder="House no., street, locality"/></div></div>
+          <div class="form-grid three" style="margin-top:14px">
+            <div class="form-group"><label class="form-label">Village / Town</label><input class="form-input" id="p_village" type="text" placeholder="Village or town name"/></div>
+            <div class="form-group"><label class="form-label">District</label><input class="form-input" id="p_district" type="text" placeholder="e.g. Nashik"/></div>
+            <div class="form-group"><label class="form-label">State</label><select class="form-select" id="p_state"><option value="">Select state</option><option>Maharashtra</option><option>Telangana</option><option>Karnataka</option><option>Odisha</option><option>Punjab</option><option>Haryana</option><option>Uttar Pradesh</option><option>Madhya Pradesh</option><option>Rajasthan</option><option>Gujarat</option><option>Tamil Nadu</option><option>Andhra Pradesh</option><option>West Bengal</option><option>Bihar</option><option>Jharkhand</option></select></div>
+          </div>
+          <div class="form-grid" style="margin-top:14px"><div class="form-group"><label class="form-label">PIN Code</label><input class="form-input" id="p_pincode" type="text" maxlength="6" placeholder="6-digit PIN"/></div></div>
+        </div>
+        <div class="section-gap">
+          <div class="section-title">Bio / About</div>
+          <div class="form-group"><label class="form-label">Short Bio</label><textarea class="form-textarea" id="p_bio" placeholder="Tell buyers about yourself…"></textarea></div>
+        </div>
+        <div class="btn-row"><button type="submit" class="btn btn-primary" id="savePersonalBtn">💾 Save Changes</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── FARM DETAILS ── -->
+  <div class="card" id="tab-farm">
+    <div class="card-hd"><h3>🌾 Farm Details</h3></div>
+    <div class="card-bd">
+      <form onsubmit="saveFarmInfo(event)">
+        <div class="section-gap">
+          <div class="section-title">Farm Information</div>
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label">Farm Size</label><select class="form-select" id="f_farm_size"><option value="">Select farm size</option><option value="< 1 acre">Less than 1 acre</option><option value="1-2 acres">1–2 acres</option><option value="2-5 acres">2–5 acres</option><option value="5-10 acres">5–10 acres</option><option value="10-25 acres">10–25 acres</option><option value="25+ acres">25+ acres</option></select></div>
+            <div class="form-group"><label class="form-label">Farm Type</label><select class="form-select" id="f_farm_type"><option value="">Select type</option><option value="Subsistence farming">Subsistence farming</option><option value="Commercial farming">Commercial farming</option><option value="Organic farming">Organic farming</option><option value="Mixed farming">Mixed farming</option><option value="Horticulture">Horticulture</option><option value="Dairy farming">Dairy farming</option></select></div>
+          </div>
+        </div>
+        <div class="btn-row"><button type="submit" class="btn btn-primary" id="saveFarmBtn">💾 Save Farm Details</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── IDENTIFICATION ── -->
+  <div class="card" id="tab-identification">
+    <div class="card-hd"><h3>🪪 Identification Documents</h3></div>
+    <div class="card-bd">
+      <div style="background:#e8f5ef;border:1px solid var(--green-pale);border-radius:10px;padding:14px 16px;margin-bottom:22px;font-size:13px;color:var(--green-dark)">🔒 Your identification information is encrypted and stored securely.</div>
+      <form onsubmit="saveIdentification(event)">
+        <div class="section-gap">
+          <div class="section-title">Government ID</div>
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label">Aadhar Number</label><input class="form-input" id="id_aadhar" type="text" maxlength="14" placeholder="XXXX XXXX XXXX" oninput="formatAadhar(this)"/><div style="font-size:11px;color:var(--text-light);margin-top:4px">12-digit Aadhar number</div></div>
+            <div class="form-group"><label class="form-label">PAN Number</label><input class="form-input" id="id_pan" type="text" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"/><div style="font-size:11px;color:var(--text-light);margin-top:4px">10-character PAN card number</div></div>
+          </div>
+        </div>
+        <div class="btn-row"><button type="submit" class="btn btn-primary" id="saveIdBtn">💾 Save Identification</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── CHANGE PASSWORD ── -->
+  <div class="card" id="tab-security">
+    <div class="card-hd"><h3>🔒 Change Password</h3></div>
+    <div class="card-bd">
+      <div style="max-width:440px">
+
+        <!-- Step 1 — Passwords -->
+        <div id="pwStep1">
+          <div class="form-group section-gap">
+            <label class="form-label">Current Password</label>
+            <input class="form-input" id="s_current" type="password" placeholder="Your current password"/>
+          </div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label class="form-label">New Password</label>
+            <input class="form-input" id="s_new" type="password" placeholder="New password" oninput="checkStrength(this.value)"/>
+            <div class="pwd-strength" id="pwdStrength"></div>
+            <div class="pwd-hint" id="pwdHint">Min 8 chars · 1 uppercase · 1 number · 1 special character</div>
+          </div>
+          <div class="form-group" style="margin-bottom:20px">
+            <label class="form-label">Confirm New Password</label>
+            <input class="form-input" id="s_confirm" type="password" placeholder="Re-enter new password"/>
+          </div>
+          <button type="button" class="btn btn-primary" id="sendOtpBtn" onclick="sendOtp()">📧 Send OTP to Email</button>
+        </div>
+
+        <!-- Step 2 — OTP Verification -->
+        <div class="otp-step" id="pwStep2">
+          <div class="otp-step-title">🔑 Enter OTP</div>
+          <div class="otp-step-sub" id="otpSentMsg">A 6-digit OTP has been sent to your registered email.</div>
+
+          <div class="otp-info-strip">
+            <span>🛡️</span>
+            <span>Enter the OTP sent to your email to verify it's really you before changing the password.</span>
+          </div>
+
+          <div class="otp-input-wrap">
+            <input class="otp-input" id="s_otp" type="text" maxlength="6" placeholder="──────" oninput="this.value=this.value.replace(/\D/g,'')"/>
+          </div>
+
+          <div class="otp-timer" id="otpTimerWrap">
+            ⏱️ OTP expires in <span id="otpTimerVal">10:00</span>
+          </div>
+          <div style="margin-top:8px;margin-bottom:16px">
+            <button class="otp-resend" id="resendOtpBtn" onclick="sendOtp(true)" disabled>Resend OTP</button>
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button type="button" class="btn btn-primary" id="changePwdBtn" onclick="changePassword()">🔐 Verify & Change Password</button>
+            <button type="button" class="btn btn-secondary" onclick="cancelOtp()">✕ Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='profile.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>AgroHub – Research & Agri Tips</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='agri_tips.css') }}">
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/dashboard/farmer">
+    <div class="nav-logo-icon">🌾</div>
+    <div class="nav-logo-text"><span class="brand">AgroHub</span><span class="tagline">Farmer Platform</span></div>
+  </a>
+  <div class="nav-spacer"></div>
+  <a class="nav-back" href="/dashboard/farmer">← Back to Dashboard</a>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="toc-title">Contents</div>
+    <a class="toc-item active" href="#soil-science" onclick="setActive(this)">
+      <span class="toc-icon">🌍</span> Soil Science
+    </a>
+    <a class="toc-item" href="#water-management" onclick="setActive(this)">
+      <span class="toc-icon">🌧️</span> Water Management
+    </a>
+    <a class="toc-item" href="#pest-control" onclick="setActive(this)">
+      <span class="toc-icon">🐛</span> Pest Control
+    </a>
+    <a class="toc-item" href="#seeds-varieties" onclick="setActive(this)">
+      <span class="toc-icon">🌱</span> Seeds & Varieties
+    </a>
+    <a class="toc-item" href="#weather-advisory" onclick="setActive(this)">
+      <span class="toc-icon">☀️</span> Weather Advisory
+    </a>
+    <a class="toc-item" href="#fertilization" onclick="setActive(this)">
+      <span class="toc-icon">🧪</span> Fertilization
+    </a>
+    <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--cream-dark)">
+      <div style="font-size:10px;color:var(--text-light);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Quick Links</div>
+      <a class="toc-item" href="/sellmygoods" style="font-size:12px"><span class="toc-icon">🛒</span> Sell My Goods</a>
+      <a class="toc-item" href="/book-vehicle" style="font-size:12px"><span class="toc-icon">🚚</span> Book Vehicle</a>
+      <a class="toc-item" href="/help-support" style="font-size:12px"><span class="toc-icon">❓</span> Help & Support</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="hero-badge">📚 Research & Knowledge Hub</div>
+      <h1>Agricultural Research<br>& Expert Agri Tips</h1>
+      <p>Science-backed farming guidance for Indian farmers — covering soil health, water conservation, pest management, crop varieties, weather preparedness, and modern fertilization techniques.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hs-val">6</div><div class="hs-lab">Topic Areas</div></div>
+        <div class="hero-stat"><div class="hs-val">18+</div><div class="hs-lab">Research Articles</div></div>
+        <div class="hero-stat"><div class="hs-val">ICAR</div><div class="hs-lab">Verified Sources</div></div>
+        <div class="hero-stat"><div class="hs-val">2025</div><div class="hs-lab">Updated Data</div></div>
+      </div>
+    </div>
+
+    <div class="content-wrap">
+      <!-- SEARCH -->
+      <div class="search-bar">
+        <span class="search-bar-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search tips — soil pH, drip irrigation, neem oil…" oninput="filterSections()"/>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- 1. SOIL SCIENCE -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="section-block" id="soil-science">
+        <div class="section-header">
+          <div class="section-icon soil">🌍</div>
+          <div>
+            <div class="section-title">Soil Science</div>
+            <div class="section-subtitle">Understanding and improving your farm's foundation</div>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#a8855c33,#8B6914 100%)">
+            <div class="img-placeholder">
+              <span>🌍</span>
+              <div style="font-size:13px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.5)">Soil pH Testing</div>
+            </div>
+            <div class="img-caption">📍 Field Study, Maharashtra APMC</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Soil Science · Featured</div>
+            <div class="article-title">Improve Soil pH for Better Onion Yields</div>
+            <div class="article-intro">Onions are sensitive to soil acidity. Research from ICAR-NRC Onion & Garlic (Pune) confirms that maintaining pH between 6.0 and 7.0 can increase yields by up to 18% in Maharashtra's Nashik region.</div>
+            <div class="article-content">
+              <h4>Why Soil pH Matters for Onions</h4>
+              <p>Soil pH directly controls nutrient availability. In acidic soils (pH below 6.0), phosphorus, calcium, and magnesium become less available to plants — nutrients critical for onion bulb development. In Nashik's basalt-heavy soils, pH often dips to 5.4–5.8 after monsoon leaching.</p>
+
+              <div class="key-facts">
+                <div class="key-fact"><div class="kf-val">6.0–7.0</div><div class="kf-lab">Optimal pH Range</div></div>
+                <div class="key-fact"><div class="kf-val">18%</div><div class="kf-lab">Yield Increase Possible</div></div>
+                <div class="key-fact"><div class="kf-val">2–3 t/ha</div><div class="kf-lab">Lime Requirement</div></div>
+              </div>
+
+              <h4>pH Scale Visual Reference</h4>
+              <div style="background:var(--cream);border-radius:10px;padding:16px;margin:8px 0">
+                <div style="display:flex;gap:4px;height:36px;border-radius:8px;overflow:hidden">
+                  <div style="flex:1;background:#ef4444;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700">4.5<br>Very Acid</div>
+                  <div style="flex:1;background:#f97316;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700">5.0<br>Acid</div>
+                  <div style="flex:1;background:#eab308;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700">5.5<br>Acidic</div>
+                  <div style="flex:1;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;outline:3px solid #1a3a2a">6.5<br>✓ Ideal</div>
+                  <div style="flex:1;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700">7.0<br>Neutral</div>
+                  <div style="flex:1;background:#eab308;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700">7.5<br>Alkaline</div>
+                  <div style="flex:1;background:#ef4444;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700">8.0+<br>Too High</div>
+                </div>
+                <div style="font-size:10px;color:var(--text-light);margin-top:6px;text-align:center">Green zone = Ideal for onions · Red zones = Yields drop by 15–25%</div>
+              </div>
+
+              <h4>How to Correct Acidic Soil</h4>
+              <table class="info-table">
+                <thead><tr><th>Amendment</th><th>Application Rate</th><th>Effect</th><th>Time to Act</th></tr></thead>
+                <tbody>
+                  <tr><td>Agricultural Lime (CaCO₃)</td><td>2–3 t/ha</td><td>Raises pH by 1.0</td><td>3–6 months</td></tr>
+                  <tr><td>Dolomite Lime</td><td>1.5–2 t/ha</td><td>Adds Mg + Ca</td><td>2–4 months</td></tr>
+                  <tr><td>Wood Ash</td><td>500–800 kg/ha</td><td>Quick K + pH boost</td><td>2–4 weeks</td></tr>
+                  <tr><td>Vermicompost</td><td>5 t/ha</td><td>Buffers pH + nutrition</td><td>Ongoing</td></tr>
+                </tbody>
+              </table>
+
+              <div class="tips-box">
+                <div class="tb-title">✅ Best Practices for Nashik Farmers</div>
+                <ul>
+                  <li>Test soil pH every season using a soil testing kit (₹200–500 at Krishi Kendra)</li>
+                  <li>Apply lime 30–45 days before transplanting for best results</li>
+                  <li>Do not apply lime and chemical fertilizers on the same day</li>
+                  <li>Irrigate after lime application to help it incorporate into soil</li>
+                  <li>Keep records of each field's pH for trending over years</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card full">
+          <div class="article-body">
+            <div class="article-tag">Soil Science</div>
+            <div class="article-title">Soil Organic Matter: The Foundation of Productive Farming</div>
+            <div class="article-intro">Increasing soil organic matter (SOM) from 0.5% to just 1.5% can triple water-holding capacity and reduce fertilizer needs by 30%. Here's how Maharashtra farmers are doing it.</div>
+            <div class="article-content">
+              <h4>Simple Methods to Build SOM</h4>
+              <ul>
+                <li><strong>Green manuring:</strong> Dhaincha (Sesbania) or cowpea incorporated at 45 days adds 30–40 kg N/ha and 1–2 tonnes organic matter</li>
+                <li><strong>Crop residue retention:</strong> Chop wheat/sorghum stalks and incorporate instead of burning — adds 800–1200 kg/ha organic carbon annually</li>
+                <li><strong>FYM application:</strong> Apply 10–12 tonnes/ha of well-decomposed farmyard manure before kharif planting</li>
+                <li><strong>Bichar (Biochar):</strong> 1–2 t/ha biochar from crop waste improves SOM retention in light soils</li>
+              </ul>
+
+              <div class="warning-box">
+                <div class="wb-title">⚠ Avoid These Common Mistakes</div>
+                <p>Burning crop residue destroys organic matter and beneficial microbes, releasing CO₂. Nashik district loses an estimated ₹800 crore in soil value annually from residue burning. Switch to mulching or incorporation to save money and improve yields over time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- 2. WATER MANAGEMENT -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="section-block" id="water-management">
+        <div class="section-header">
+          <div class="section-icon rain">🌧️</div>
+          <div>
+            <div class="section-title">Water Management</div>
+            <div class="section-subtitle">Efficient irrigation for maximum yield with minimum water</div>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#bfdbfe,#1d4ed8)">
+            <div class="img-placeholder">
+              <span>🌧️</span>
+              <div style="font-size:13px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.5)">Drip Irrigation Setup</div>
+            </div>
+            <div class="img-caption">📍 Tomato Farm, Nashik</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Water Management · Featured</div>
+            <div class="article-title">Drip Irrigation for Tomatoes in Dry Season</div>
+            <div class="article-intro">Drip irrigation reduces water usage by 40–50% compared to flood irrigation while maintaining — and often improving — fruit size, uniformity, and marketable yield.</div>
+            <div class="article-content">
+              <div class="key-facts">
+                <div class="key-fact"><div class="kf-val">40–50%</div><div class="kf-lab">Water Saved</div></div>
+                <div class="key-fact"><div class="kf-val">25%</div><div class="kf-lab">Yield Increase</div></div>
+                <div class="key-fact"><div class="kf-val">3 yr</div><div class="kf-lab">Payback Period</div></div>
+              </div>
+
+              <h4>Drip System Setup for 1 Acre Tomatoes</h4>
+              <div class="drip-diagram">
+                <div style="font-size:13px;font-weight:600;color:#1e40af;margin-bottom:8px">System Components</div>
+                <div class="drip-row">
+                  <div class="drip-item"><div class="drip-icon">⛽</div><div>Main Line<br><small>75mm HDPE pipe</small></div></div>
+                  <div class="drip-item"><div style="font-size:20px;margin-bottom:4px">→</div></div>
+                  <div class="drip-item"><div class="drip-icon">🔧</div><div>Filter<br><small>120-mesh screen</small></div></div>
+                  <div class="drip-item"><div style="font-size:20px;margin-bottom:4px">→</div></div>
+                  <div class="drip-item"><div class="drip-icon">📏</div><div>Sub-main<br><small>40mm pipe</small></div></div>
+                  <div class="drip-item"><div style="font-size:20px;margin-bottom:4px">→</div></div>
+                  <div class="drip-item"><div class="drip-icon">💧</div><div>Drippers<br><small>2–4 L/hr</small></div></div>
+                </div>
+              </div>
+
+              <h4>Irrigation Schedule for Tomatoes</h4>
+              <table class="info-table">
+                <thead><tr><th>Growth Stage</th><th>Water Requirement</th><th>Frequency</th><th>Duration/Day</th></tr></thead>
+                <tbody>
+                  <tr><td>Transplanting (0–15 days)</td><td>High</td><td>Daily</td><td>45–60 min</td></tr>
+                  <tr><td>Vegetative (15–45 days)</td><td>Moderate</td><td>Every 2 days</td><td>30–40 min</td></tr>
+                  <tr><td>Flowering (45–65 days)</td><td>High</td><td>Daily</td><td>40–50 min</td></tr>
+                  <tr><td>Fruiting (65–90 days)</td><td>Very High</td><td>Daily</td><td>50–70 min</td></tr>
+                  <tr><td>Ripening (90–110 days)</td><td>Low</td><td>Every 3 days</td><td>20–30 min</td></tr>
+                </tbody>
+              </table>
+
+              <div class="tips-box">
+                <div class="tb-title">✅ Subsidy Available Under PM-KUSUM</div>
+                <ul>
+                  <li>Maharashtra government provides 55% subsidy on drip systems for farmers under 2 acres</li>
+                  <li>Apply through your nearest Krishi Vigyan Kendra or District Agriculture Office</li>
+                  <li>Documents needed: 7/12 extract, Aadhaar, bank passbook copy</li>
+                  <li>Processing time: 30–45 days</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card full">
+          <div class="article-body">
+            <div class="article-tag">Water Management</div>
+            <div class="article-title">Rainwater Harvesting for Small Farms</div>
+            <div class="article-intro">A simple farm pond of 20m × 20m × 3m depth can store 1.2 million litres — enough to irrigate 2 acres of vegetables through a 60-day dry spell.</div>
+            <div class="article-content">
+              <ul>
+                <li><strong>Farm Pond Construction Cost:</strong> ₹60,000–80,000 for 20×20×3m; 50% subsidy under NHM</li>
+                <li><strong>Plastic lining:</strong> 500-micron HDPE liner reduces seepage losses by 95%</li>
+                <li><strong>Recharge wells:</strong> Dig 3–4 recharge pits (1m dia × 3m deep) around the pond to refill during monsoon runoff</li>
+                <li><strong>Return period:</strong> 2–3 seasons with saved water for one additional rabi crop worth ₹40,000–60,000</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- 3. PEST CONTROL -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="section-block" id="pest-control">
+        <div class="section-header">
+          <div class="section-icon pest">🐛</div>
+          <div>
+            <div class="section-title">Pest Control</div>
+            <div class="section-subtitle">Organic and integrated approaches to protect your crops</div>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#fee2e2,#7f1d1d)">
+            <div class="img-placeholder">
+              <span>🐛</span>
+              <div style="font-size:13px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.5)">Powdery Mildew on Chilli</div>
+            </div>
+            <div class="img-caption">📍 Chilli Field, Dindori</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Pest Control · Featured</div>
+            <div class="article-title">Organic Control for Powdery Mildew on Chillies</div>
+            <div class="article-intro">Powdery mildew (Leveillula taurica) can reduce chilli yield by 30–50% in humid conditions. Neem oil spray at 5ml/L every 7 days has shown 78% suppression efficiency in IARI trials — comparable to synthetic fungicides at a fraction of the cost.</div>
+            <div class="article-content">
+              <h4>Identifying Powdery Mildew</h4>
+              <div class="pest-timeline">
+                <div class="pest-stage">
+                  <div class="ps-icon">🌿</div>
+                  <div class="ps-name">Early Stage</div>
+                  <div class="ps-sub">White powdery spots on upper leaf surface</div>
+                </div>
+                <div class="pest-stage">
+                  <div class="ps-icon">🍂</div>
+                  <div class="ps-name">Spreading</div>
+                  <div class="ps-sub">Spots coalesce, leaves yellow and curl</div>
+                </div>
+                <div class="pest-stage">
+                  <div class="ps-icon">🍁</div>
+                  <div class="ps-name">Advanced</div>
+                  <div class="ps-sub">Full leaf coating, premature drop</div>
+                </div>
+                <div class="pest-stage">
+                  <div class="ps-icon">🌶️</div>
+                  <div class="ps-name">Fruit Impact</div>
+                  <div class="ps-sub">Small, discoloured, unmarketable fruits</div>
+                </div>
+              </div>
+
+              <div class="key-facts">
+                <div class="key-fact"><div class="kf-val">₹120/L</div><div class="kf-lab">Neem Oil Cost</div></div>
+                <div class="key-fact"><div class="kf-val">78%</div><div class="kf-lab">Suppression Rate</div></div>
+                <div class="key-fact"><div class="kf-val">7 days</div><div class="kf-lab">Spray Interval</div></div>
+              </div>
+
+              <h4>Spray Preparation Guide</h4>
+              <table class="info-table">
+                <thead><tr><th>Ingredient</th><th>Quantity per 10L</th><th>Purpose</th></tr></thead>
+                <tbody>
+                  <tr><td>Neem oil (cold pressed)</td><td>50 ml</td><td>Active antifungal ingredient</td></tr>
+                  <tr><td>Liquid soap / Neem soap</td><td>5 ml</td><td>Emulsifier to mix oil in water</td></tr>
+                  <tr><td>Water (warm preferred)</td><td>10 L</td><td>Carrier</td></tr>
+                  <tr><td>Garlic extract (optional)</td><td>10 ml</td><td>Enhances repellent effect</td></tr>
+                </tbody>
+              </table>
+
+              <div class="tips-box">
+                <div class="tb-title">✅ Application Tips for Best Results</div>
+                <ul>
+                  <li>Spray in early morning (6–9 AM) or late evening to avoid UV degradation of neem</li>
+                  <li>Cover both upper AND lower leaf surfaces thoroughly</li>
+                  <li>Begin at first sign of whitish patches — do not wait for widespread infection</li>
+                  <li>Alternate neem oil with Trichoderma viride solution every 3 weeks for resistance management</li>
+                  <li>Do not apply during extreme heat (above 38°C) — can cause leaf burn</li>
+                </ul>
+              </div>
+
+              <h4>Integrated Pest Management (IPM) Calendar</h4>
+              <table class="info-table">
+                <thead><tr><th>Month</th><th>Threat</th><th>Action</th></tr></thead>
+                <tbody>
+                  <tr><td>Oct–Nov</td><td>Thrips, Mites</td><td>Yellow sticky traps, Spinosad spray</td></tr>
+                  <tr><td>Dec–Jan</td><td>Powdery Mildew</td><td>Neem oil spray every 7 days</td></tr>
+                  <tr><td>Feb–Mar</td><td>Aphids</td><td>Neem + soap solution, release Coccinellidae</td></tr>
+                  <tr><td>Apr–May</td><td>Fruit Borer</td><td>Pheromone traps, Bt spray</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- 4. SEEDS & VARIETIES -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="section-block" id="seeds-varieties">
+        <div class="section-header">
+          <div class="section-icon seed">🌱</div>
+          <div>
+            <div class="section-title">Seeds & Varieties</div>
+            <div class="section-subtitle">Choosing the right variety for your region and season</div>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#dcfce7,#14532d)">
+            <div class="img-placeholder">
+              <span>🌾</span>
+              <div style="font-size:13px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.5)">Wheat Varieties</div>
+            </div>
+            <div class="img-caption">📍 Niphad, Nashik</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Seeds & Varieties · Featured</div>
+            <div class="article-title">High-Yield Wheat Varieties for Maharashtra</div>
+            <div class="article-intro">ICAR-released wheat varieties HD 2781 and NW 1014 are showing 22–28% higher productivity under Nashik agro-climatic conditions compared to older HYV varieties, with better rust resistance and protein content.</div>
+            <div class="article-content">
+              <div class="variety-grid">
+                <div class="variety-card">
+                  <div style="display:flex;align-items:center">
+                    <span class="vc-name">HD 2781</span>
+                    <span class="vc-badge">ICAR Recommended</span>
+                  </div>
+                  <div class="vc-yield">55–60 qtl/ha <span>avg. yield</span></div>
+                  <div class="vc-spec">
+                    <strong>Maturity:</strong> 110–115 days<br>
+                    <strong>Protein:</strong> 12.5%<br>
+                    <strong>Resistance:</strong> Yellow rust, brown rust<br>
+                    <strong>Sowing:</strong> Nov 1–15<br>
+                    <strong>Seed rate:</strong> 100 kg/ha
+                  </div>
+                </div>
+                <div class="variety-card">
+                  <div style="display:flex;align-items:center">
+                    <span class="vc-name">NW 1014</span>
+                    <span class="vc-badge">High Protein</span>
+                  </div>
+                  <div class="vc-yield">52–58 qtl/ha <span>avg. yield</span></div>
+                  <div class="vc-spec">
+                    <strong>Maturity:</strong> 105–112 days<br>
+                    <strong>Protein:</strong> 13.2%<br>
+                    <strong>Resistance:</strong> Karnal bunt, rust<br>
+                    <strong>Sowing:</strong> Nov 5–20<br>
+                    <strong>Seed rate:</strong> 100–110 kg/ha
+                  </div>
+                </div>
+                <div class="variety-card">
+                  <div style="display:flex;align-items:center">
+                    <span class="vc-name">HD 3086</span>
+                    <span class="vc-badge">Late Sowing</span>
+                  </div>
+                  <div class="vc-yield">48–55 qtl/ha <span>avg. yield</span></div>
+                  <div class="vc-spec">
+                    <strong>Maturity:</strong> 100–105 days<br>
+                    <strong>Protein:</strong> 11.8%<br>
+                    <strong>Resistance:</strong> Drought tolerant<br>
+                    <strong>Sowing:</strong> Nov 25–Dec 10<br>
+                    <strong>Seed rate:</strong> 125 kg/ha
+                  </div>
+                </div>
+                <div class="variety-card">
+                  <div style="display:flex;align-items:center">
+                    <span class="vc-name">GW 322</span>
+                    <span class="vc-badge">Early Harvest</span>
+                  </div>
+                  <div class="vc-yield">45–52 qtl/ha <span>avg. yield</span></div>
+                  <div class="vc-spec">
+                    <strong>Maturity:</strong> 95–100 days<br>
+                    <strong>Protein:</strong> 11.0%<br>
+                    <strong>Resistance:</strong> Moderate all-round<br>
+                    <strong>Sowing:</strong> Oct 25–Nov 10<br>
+                    <strong>Seed rate:</strong> 100 kg/ha
+                  </div>
+                </div>
+              </div>
+
+              <h4>Optimal Sowing Window</h4>
+              <div class="season-bar">
+                <div class="sb-month avoid">Sep</div>
+                <div class="sb-month avoid">Oct</div>
+                <div class="sb-month optimal">Nov</div>
+                <div class="sb-month optimal">Dec</div>
+                <div class="sb-month good">Jan</div>
+                <div class="sb-month avoid">Feb</div>
+                <div class="sb-month avoid">Mar</div>
+              </div>
+              <div style="display:flex;gap:12px;font-size:10px;color:var(--text-light);margin-bottom:16px">
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--green-light);border-radius:2px;display:inline-block"></span>Optimal</span>
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--green-pale);border-radius:2px;display:inline-block"></span>Good</span>
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--cream-dark);border-radius:2px;display:inline-block"></span>Avoid</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- 5. WEATHER ADVISORY -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="section-block" id="weather-advisory">
+        <div class="section-header">
+          <div class="section-icon sun">☀️</div>
+          <div>
+            <div class="section-title">Weather Advisory</div>
+            <div class="section-subtitle">Preparing your farm for seasonal and extreme weather</div>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#fef3c7,#d97706)">
+            <div class="img-placeholder">
+              <span>☀️</span>
+              <div style="font-size:13px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.5)">Heat Stress on Crops</div>
+            </div>
+            <div class="img-caption">📍 Open Field, Nashik</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Weather Advisory · Featured</div>
+            <div class="article-title">Prepare Your Crops for Summer Heat Stress</div>
+            <div class="article-intro">When temperatures exceed 35°C for more than 3 consecutive days, vegetable crops can lose 20–40% of marketable yield due to heat stress. Early preparation can save your harvest.</div>
+            <div class="article-content">
+              <div class="key-facts">
+                <div class="key-fact"><div class="kf-val">35°C+</div><div class="kf-lab">Critical Threshold</div></div>
+                <div class="key-fact"><div class="kf-val">40%</div><div class="kf-lab">Max Yield Loss</div></div>
+                <div class="key-fact"><div class="kf-val">6 AM</div><div class="kf-lab">Best Irrigation Time</div></div>
+              </div>
+
+              <h4>Crop-by-Crop Heat Tolerance</h4>
+              <table class="info-table">
+                <thead><tr><th>Crop</th><th>Heat Threshold</th><th>Critical Stage</th><th>Protection Needed</th></tr></thead>
+                <tbody>
+                  <tr><td>Tomatoes</td><td>32°C</td><td>Flowering</td><td>High — mulch + evening irrigation</td></tr>
+                  <tr><td>Chillies</td><td>35°C</td><td>Fruiting</td><td>Medium — shade nets optional</td></tr>
+                  <tr><td>Onions</td><td>38°C</td><td>Bulbing</td><td>Low — maintain soil moisture</td></tr>
+                  <tr><td>Wheat</td><td>30°C</td><td>Grain fill</td><td>High — early harvest critical</td></tr>
+                  <tr><td>Grapes</td><td>40°C</td><td>Veraison</td><td>Medium — kaolin clay spray</td></tr>
+                </tbody>
+              </table>
+
+              <h4>Heat Protection Actions</h4>
+              <div class="tips-box">
+                <div class="tb-title">✅ Priority Actions When Forecast Exceeds 35°C</div>
+                <ul>
+                  <li>Apply 5–7 cm thick mulch (paddy straw, sugarcane bagasse) — reduces soil temp by 5–8°C</li>
+                  <li>Shift irrigation to early morning (5–7 AM) and evening (6–8 PM) — avoid midday watering</li>
+                  <li>Install 50% shade nets over nurseries and young seedlings</li>
+                  <li>Spray Kaolin clay (5%) on fruit crops — reflects sunlight and reduces surface temp</li>
+                  <li>Apply potassium at 0.5% (KNO₃ foliar spray) — improves heat tolerance</li>
+                  <li>Harvest early in the morning before temperatures peak</li>
+                </ul>
+              </div>
+
+              <div class="warning-box">
+                <div class="wb-title">⚠ Cyclone / Storm Preparedness</div>
+                <p>If IMD issues a pre-cyclone warning for Nashik or Pune division: Harvest all mature produce immediately, even if not at peak. Secure loose structures — shade nets, water tanks, mulch sheets. Move harvested produce to covered storage. Do not enter flooded fields for 48 hours after storm — risk of leptospirosis.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- 6. FERTILIZATION -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="section-block" id="fertilization">
+        <div class="section-header">
+          <div class="section-icon fert">🧪</div>
+          <div>
+            <div class="section-title">Fertilization</div>
+            <div class="section-subtitle">Modern and cost-effective nutrient management</div>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#ede9fe,#5b21b6)">
+            <div class="img-placeholder">
+              <span>🧪</span>
+              <div style="font-size:13px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.5)">Nano Urea vs Traditional</div>
+            </div>
+            <div class="img-caption">📍 IFFCO Trial, Pune</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Fertilization · Featured</div>
+            <div class="article-title">Nano Urea vs Traditional Urea: Field Results from Maharashtra</div>
+            <div class="article-intro">IFFCO's Nano Urea liquid, launched in 2021, is showing comparable nitrogen delivery to traditional prilled urea at 35% lower input cost and 80% lower quantity requirement. Here's what Maharashtra farmers need to know.</div>
+            <div class="article-content">
+              <div class="nano-compare">
+                <div class="nc-card traditional">
+                  <div class="nc-title" style="color:#856404">Traditional Urea (Prilled)</div>
+                  <div class="nc-row"><span class="nc-key">Quantity per acre</span><span class="nc-val">50–60 kg</span></div>
+                  <div class="nc-row"><span class="nc-key">Cost per acre</span><span class="nc-val">₹600–720</span></div>
+                  <div class="nc-row"><span class="nc-key">N efficiency</span><span class="nc-val">30–35%</span></div>
+                  <div class="nc-row"><span class="nc-key">Soil impact</span><span class="nc-val">Acidifies over time</span></div>
+                  <div class="nc-row"><span class="nc-key">Application</span><span class="nc-val">Soil broadcast</span></div>
+                </div>
+                <div class="nc-card nano">
+                  <div class="nc-title" style="color:#1a6b3a">IFFCO Nano Urea (Liquid)</div>
+                  <div class="nc-row"><span class="nc-key">Quantity per acre</span><span class="nc-val">2–4 ml/L spray</span></div>
+                  <div class="nc-row"><span class="nc-key">Cost per acre</span><span class="nc-val">₹240–360</span></div>
+                  <div class="nc-row"><span class="nc-key">N efficiency</span><span class="nc-val">80–85%</span></div>
+                  <div class="nc-row"><span class="nc-key">Soil impact</span><span class="nc-val">Minimal soil load</span></div>
+                  <div class="nc-row"><span class="nc-key">Application</span><span class="nc-val">Foliar spray</span></div>
+                </div>
+              </div>
+
+              <div class="key-facts">
+                <div class="key-fact"><div class="kf-val">35%</div><div class="kf-lab">Cost Reduction</div></div>
+                <div class="key-fact"><div class="kf-val">80%</div><div class="kf-lab">N Efficiency</div></div>
+                <div class="key-fact"><div class="kf-val">500 ml</div><div class="kf-lab">Bottle replaces 50kg bag</div></div>
+              </div>
+
+              <h4>How to Use Nano Urea Correctly</h4>
+              <table class="info-table">
+                <thead><tr><th>Crop</th><th>Dosage</th><th>Timing</th><th>Sprays Needed</th></tr></thead>
+                <tbody>
+                  <tr><td>Wheat</td><td>4 ml/L</td><td>Tillering + boot stage</td><td>2 sprays</td></tr>
+                  <tr><td>Rice</td><td>4 ml/L</td><td>Panicle initiation</td><td>2 sprays</td></tr>
+                  <tr><td>Tomatoes</td><td>3 ml/L</td><td>Vegetative + flowering</td><td>3 sprays</td></tr>
+                  <tr><td>Onion</td><td>2 ml/L</td><td>30 & 45 days after transplant</td><td>2 sprays</td></tr>
+                  <tr><td>Sugarcane</td><td>4 ml/L</td><td>60 & 120 days</td><td>2 sprays</td></tr>
+                </tbody>
+              </table>
+
+              <div class="tips-box">
+                <div class="tb-title">✅ Key Points</div>
+                <ul>
+                  <li>Available at most Krishi Seva Kendras at ₹240 per 500ml bottle</li>
+                  <li>Shake bottle well before mixing — nano particles may settle</li>
+                  <li>Do not mix with alkaline pesticides (pH > 8) — degrades efficacy</li>
+                  <li>Spray in the evening for best absorption through leaf stomata</li>
+                  <li>Cannot fully replace soil nitrogen — use alongside 50% of normal soil urea dose</li>
+                  <li>Shelf life: 2 years from manufacture if stored below 35°C</li>
+                </ul>
+              </div>
+
+              <div class="warning-box">
+                <div class="wb-title">⚠ Balanced Fertilization Reminder</div>
+                <p>No single fertilizer is a silver bullet. Always base application on a soil test report (available free at Soil Testing Labs run by Maharashtra Agriculture Department). Over-application of any nitrogen source — including nano urea — can cause nitrate leaching, groundwater contamination, and excessive vegetative growth at the expense of fruiting.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER NOTE -->
+      <div style="background:#fff;border-radius:var(--radius);border:1px solid var(--cream-dark);padding:20px 24px;text-align:center">
+        <div style="font-size:13px;color:var(--text-mid);line-height:1.7">
+          📚 Content based on research from <strong>ICAR</strong>, <strong>IARI</strong>, <strong>Mahatma Phule Krishi Vidyapeeth (MPKV)</strong>, and <strong>KVK Nashik</strong>.<br>
+          For expert advice on your specific farm, visit your nearest <strong>Krishi Vigyan Kendra</strong> or contact AgroHub Help & Support.
+        </div>
+        <div style="margin-top:14px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a href="/dashboard/farmer" style="display:inline-flex;align-items:center;gap:6px;background:var(--green-mid);color:#fff;padding:9px 18px;border-radius:10px;text-decoration:none;font-size:13px;font-weight:600">🏠 Back to Dashboard</a>
+          <a href="/help-support" style="display:inline-flex;align-items:center;gap:6px;background:var(--cream);color:var(--green-mid);border:1.5px solid var(--cream-dark);padding:9px 18px;border-radius:10px;text-decoration:none;font-size:13px;font-weight:600">❓ Expert Help</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script src="{{ url_for('static', filename='agri_tips.js') }}"></script>
+</body>
+</html>

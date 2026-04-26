@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>AgroHub – Farmer Dashboard</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_farmer.css') }}">
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="#">
+    <img src="{{ url_for('static', filename='Assets/logo.png') }}" alt="AgroHub" style="height:44px; width:auto; object-fit:contain;">
+    <div class="nav-logo-text"><span class="tagline">Farmer Platform</span></div>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-right">
+    <a href="/sellmygoods" style="color:var(--green-pale);font-size:12.5px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);padding:7px 13px;border-radius:20px;transition:.2s" onmouseover="this.style.background='rgba(255,255,255,.15)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">📦 Sell Goods</a>
+    <button class="nav-bell" id="bellBtn" title="Notifications" onclick="toggleNotifPanel()">
+  <span id="bellIcon">🔔</span>
+  <span class="nav-badge-dot" id="navBadgeDot" style="display:none"></span>
+</button>
+
+<!-- NOTIFICATION PANEL (paste right after the bell button) -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-panel-hd">
+    <span class="notif-panel-title">Notifications</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="notif-mark-all-btn" onclick="markAllRead()">Mark all read</button>
+      <button class="notif-close-btn" onclick="closeNotifPanel()">✕</button>
+    </div>
+  </div>
+  <div class="notif-tabs">
+    <button class="notif-tab active" onclick="filterNotifs('all',this)">All</button>
+    <button class="notif-tab" onclick="filterNotifs('order',this)">Orders</button>
+    <button class="notif-tab" onclick="filterNotifs('service',this)">Services</button>
+    <button class="notif-tab" onclick="filterNotifs('info',this)">Info</button>
+  </div>
+  <div class="notif-list" id="notifList">
+    <div class="notif-empty">Loading…</div>
+  </div>
+  <div class="notif-footer">
+    <a href="#" onclick="loadNotifications();return false;" style="color:var(--green-mid);font-size:12px;font-weight:600;text-decoration:none;">↻ Refresh</a>
+    <span style="font-size:11px;color:var(--text-light)" id="notifUpdatedAt"></span>
+  </div>
+</div>
+    <div class="profile-wrap" id="profileWrap">
+      <div class="profile-btn" onclick="toggleProfile()">
+        <div class="profile-avatar" id="avatarEl"><span id="avatarInitials">--</span></div>
+        <span class="profile-name" id="username">Loading…</span>
+        <span class="profile-chevron">▼</span>
+      </div>
+      <div class="profile-dropdown">
+        <div class="dropdown-header">
+          <div class="dh-name" id="dropdownName">--</div>
+          <div class="dh-email" id="userEmail">--</div>
+        </div>
+        <a class="dropdown-item" href="/profile"><span class="di-icon">👤</span> My Profile</a>
+        <a class="dropdown-item" onclick="openSettings()"><span class="di-icon">⚙️</span> Settings</a>
+        <a class="dropdown-item" href="/help-support"><span class="di-icon">❓</span> Help & Support</a>
+        <a class="dropdown-item logout" onclick="logout()"><span class="di-icon">🚪</span> Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="menu-title">Dashboard</div>
+    <div class="menu"><a href="#" class="active"><span class="m-icon">🏠</span> Home</a></div>
+    <div class="menu-title">Marketplace</div>
+    <div class="menu">
+      <a href="/sellmygoods"><span class="m-icon">🛒</span> Sell My Goods</a>
+      <a href="#" onclick="openMarketPopup();return false;"><span class="m-icon">💹</span> Market Prices</a>
+    </div>
+    <div class="menu-title">Services</div>
+    <div class="menu">
+      <a href="/book-vehicle"><span class="m-icon">🚚</span> Book Vehicle</a>
+      <a href="/rent-equipment"><span class="m-icon">🛠️</span> Rent Equipment</a>
+      <a href="/book-warehouse"><span class="m-icon">🏭</span> Book Warehouse</a>
+    </div>
+    <div class="menu-title">Finance</div>
+    <div class="menu">
+      <a href="#" class="coming-soon-link"><span class="m-icon">🏦</span> Loans & Credit<span class="sb-cs">SOON</span></a>
+      <a href="#" class="coming-soon-link"><span class="m-icon">🛡️</span> Crop Insurance<span class="sb-cs">SOON</span></a>
+      <a href="#" class="coming-soon-link"><span class="m-icon">🏛️</span> Govt. Schemes<span class="sb-cs">SOON</span></a>
+    </div>
+    <div class="menu-title">Support</div>
+    <div class="menu">
+      <a href="#" class="coming-soon-link"><span class="m-icon">🔬</span> Expert Advice<span class="sb-cs">SOON</span></a>
+      <a href="#" class="coming-soon-link"><span class="m-icon">☁️</span> Weather Forecast<span class="sb-cs">SOON</span></a>
+      <a href="/help-support"><span class="m-icon">❓</span> Help & Support</a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="page-header">
+      <div>
+        <h1 id="greeting">Good Morning 👋</h1>
+        <div class="ph-sub" id="todayDate">Loading…</div>
+      </div>
+      <div class="weather-badge" id="weatherBadge">☀️ &nbsp;<span class="wtemp" id="weatherTemp">--°C</span>&nbsp; <span id="weatherDesc">Loading…</span></div>
+    </div>
+
+    <div class="kpi-grid">
+      <!-- Revenue from real delivered orders -->
+      <div class="kpi-card green">
+        <div class="kpi-label">Total Revenue (This Month)</div>
+        <div class="kpi-val" id="kpiRevenue">--</div>
+        <div class="kpi-trend up" id="kpiRevenueOrders" style="font-size:11px;color:var(--text-light);font-weight:400;margin-top:4px">From delivered orders</div>
+        <span class="kpi-icon">💰</span>
+      </div>
+      <!-- Real active listings -->
+      <div class="kpi-card amber">
+        <div class="kpi-label">Goods Listed for Sale</div>
+        <div class="kpi-val" id="kpiListings">--</div>
+        <div class="kpi-meta">Active listings</div>
+        <span class="kpi-icon">🛒</span>
+      </div>
+      <!-- Real pending orders -->
+      <div class="kpi-card soil">
+        <div class="kpi-label">Pending Orders</div>
+        <div class="kpi-val" id="kpiOrders">--</div>
+        <div class="kpi-meta">Awaiting your action</div>
+        <span class="kpi-icon">📦</span>
+      </div>
+      <!-- Crop Health: derived from orders/listing activity -->
+      <div class="kpi-card blue">
+        <div class="kpi-label">Listing Health Score</div>
+        <div class="kpi-val" id="kpiHealth">--</div>
+        <div class="health-bar-wrap">
+          <div class="health-bar-bg"><div class="health-bar-fill" id="healthBar" style="width:0%;background:linear-gradient(90deg,#3b82f6,#93c5fd)"></div></div>
+        </div>
+        <div class="health-details" id="healthDetails"></div>
+        <span class="kpi-icon">🌾</span>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="card">
+        <div class="card-header"><h3>📦 Recent Orders</h3><a class="card-link" href="/sellmygoods">View all →</a></div>
+        <div class="card-body" id="recentOrdersBody" style="padding:0">
+          <div style="text-align:center;padding:40px;color:var(--text-light)">Loading orders…</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3>💹 Live Market Prices</h3>
+          <a class="card-link" href="#" onclick="openMarketPopup();return false;">View all →</a>
+        </div>
+        <div class="card-body" id="marketPricesBody">
+          <div style="text-align:center;padding:30px;color:var(--text-light)">Loading prices…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real Schedule from orders + service bookings -->
+    <div style="margin-bottom:24px">
+      <div class="card">
+        <div class="card-header"><h3>📅 Upcoming Schedule</h3><a class="card-link" href="/sellmygoods">Manage orders →</a></div>
+        <div class="card-body" id="scheduleBody" style="display:grid;grid-template-columns:1fr 1fr;gap:0 30px">
+          <div class="empty-schedule" style="grid-column:span 2">Loading schedule…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Research & Agri Tips — links to agri-tips.html -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header"><h3>📚 Research & Agri Tips</h3><a class="card-link" href="/agri-tips">All tips →</a></div>
+      <div class="tips-grid">
+        <a class="tip-card" href="/agri-tips#soil-science">
+          <div class="tip-img soil">🌍</div>
+          <div class="tip-body"><div class="tip-tag">Soil Science</div><div class="tip-title">Improve Soil pH for Better Onion Yields</div><div class="tip-desc">Onions prefer pH 6.0–7.0. Adding lime can boost yields by 18% in acidic soils.</div></div>
+        </a>
+        <a class="tip-card" href="/agri-tips#water-management">
+          <div class="tip-img rain">🌧️</div>
+          <div class="tip-body"><div class="tip-tag">Water Management</div><div class="tip-title">Drip Irrigation for Tomatoes in Dry Season</div><div class="tip-desc">Drip irrigation reduces water usage by 40% while maintaining optimal fruit size.</div></div>
+        </a>
+        <a class="tip-card" href="/agri-tips#pest-control">
+          <div class="tip-img pest">🐛</div>
+          <div class="tip-body"><div class="tip-tag">Pest Control</div><div class="tip-title">Organic Control for Powdery Mildew</div><div class="tip-desc">Neem oil spray (5ml/L) every 7 days effectively suppresses fungal growth on chillies.</div></div>
+        </a>
+        <a class="tip-card" href="/agri-tips#seeds-varieties">
+          <div class="tip-img seed">🌱</div>
+          <div class="tip-body"><div class="tip-tag">Seeds & Varieties</div><div class="tip-title">High-Yield Wheat Varieties for Maharashtra</div><div class="tip-desc">HD 2781 and NW 1014 varieties show 22% higher productivity in Nashik conditions.</div></div>
+        </a>
+        <a class="tip-card" href="/agri-tips#weather-advisory">
+          <div class="tip-img sun">☀️</div>
+          <div class="tip-body"><div class="tip-tag">Weather Advisory</div><div class="tip-title">Prepare for Heat Stress in Summer</div><div class="tip-desc">Temperatures expected above 35°C. Cover tender crops and irrigate in the evening.</div></div>
+        </a>
+        <a class="tip-card" href="/agri-tips#fertilization">
+          <div class="tip-img fert">🧪</div>
+          <div class="tip-body"><div class="tip-tag">Fertilization</div><div class="tip-title">Nano Urea vs Traditional: Field Results</div><div class="tip-desc">IFFCO Nano Urea reduces input cost by 35% with comparable nitrogen delivery.</div></div>
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MARKET FULL POPUP -->
+<div class="market-popup-overlay" id="marketPopupOverlay" onclick="closeMarketIfBg(event)">
+  <div class="market-popup">
+    <div class="market-popup-hd">
+      <div>
+        <h2>💹 Live Market Prices</h2>
+        <div class="mp-sub" id="marketUpdatedAt">Loading prices…</div>
+      </div>
+      <button class="market-close" onclick="closeMarketPopup()">✕</button>
+    </div>
+    <div class="market-tabs" id="marketTabs">
+      <div class="market-tab active" onclick="filterMarket('all',this)">All</div>
+      <div class="market-tab" onclick="filterMarket('vegetables',this)">🥦 Vegetables</div>
+      <div class="market-tab" onclick="filterMarket('grains',this)">🌾 Grains</div>
+      <div class="market-tab" onclick="filterMarket('fruits',this)">🍎 Fruits</div>
+      <div class="market-tab" onclick="filterMarket('spices',this)">🌶️ Spices</div>
+    </div>
+    <div class="market-body">
+      <input class="market-search" id="marketSearch" type="text" placeholder="Search crops, location…" oninput="renderMarketGrid()"/>
+      <div class="market-grid" id="marketGrid">
+        <div style="color:var(--text-light);text-align:center;padding:40px;grid-column:span 3">Loading…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS DRAWER -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettings(event)">
+  <div class="settings-drawer">
+    <div class="settings-drawer-hd">
+      <h2>⚙️ Settings</h2>
+      <button class="settings-close" onclick="closeSettingsDrawer()">✕</button>
+    </div>
+    <div class="settings-body">
+      <div class="settings-section">
+        <div class="settings-section-title">Notifications</div>
+        <div class="settings-row"><div class="settings-row-info"><div class="sr-label">Order Alerts</div><div class="sr-desc">Get notified when you receive a new order</div></div><button class="settings-toggle on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="settings-row"><div class="settings-row-info"><div class="sr-label">Price Alerts</div><div class="sr-desc">Get notified on market price changes</div></div><button class="settings-toggle on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="settings-row"><div class="settings-row-info"><div class="sr-label">Delivery Updates</div><div class="sr-desc">Track your shipment status changes</div></div><button class="settings-toggle" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Account</div>
+        <div class="settings-row" style="cursor:pointer" onclick="window.location.href='/profile'"><div class="settings-row-info"><div class="sr-label">Edit Profile</div><div class="sr-desc">Update your name, photo, contact info</div></div><span style="color:var(--text-light)">→</span></div>
+        <div class="settings-row" style="cursor:pointer" onclick="window.location.href='/profile#change-password'"><div class="settings-row-info"><div class="sr-label">Change Password</div><div class="sr-desc">Update your account password</div></div><span style="color:var(--text-light)">→</span></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Danger Zone</div>
+        <div style="background:#fff5f5;border:1.5px solid #fca5a5;border-radius:12px;padding:16px;margin-bottom:12px">
+          <div style="font-size:13.5px;font-weight:700;color:var(--red);margin-bottom:6px">⚠ Delete My Account</div>
+          <div style="font-size:12px;color:var(--text-mid);margin-bottom:14px;line-height:1.5">This action is permanent. All your listings, orders, and data will be permanently deleted.</div>
+          <button class="btn-danger-outline" onclick="openDeleteAccount()">🗑️ Delete My Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE ACCOUNT MODAL -->
+<div class="modal-overlay" id="deleteAccountModal">
+  <div class="modal" style="width:440px">
+    <div class="modal-header" style="background:linear-gradient(135deg,#7f1d1d,var(--red))">
+      <h2>⚠ Delete Account</h2>
+      <button class="modal-close" onclick="closeModal('deleteAccountModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="del-confirm">
+        <div class="del-icon-big">🗑️</div>
+        <div class="del-title">Are you absolutely sure?</div>
+        <div class="del-msg">You are about to permanently delete your AgroHub farmer account.</div>
+        <div class="del-warning">⚠ This will permanently delete:<br>• All your produce listings<br>• All incoming orders<br>• Your profile and account data<br><br><b>This action cannot be undone.</b></div>
+        <div class="form-group" style="text-align:left;margin-bottom:16px">
+          <label class="form-label">Enter your password to confirm</label>
+          <input class="form-input" type="password" id="deleteConfirmPassword" placeholder="Your current password"/>
+        </div>
+        <div class="del-btns">
+          <button class="btn btn-cancel" onclick="closeModal('deleteAccountModal')">Cancel</button>
+          <button class="btn btn-danger" onclick="confirmDeleteAccount()">🗑️ Delete Forever</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='dashboard_farmer.js') }}"></script>
+</body>
+</html>

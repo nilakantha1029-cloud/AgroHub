@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AgroHub – Service Provider Dashboard</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard_service_provider.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">🛠️</div>
+    <div class="nav-logo-text"><span class="brand">AgroHub</span><span class="tagline">Service Provider</span></div>
+  </a>
+  <div class="nav-spacer"></div>
+  <div class="nav-right">
+    <div class="notif-wrap" id="notifWrap">
+      <button class="nav-bell" onclick="toggleNotif()">🔔<span class="nb-badge" id="navBadge"></span></button>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-hd"><h4>Notifications</h4><a onclick="markAllRead()">Mark all read</a></div>
+        <div id="notifList"><div style="text-align:center;padding:24px;color:var(--text-light)">Loading…</div></div>
+      </div>
+    </div>
+    <div class="profile-wrap" id="profileWrap">
+      <div class="profile-btn" onclick="toggleProfile()">
+        <div class="profile-avatar" id="navAvatar"><span id="navInitials">--</span></div>
+        <span class="profile-name" id="navName">Loading…</span>
+        <span class="profile-chevron">▼</span>
+      </div>
+      <div class="profile-dropdown">
+        <div class="pd-head">
+          <div class="pd-name" id="ddName">--</div>
+          <div class="pd-sub">🛠️ Service Provider</div>
+        </div>
+        <a class="pd-item" href="/service-profile">👤 My Profile</a>
+        <a class="pd-item" href="/service-help-support">❓ Help & Support</a>
+        <a class="pd-item" onclick="openSettings();closeProfile()">⚙️ Settings</a>
+        <a class="pd-item logout" onclick="doLogout()">🚪 Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+<!-- SIDEBAR — No badge pills on My Services -->
+<aside class="sidebar">
+  <div class="menu-title">Dashboard</div>
+  <div class="menu">
+    <a id="mn-home" onclick="switchView('home')" class="active"><span class="m-icon">🏠</span> Home</a>
+  </div>
+  <div class="menu-title">My Services</div>
+  <div class="menu">
+    <a id="mn-transport" onclick="switchView('transport')"><span class="m-icon">🚛</span> Transport Vehicles</a>
+    <a id="mn-equipment" onclick="switchView('equipment')"><span class="m-icon">🚜</span> Equipment Rental</a>
+    <a id="mn-storage" onclick="switchView('storage')"><span class="m-icon">🏭</span> Storage Facilities</a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="menu-title">Bookings</div>
+  <div class="menu">
+    <a id="mn-bookings" onclick="switchView('bookings')"><span class="m-icon">📋</span> All Bookings <span class="bk-badge" id="badge-bookings">0</span></a>
+    <a id="mn-pending" onclick="switchView('bookings','pending')"><span class="m-icon">⏳</span> Pending Requests <span class="bk-badge" id="badge-pending">0</span></a>
+    <a id="mn-active" onclick="switchView('bookings','active')"><span class="m-icon">✅</span> Active Bookings</a>
+    <a id="mn-completed" onclick="switchView('bookings','completed')"><span class="m-icon">🎉</span> Completed</a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="menu-title">Analytics</div>
+  <div class="menu">
+    <a id="mn-earnings" onclick="switchView('earnings')"><span class="m-icon">💰</span> Earnings</a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="menu-title">Account</div>
+  <div class="menu">
+    <a href="/service-profile"><span class="m-icon">👤</span> My Profile</a>
+    <a onclick="openSettings()"><span class="m-icon">⚙️</span> Settings</a>
+    <a href="/service-help-support"><span class="m-icon">❓</span> Help & Support</a>
+    <a onclick="doLogout()"><span class="m-icon">🚪</span> Logout</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main>
+
+<!-- HOME VIEW -->
+<div class="view active" id="view-home">
+  <div class="page-header">
+    <div><h1 id="homeGreeting">Good Morning 👋</h1><div class="ph-sub" id="homeDate">Loading…</div></div>
+    <button class="btn-primary-sm" onclick="switchView('transport');openAddModal('transport')">+ Add New Service</button>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card green"><div class="kpi-label">Total Revenue</div><div class="kpi-val" id="kpiRevenue">₹0</div><div class="kpi-trend up">↑ Growing</div><span class="kpi-icon">💰</span></div>
+    <div class="kpi-card amber"><div class="kpi-label">Total Services</div><div class="kpi-val" id="kpiServices">0</div><div class="kpi-meta">All listed services</div><span class="kpi-icon">🛠️</span></div>
+    <div class="kpi-card blue"><div class="kpi-label">Pending Requests</div><div class="kpi-val" id="kpiPending">0</div><div class="kpi-meta">Awaiting your action</div><span class="kpi-icon">⏳</span></div>
+    <div class="kpi-card purple"><div class="kpi-label">Completed Jobs</div><div class="kpi-val" id="kpiCompleted">0</div><div class="kpi-meta">All time</div><span class="kpi-icon">🎉</span></div>
+  </div>
+  <div style="margin-bottom:16px"><h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--primary)">Your Services Overview</h3></div>
+  <div class="service-cards">
+    <div class="srv-action-card transport" onclick="switchView('transport')">
+      <div class="sac-icon">🚛</div><div class="sac-title">Transport Vehicles</div>
+      <div class="sac-desc">Manage trucks, tractors and transport vehicles for farm produce logistics.</div>
+      <div class="sac-stat">
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-t-total">0</div><div class="sac-stat-lbl">Listed</div></div>
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-t-avail">0</div><div class="sac-stat-lbl">Available</div></div>
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-t-book">0</div><div class="sac-stat-lbl">Booked</div></div>
+      </div>
+      <button class="sac-btn" onclick="event.stopPropagation();openAddModal('transport')">+ Add Vehicle</button>
+    </div>
+    <div class="srv-action-card equipment" onclick="switchView('equipment')">
+      <div class="sac-icon">🚜</div><div class="sac-title">Equipment Rental</div>
+      <div class="sac-desc">Tractors, harvesters, sprayers and farming equipment for rental.</div>
+      <div class="sac-stat">
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-e-total">0</div><div class="sac-stat-lbl">Listed</div></div>
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-e-avail">0</div><div class="sac-stat-lbl">Available</div></div>
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-e-book">0</div><div class="sac-stat-lbl">Rented</div></div>
+      </div>
+      <button class="sac-btn" onclick="event.stopPropagation();openAddModal('equipment')">+ Add Equipment</button>
+    </div>
+    <div class="srv-action-card storage" onclick="switchView('storage')">
+      <div class="sac-icon">🏭</div><div class="sac-title">Storage Facilities</div>
+      <div class="sac-desc">Cold storage, dry warehouses and grain silos for produce preservation.</div>
+      <div class="sac-stat">
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-s-total">0</div><div class="sac-stat-lbl">Facilities</div></div>
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-s-avail">0</div><div class="sac-stat-lbl">Available</div></div>
+        <div class="sac-stat-item"><div class="sac-stat-val" id="ov-s-cap">0</div><div class="sac-stat-lbl">Total qtl</div></div>
+      </div>
+      <button class="sac-btn" onclick="event.stopPropagation();openAddModal('storage')">+ Add Storage</button>
+    </div>
+  </div>
+  <div class="home-grid">
+    <div class="card">
+      <div class="card-hd"><h3>📋 Recent Bookings</h3><a class="card-link" onclick="switchView('bookings')">View all →</a></div>
+      <div id="homeRecentBookings" style="padding:0"><div style="text-align:center;padding:36px;color:var(--text-light)">Loading…</div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>📅 Upcoming Schedule</h3></div>
+      <div class="card-bd" id="scheduleList">
+  <div style="text-align:center;padding:36px;color:var(--text-light)">Loading…</div>
+</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSPORT VIEW -->
+<div class="view" id="view-transport">
+  <div class="page-header">
+    <div><h1>🚛 Transport Vehicles</h1><div class="ph-sub">Manage your fleet of transport vehicles</div></div>
+    <button class="btn-primary-sm" onclick="openAddModal('transport')">+ Add Vehicle</button>
+  </div>
+  <div class="stats-row" id="transport-stats"></div>
+  <div class="filters-bar">
+    <button class="filter-tab active" onclick="filterList('transport','all',this)">All <span class="cnt" id="t-cnt-all">0</span></button>
+    <button class="filter-tab" onclick="filterList('transport','available',this)">🟢 Available <span class="cnt" id="t-cnt-available">0</span></button>
+    <button class="filter-tab" onclick="filterList('transport','booked',this)">🔵 Booked <span class="cnt" id="t-cnt-booked">0</span></button>
+    <button class="filter-tab" onclick="filterList('transport','maintenance',this)">🟡 Maintenance <span class="cnt" id="t-cnt-maintenance">0</span></button>
+    <div class="search-box">🔍<input type="text" placeholder="Search vehicles…" id="t-search" oninput="renderList('transport')"/></div>
+    <select class="sort-sel" id="t-sort" onchange="renderList('transport')"><option value="newest">Newest First</option><option value="price-high">Price High→Low</option><option value="price-low">Price Low→High</option></select>
+  </div>
+  <div class="tbl-wrap"><div class="tbl-hd"><h3>🚛 My Vehicles</h3><span class="tbl-count" id="t-table-count"></span></div><div id="t-table-body"></div></div>
+</div>
+
+<!-- EQUIPMENT VIEW -->
+<div class="view" id="view-equipment">
+  <div class="page-header">
+    <div><h1>🚜 Equipment Rental</h1><div class="ph-sub">Manage your rental equipment inventory</div></div>
+    <button class="btn-primary-sm" onclick="openAddModal('equipment')">+ Add Equipment</button>
+  </div>
+  <div class="stats-row" id="equipment-stats"></div>
+  <div class="filters-bar">
+    <button class="filter-tab active" onclick="filterList('equipment','all',this)">All <span class="cnt" id="e-cnt-all">0</span></button>
+    <button class="filter-tab" onclick="filterList('equipment','available',this)">🟢 Available <span class="cnt" id="e-cnt-available">0</span></button>
+    <button class="filter-tab" onclick="filterList('equipment','booked',this)">🔵 Rented <span class="cnt" id="e-cnt-booked">0</span></button>
+    <button class="filter-tab" onclick="filterList('equipment','maintenance',this)">🟡 Maintenance <span class="cnt" id="e-cnt-maintenance">0</span></button>
+    <div class="search-box">🔍<input type="text" placeholder="Search equipment…" id="e-search" oninput="renderList('equipment')"/></div>
+    <select class="sort-sel" id="e-sort" onchange="renderList('equipment')"><option value="newest">Newest First</option><option value="price-high">Rate High→Low</option><option value="price-low">Rate Low→High</option></select>
+  </div>
+  <div class="tbl-wrap"><div class="tbl-hd"><h3>🚜 My Equipment</h3><span class="tbl-count" id="e-table-count"></span></div><div id="e-table-body"></div></div>
+</div>
+
+<!-- STORAGE VIEW -->
+<div class="view" id="view-storage">
+  <div class="page-header">
+    <div><h1>🏭 Storage Facilities</h1><div class="ph-sub">Manage your warehouses and cold storage units</div></div>
+    <button class="btn-primary-sm" onclick="openAddModal('storage')">+ Add Facility</button>
+  </div>
+  <div class="stats-row" id="storage-stats"></div>
+  <div class="filters-bar">
+    <button class="filter-tab active" onclick="filterList('storage','all',this)">All <span class="cnt" id="s-cnt-all">0</span></button>
+    <button class="filter-tab" onclick="filterList('storage','available',this)">🟢 Available <span class="cnt" id="s-cnt-available">0</span></button>
+    <button class="filter-tab" onclick="filterList('storage','booked',this)">🔵 Occupied <span class="cnt" id="s-cnt-booked">0</span></button>
+    <button class="filter-tab" onclick="filterList('storage','unavailable',this)">🔴 Unavailable <span class="cnt" id="s-cnt-unavailable">0</span></button>
+    <div class="search-box">🔍<input type="text" placeholder="Search facilities…" id="s-search" oninput="renderList('storage')"/></div>
+    <select class="sort-sel" id="s-sort" onchange="renderList('storage')"><option value="newest">Newest First</option><option value="capacity-high">Capacity High→Low</option><option value="price-high">Price High→Low</option></select>
+  </div>
+  <div class="tbl-wrap"><div class="tbl-hd"><h3>🏭 My Facilities</h3><span class="tbl-count" id="s-table-count"></span></div><div id="s-table-body"></div></div>
+</div>
+
+<!-- BOOKINGS VIEW -->
+<div class="view" id="view-bookings">
+  <div class="page-header">
+    <div><h1>📋 Booking Requests</h1><div class="ph-sub">Accept, manage and complete service bookings</div></div>
+    <button class="btn-primary-sm" onclick="refreshBookings()">↻ Refresh</button>
+  </div>
+  <div class="filters-bar">
+    <button class="filter-tab active" id="bk-tab-all"       onclick="filterBookings('all',this)">All</button>
+    <button class="filter-tab"        id="bk-tab-pending"   onclick="filterBookings('pending',this)">⏳ New Requests</button>
+    <button class="filter-tab"        id="bk-tab-accepted"  onclick="filterBookings('accepted',this)">✅ Accepted</button>
+    <button class="filter-tab"        id="bk-tab-active"    onclick="filterBookings('active',this)">🔵 Active</button>
+    <button class="filter-tab"        id="bk-tab-completed" onclick="filterBookings('completed',this)">🎉 Completed</button>
+    <button class="filter-tab"        id="bk-tab-rejected"  onclick="filterBookings('rejected',this)">❌ Rejected</button>
+  </div>
+  <div id="bookingsList"><div style="text-align:center;padding:60px;color:var(--text-light)">Loading bookings…</div></div>
+</div>
+
+<!-- EARNINGS VIEW -->
+<div class="view" id="view-earnings">
+  <div class="page-header"><div><h1>💰 Earnings Overview</h1><div class="ph-sub">Revenue breakdown across all services</div></div></div>
+  <div class="kpi-grid">
+    <div class="kpi-card green"><div class="kpi-label">Total Earnings</div><div class="kpi-val" id="earn-total">₹0</div><div class="kpi-meta">All time</div><span class="kpi-icon">💰</span></div>
+    <div class="kpi-card blue"><div class="kpi-label">Transport Revenue</div><div class="kpi-val" id="earn-transport">₹0</div><span class="kpi-icon">🚛</span></div>
+    <div class="kpi-card purple"><div class="kpi-label">Equipment Revenue</div><div class="kpi-val" id="earn-equip">₹0</div><span class="kpi-icon">🚜</span></div>
+    <div class="kpi-card amber"><div class="kpi-label">Storage Revenue</div><div class="kpi-val" id="earn-storage">₹0</div><span class="kpi-icon">🏭</span></div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-hd"><h3>📊 Monthly Revenue Trend</h3></div>
+    <div class="card-bd"><div class="rev-bars" id="revBars"></div>
+    <div class="rev-legend"><div class="rev-leg-item"><div class="rev-leg-dot" style="background:var(--primary-mid)"></div>Total Revenue</div></div></div>
+  </div>
+  <div class="card"><div class="card-hd"><h3>🏆 Top Performing Services</h3></div><div class="card-bd" id="topServices"></div></div>
+</div>
+
+</main>
+</div><!-- /layout -->
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header"><h2 id="addModalTitle">Add Service</h2><button class="modal-close" onclick="closeModal('addModal')">✕</button></div>
+    <div class="modal-body" id="addModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-m btn-m-secondary" onclick="closeModal('addModal')">Cancel</button>
+      <button class="btn-m btn-m-primary" id="addModalSaveBtn" onclick="saveService()">✅ Post Listing</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW MODAL -->
+<div class="modal-overlay" id="viewModal">
+  <div class="modal">
+    <div class="modal-header"><h2>📋 Service Details</h2><button class="modal-close" onclick="closeModal('viewModal')">✕</button></div>
+    <div id="viewModalBody"></div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay del-modal" id="delModal">
+  <div class="modal">
+    <div class="modal-body">
+      <div class="del-icon">🗑️</div>
+      <div class="del-title">Delete Service?</div>
+      <div class="del-badge" id="delBadge"></div>
+      <div class="del-msg">This listing will be permanently removed. Active bookings linked to it may be affected.</div>
+      <div class="del-btns">
+        <button class="btn-m btn-cancel" onclick="closeModal('delModal')">Cancel</button>
+        <button class="btn-m btn-danger" onclick="confirmDelete()">🗑️ Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS DRAWER — Account Only -->
+<div class="settings-overlay" id="settingsOverlay" onclick="handleSettingsOverlayClick(event)">
+  <div class="settings-drawer" id="settingsDrawer">
+    <div class="settings-drawer-hd">
+      <h2>⚙️ Account Settings</h2>
+      <button class="settings-drawer-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="settings-body">
+
+      <div class="settings-section">
+        <div class="settings-section-title">🔔 Notifications</div>
+        <div class="settings-action-row">
+          <div class="sar-left"><div class="sar-icon blue">🔔</div><div class="sar-text"><div class="sar-title">Booking Notifications</div><div class="sar-sub">Get alerts for new booking requests</div></div></div>
+          <span class="sar-arrow">✓ On</span>
+        </div>
+        <div class="settings-action-row">
+          <div class="sar-left"><div class="sar-icon green">📱</div><div class="sar-text"><div class="sar-title">SMS Alerts</div><div class="sar-sub">Receive SMS for critical updates</div></div></div>
+          <span class="sar-arrow">✓ On</span>
+        </div>
+        <div class="settings-action-row">
+          <div class="sar-left"><div class="sar-icon amber">📧</div><div class="sar-text"><div class="sar-title">Email Notifications</div><div class="sar-sub">Weekly earnings summary and tips</div></div></div>
+          <span class="sar-arrow">— Off</span>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">🔑 Account Info</div>
+        <div class="settings-info-row"><span class="si-row-label">Email</span><span class="si-row-val" id="s-display-email">--</span></div>
+        <div class="settings-info-row"><span class="si-row-label">Role</span><span class="si-row-val">🛠️ Service Provider</span></div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">🔒 Change Password</div>
+        <div class="s-form-group"><label class="s-form-label">Current Password</label><input class="s-form-input" id="s_cur_pass" type="password" placeholder="Current password"/></div>
+        <div class="s-form-group">
+          <label class="s-form-label">New Password</label>
+          <input class="s-form-input" id="s_new_pass" type="password" placeholder="New password (min 8 chars)" oninput="checkPwStrength(this.value)"/>
+          <div class="pw-strength-row"><div class="pw-bar" id="pwb1"></div><div class="pw-bar" id="pwb2"></div><div class="pw-bar" id="pwb3"></div><div class="pw-bar" id="pwb4"></div></div>
+          <div class="pw-label" id="pwLabel" style="color:var(--text-light)">Enter password to check strength</div>
+        </div>
+        <div class="s-form-group"><label class="s-form-label">Confirm New Password</label><input class="s-form-input" id="s_conf_pass" type="password" placeholder="Confirm new password"/></div>
+        <button class="settings-save-btn" style="background:linear-gradient(135deg,var(--blue-mid),var(--blue));margin-bottom:0" onclick="changePassword()">🔒 Update Password</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">🛡 Privacy</div>
+        <div class="settings-action-row">
+          <div class="sar-left"><div class="sar-icon purple">📋</div><div class="sar-text"><div class="sar-title">Profile Visibility</div><div class="sar-sub">Your profile is visible to farmers</div></div></div>
+          <span class="sar-arrow">Public</span>
+        </div>
+        <div class="settings-action-row" onclick="window.location.href='/service-help-support'">
+          <div class="sar-left"><div class="sar-icon amber">❓</div><div class="sar-text"><div class="sar-title">Help & Support</div><div class="sar-sub">FAQs and raise a ticket</div></div></div>
+          <span class="sar-arrow">→</span>
+        </div>
+        <div class="settings-action-row" onclick="window.location.href='/service-profile'">
+          <div class="sar-left"><div class="sar-icon green">👤</div><div class="sar-text"><div class="sar-title">Edit Profile & Documents</div><div class="sar-sub">Update personal info, DL, vehicle registration</div></div></div>
+          <span class="sar-arrow">→</span>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">☠️ Danger Zone</div>
+        <div class="danger-zone">
+          <div class="dz-title">🚨 Delete My Account</div>
+          <div class="dz-desc">Permanently remove your account, all service listings, bookings and data. This cannot be undone.</div>
+          <button class="btn-danger-outline" onclick="toggleDeleteConfirm()">🗑️ Delete My Account</button>
+          <div class="del-acc-confirm" id="delAccConfirm">
+            <div class="del-acc-note">⚠️ Enter your password to confirm permanent deletion.</div>
+            <label class="s-form-label" style="color:var(--red);margin-top:8px;display:block">Confirm Password</label>
+            <input class="s-form-input" id="s_del_pass" type="password" placeholder="Enter your password" style="margin-top:6px;margin-bottom:10px;border-color:#fca5a5"/>
+            <div style="display:flex;gap:8px">
+              <button class="btn-m btn-cancel" onclick="toggleDeleteConfirm()" style="flex:1;padding:10px">Cancel</button>
+              <button class="btn-m btn-danger" onclick="deleteAccount()" style="flex:1;padding:10px">🗑️ Confirm Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /settings-body -->
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='dashboard_service_provider.js') }}"></script>
+</body>
+</html>

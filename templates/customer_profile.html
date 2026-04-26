@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>My Profile – AgroHub</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='customer_profile.css') }}">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/dashboard/customer">
+    <div class="nav-logo-icon">🥬</div>
+    <div class="nav-logo-text"><div class="brand">AgroHub</div><div class="sub">Farm to You</div></div>
+  </a>
+  <div class="nav-avatar-wrap" style="margin-left:auto">
+    <div class="nav-avatar" id="navAvatar">--</div>
+    <span class="nav-uname" id="navName">Loading…</span>
+  </div>
+  <a class="nav-back" href="/dashboard/customer">← Back to Dashboard</a>
+</nav>
+
+<div class="page">
+  <div class="profile-hero">
+    <div class="ph-avatar-wrap" onclick="document.getElementById('heroImgInput').click()">
+      <div class="ph-avatar" id="heroAvatar">--</div>
+      <div class="ph-cam">📷</div>
+      <input type="file" id="heroImgInput" accept="image/*" style="display:none" onchange="previewHeroImage(this)">
+    </div>
+    <div class="ph-info">
+      <div class="ph-name" id="heroName">Loading…</div>
+      <div class="ph-email" id="heroEmail">—</div>
+      <div class="ph-tags">
+        <span class="ph-tag">👤 Customer</span>
+        <span class="ph-tag green" id="heroMemberSince">Member</span>
+        <span class="ph-tag" id="heroPhone">—</span>
+      </div>
+    </div>
+    <button class="ph-edit-btn" id="heroEditBtn" onclick="toggleEdit()">✏️ Edit Profile</button>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card"><div class="stat-val" id="statOrders">0</div><div class="stat-lbl">Total Orders</div></div>
+    <div class="stat-card"><div class="stat-val" id="statDelivered">0</div><div class="stat-lbl">Delivered</div></div>
+    <div class="stat-card"><div class="stat-val" id="statPending">0</div><div class="stat-lbl">Pending</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('personal')">👤 Personal Info</button>
+    <button class="tab-btn" onclick="switchTab('address')">📍 Addresses</button>
+    <button class="tab-btn" onclick="switchTab('identification')">🪪 Identification</button>
+    <button class="tab-btn" onclick="switchTab('security')">🔒 Security</button>
+  </div>
+
+  <!-- ── PERSONAL INFO ── -->
+  <div class="tab-panel active" id="panel-personal">
+    <form id="personalForm" onsubmit="savePersonal(event)">
+      <div class="card">
+        <div class="card-hd"><h3>👤 Basic Information</h3></div>
+        <div class="card-bd">
+          <div class="fm-group" style="margin-bottom:20px">
+            <label class="fm-label">Profile Photo</label>
+            <div style="display:flex;align-items:center;gap:20px">
+              <div class="profile-avatar-lg" id="profileAvatarLg">--</div>
+              <div style="flex:1">
+                <div class="img-upload-area" id="imgUploadArea" onclick="document.getElementById('profileImgInput').click()">
+                  <input type="file" id="profileImgInput" accept="image/*" style="position:absolute;opacity:0;pointer-events:none" onchange="previewProfileImage(this)">
+                  <div class="img-placeholder">📸</div>
+                  <div class="img-upload-text">Click to upload new photo</div>
+                  <div class="img-upload-hint">JPG or PNG, max 5MB.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="fm-group"><label class="fm-label">First Name *</label><input class="fm-input" type="text" id="inp_first_name" name="first_name" placeholder="Enter first name" required disabled/></div>
+            <div class="fm-group"><label class="fm-label">Last Name *</label><input class="fm-input" type="text" id="inp_last_name" name="last_name" placeholder="Enter last name" required disabled/></div>
+            <div class="fm-group"><label class="fm-label">Gender</label><select class="fm-select" id="inp_gender" name="gender" disabled><option value="">Select gender</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option><option value="prefer_not">Prefer not to say</option></select></div>
+            <div class="fm-group"><label class="fm-label">Date of Birth</label><input class="fm-input" type="date" id="inp_dob" name="dob" disabled/></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>📞 Contact Details</h3></div>
+        <div class="card-bd">
+          <div class="form-grid">
+            <div class="fm-group"><label class="fm-label">Email Address</label><input class="fm-input readonly" type="email" id="inp_email" value="" readonly/><span class="fm-hint">Email cannot be changed</span></div>
+            <div class="fm-group"><label class="fm-label">Phone Number</label><input class="fm-input" type="tel" id="inp_phone" name="phone" placeholder="+91 XXXXX XXXXX" disabled/></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h3>📝 About Me</h3></div>
+        <div class="card-bd">
+          <div class="fm-group"><label class="fm-label">Bio / About</label><textarea class="fm-input" id="inp_bio" name="bio" rows="3" placeholder="Tell farmers a bit about yourself…" disabled style="resize:vertical"></textarea></div>
+        </div>
+        <div class="save-bar" id="personalSaveBar" style="display:none">
+          <button type="button" class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+          <button type="submit" class="btn-save" id="personalSaveBtn">💾 Save Changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── ADDRESSES ── -->
+  <div class="tab-panel" id="panel-address">
+    <div class="card">
+      <div class="card-hd">
+        <h3>📍 Saved Addresses</h3>
+        <button onclick="openAddressModal()" style="padding:7px 16px;border-radius:9px;background:var(--saffron);color:#fff;border:none;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer">+ Add New</button>
+      </div>
+      <div class="card-bd">
+        <div class="info-row"><span class="info-icon">💡</span><span class="info-text">Your saved addresses will be available at checkout.</span></div>
+        <div class="address-grid" id="addressGrid"><div style="color:var(--text-light);font-size:13px;grid-column:1/-1;text-align:center;padding:30px">Loading addresses…</div></div>
+        <button class="add-address-btn" onclick="openAddressModal()">➕ Add New Address</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── IDENTIFICATION ── -->
+  <div class="tab-panel" id="panel-identification">
+    <form id="identForm" onsubmit="saveIdent(event)">
+      <div class="card">
+        <div class="card-hd"><h3>🪪 Identity Documents</h3></div>
+        <div class="card-bd">
+          <div class="info-row"><span class="info-icon">🔐</span><span class="info-text">Your identity details are encrypted and stored securely.</span></div>
+          <div class="form-grid">
+            <div class="fm-group"><label class="fm-label">Aadhaar Number</label><input class="fm-input" type="text" id="inp_aadhar" name="aadhar" placeholder="XXXX XXXX XXXX" maxlength="14" disabled/><span class="fm-hint">12-digit Aadhaar card number</span></div>
+            <div class="fm-group"><label class="fm-label">PAN Number</label><input class="fm-input" type="text" id="inp_pan" name="pan" placeholder="ABCDE1234F" maxlength="10" style="text-transform:uppercase" disabled/><span class="fm-hint">10-character PAN card number</span></div>
+          </div>
+        </div>
+        <div class="save-bar" id="identSaveBar" style="display:none">
+          <button type="button" class="btn-cancel" onclick="cancelIdentEdit()">Cancel</button>
+          <button type="submit" class="btn-save" id="identSaveBtn">💾 Save Documents</button>
+        </div>
+      </div>
+    </form>
+    <div style="text-align:right;margin-top:-12px;margin-bottom:20px">
+      <button onclick="toggleIdentEdit()" style="padding:8px 18px;border-radius:9px;background:var(--saffron-light);color:var(--saffron);border:1.5px solid rgba(232,98,10,.25);font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer" id="identEditBtn">✏️ Edit Documents</button>
+    </div>
+  </div>
+
+  <!-- ── SECURITY ── -->
+  <div class="tab-panel" id="panel-security">
+    <div class="card">
+      <div class="card-hd"><h3>🔒 Change Password</h3></div>
+      <div class="card-bd">
+
+        <!-- Step 1 — Fill passwords -->
+        <div id="cust_pwStep1" style="max-width:440px">
+          <div class="form-grid full" style="gap:14px">
+            <div class="fm-group pw-show">
+              <label class="fm-label">Current Password</label>
+              <input class="fm-input" type="password" id="inp_current_pw" placeholder="Enter current password"/>
+              <button type="button" class="pw-toggle" onclick="togglePw('inp_current_pw',this)">👁</button>
+            </div>
+            <div class="fm-group pw-show">
+              <label class="fm-label">New Password</label>
+              <input class="fm-input" type="password" id="inp_new_pw" placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special" oninput="checkPwStrength(this.value)"/>
+              <button type="button" class="pw-toggle" onclick="togglePw('inp_new_pw',this)">👁</button>
+              <div class="pw-strength"><div class="pw-strength-bar" id="pwStrengthBar"></div></div>
+              <span class="fm-hint" id="pwStrengthTxt"></span>
+            </div>
+            <div class="fm-group pw-show">
+              <label class="fm-label">Confirm New Password</label>
+              <input class="fm-input" type="password" id="inp_confirm_pw" placeholder="Re-enter new password"/>
+              <button type="button" class="pw-toggle" onclick="togglePw('inp_confirm_pw',this)">👁</button>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <button type="button" class="btn-save" style="width:100%" id="custSendOtpBtn" onclick="custSendOtp()">📧 Send OTP to Email</button>
+          </div>
+        </div>
+
+        <!-- Step 2 — OTP -->
+        <div class="otp-step" id="cust_pwStep2" style="max-width:440px">
+          <div class="otp-step-title">🔑 Verify with OTP</div>
+          <div class="otp-step-sub" id="custOtpSentMsg">A 6-digit OTP has been sent to your registered email address.</div>
+          <div class="otp-info-strip">
+            <span>🛡️</span>
+            <span>This extra step protects your account from unauthorized password changes.</span>
+          </div>
+          <input class="otp-input" id="cust_otp" type="text" maxlength="6" placeholder="──────" oninput="this.value=this.value.replace(/\D/g,'')"/>
+          <div class="otp-timer" id="custOtpTimerWrap">⏱️ OTP expires in <span id="custOtpTimerVal">10:00</span></div>
+          <button class="otp-resend" id="custResendOtpBtn" onclick="custSendOtp(true)" disabled>Resend OTP</button>
+          <div class="otp-actions">
+            <button type="button" class="btn-save" id="custChangePwBtn" onclick="custChangePassword()">🔐 Verify & Change Password</button>
+            <button type="button" class="btn-cancel" onclick="custCancelOtp()">✕ Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="danger-zone">
+      <div class="danger-title">⚠️ Danger Zone</div>
+      <div class="danger-desc">Permanently delete your account and all associated data. This action <strong>cannot be undone</strong>.</div>
+      <button class="btn-danger" onclick="showDeleteModal()">🗑️ Delete My Account</button>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ADDRESS MODAL -->
+<div class="modal-overlay" id="addressModal">
+  <div class="modal">
+    <div class="modal-hd"><h2>📍 Add New Address</h2><button class="modal-close" onclick="closeModal('addressModal')">✕</button></div>
+    <div class="modal-bd">
+      <form id="addressForm" onsubmit="saveAddress(event)">
+        <div class="fm-group" style="margin-bottom:14px"><label class="fm-label">Address Type</label><select class="fm-select" id="addr_type" name="type"><option value="home">🏠 Home</option><option value="work">🏢 Work / Office</option><option value="farm">🌾 Farm</option><option value="other">📍 Other</option></select></div>
+        <div class="form-grid" style="margin-bottom:14px">
+          <div class="fm-group"><label class="fm-label">Full Name</label><input class="fm-input" type="text" id="addr_name" name="name" placeholder="Recipient name" required/></div>
+          <div class="fm-group"><label class="fm-label">Phone</label><input class="fm-input" type="tel" id="addr_phone" name="phone" placeholder="+91 XXXXX XXXXX"/></div>
+        </div>
+        <div class="fm-group" style="margin-bottom:14px"><label class="fm-label">Street Address</label><input class="fm-input" type="text" id="addr_street" name="street" placeholder="House no., Street, Area" required/></div>
+        <div class="form-grid three" style="margin-bottom:14px">
+          <div class="fm-group"><label class="fm-label">Village / City</label><input class="fm-input" type="text" id="addr_village" name="village" placeholder="Village or city" required/></div>
+          <div class="fm-group"><label class="fm-label">District</label><input class="fm-input" type="text" id="addr_district" name="district" placeholder="District"/></div>
+          <div class="fm-group"><label class="fm-label">Pincode</label><input class="fm-input" type="text" id="addr_pincode" name="pincode" placeholder="6-digit PIN" maxlength="6"/></div>
+        </div>
+        <div class="form-grid" style="margin-bottom:18px">
+          <div class="fm-group"><label class="fm-label">State</label><select class="fm-select" id="addr_state" name="state" required><option value="">Select state</option><option>Maharashtra</option><option>Telangana</option><option>Karnataka</option><option>Andhra Pradesh</option><option>Tamil Nadu</option><option>Gujarat</option><option>Rajasthan</option><option>Uttar Pradesh</option><option>Punjab</option><option>West Bengal</option><option>Other</option></select></div>
+          <div class="fm-group"><label class="fm-label">Country</label><input class="fm-input readonly" type="text" value="India" readonly/></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px"><input type="checkbox" id="addr_default" style="accent-color:var(--saffron);width:15px;height:15px"><label for="addr_default" style="font-size:12.5px;font-weight:600;color:var(--text-mid);cursor:pointer">Set as default delivery address</label></div>
+        <button type="submit" class="btn-save" style="width:100%">💾 Save Address</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-hd danger"><h2>⚠️ Delete Account</h2><button class="modal-close" onclick="closeModal('deleteModal')">✕</button></div>
+    <div class="modal-bd">
+      <div style="background:var(--red-light);border-radius:12px;padding:14px 16px;margin-bottom:18px"><div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px">⚠️ This action is irreversible</div><div style="font-size:12px;color:#7f1d1d;line-height:1.6">All your data will be permanently deleted.</div></div>
+      <div class="fm-group" style="margin-bottom:18px"><label class="fm-label">Confirm with your password</label><div class="pw-show"><input class="fm-input" type="password" id="deletePassword" placeholder="Enter your password to confirm"/><button type="button" class="pw-toggle" onclick="togglePw('deletePassword',this)">👁</button></div></div>
+      <div style="display:flex;gap:10px"><button class="btn-cancel" style="flex:1" onclick="closeModal('deleteModal')">Cancel</button><button class="btn-danger" style="flex:1" onclick="deleteAccount()">🗑️ Delete Forever</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='customer_profile.js') }}"></script>
+</body>
+</html>

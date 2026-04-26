@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>AgroHub – Smart Buying Tips & Research</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='buying_tips.css') }}">
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/dashboard/customer">
+    <div class="nav-logo-icon">🥬</div>
+    <div class="nav-logo-text"><div class="brand">AgroHub</div><div class="sub">Farm to You</div></div>
+  </a>
+  <div class="nav-spacer"></div>
+  <a class="nav-back" href="/dashboard/customer">← Back to Dashboard</a>
+</nav>
+
+<div class="layout">
+  <aside>
+    <div class="toc-title">Contents</div>
+    <a class="toc-link active" href="#fresh-vegetables" onclick="setTocActive(this)"><span class="toc-icon">🛒</span> Fresh Vegetables Guide</a>
+    <a class="toc-link" href="#storage-tips" onclick="setTocActive(this)"><span class="toc-icon">📦</span> Storage Tips</a>
+    <a class="toc-link" href="#market-insight" onclick="setTocActive(this)"><span class="toc-icon">💹</span> Market Insight</a>
+    <a class="toc-link" href="#organic-benefits" onclick="setTocActive(this)"><span class="toc-icon">🌿</span> Organic Benefits</a>
+    <a class="toc-link" href="#seasonal-eating" onclick="setTocActive(this)"><span class="toc-icon">🍎</span> Seasonal Eating</a>
+    <a class="toc-link" href="#direct-farming" onclick="setTocActive(this)"><span class="toc-icon">🤝</span> Direct from Farmers</a>
+    <div class="toc-divider">
+      <div class="toc-title">Quick Access</div>
+      <a class="toc-link" href="/dashboard/customer"><span class="toc-icon">🏠</span> Dashboard</a>
+      <a class="toc-link" href="/customer-helpandsupport"><span class="toc-icon">❓</span> Help & Support</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="hero-badge">📚 Smart Buyer's Knowledge Hub</div>
+      <h1>Smart Buying Tips<br>& Research</h1>
+      <p>Evidence-based guides on picking fresh produce, saving money, storing food right, and buying directly from verified Indian farmers — so you always get the best value.</p>
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-val">6</div><div class="hs-lab">Topic Guides</div></div>
+        <div class="hs"><div class="hs-val">25–40%</div><div class="hs-lab">Avg Savings vs Retail</div></div>
+        <div class="hs"><div class="hs-val">100%</div><div class="hs-lab">Farmer Verified</div></div>
+      </div>
+    </div>
+
+    <div class="content-wrap">
+      <!-- SEARCH -->
+      <div class="search-wrap">
+        <span style="font-size:17px">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search tips — freshness, storage, tomatoes, organic…" oninput="filterSections()"/>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- 1. FRESH VEGETABLES -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="section-block" id="fresh-vegetables">
+        <div class="section-hd">
+          <div class="sec-icon a">🛒</div>
+          <div><div class="sec-title">How to Pick Fresh Vegetables at the Best Price</div><div class="sec-sub">Quality checks every buyer should know</div></div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#fdf0e8,#d97706)">
+            <span>🥦</span>
+            <div class="img-caption">📍 Farm-fresh produce, Nashik market</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Buying Guide · Featured</div>
+            <div class="article-title">The 5-Point Freshness Check for Any Vegetable</div>
+            <div class="article-intro">Local farm produce lasts 2–3× longer than supermarket vegetables that have been in cold storage for days. Here's how to spot the difference in seconds.</div>
+            <div class="article-content">
+              <div class="key-facts">
+                <div class="kf"><div class="kf-val">2–3×</div><div class="kf-lab">Longer shelf life vs retail</div></div>
+                <div class="kf"><div class="kf-val">24–48 hr</div><div class="kf-lab">Post-harvest peak nutrition</div></div>
+                <div class="kf"><div class="kf-val">30%</div><div class="kf-lab">Avg price saving on AgroHub</div></div>
+              </div>
+              <h4>5-Point Freshness Check</h4>
+              <ul>
+                <li><strong>Firmness:</strong> Press gently — fresh vegetables feel firm and spring back. Soft spots mean breakdown has begun.</li>
+                <li><strong>Colour:</strong> Vibrant, deep colour = high anthocyanin/chlorophyll. Dull or yellowing = ageing and nutrient loss.</li>
+                <li><strong>Fragrance:</strong> Fresh tomatoes smell earthy and slightly sweet. Odourless or sour smell = stored too long.</li>
+                <li><strong>Cut surfaces:</strong> If buying cut vegetables, the flesh should be moist and not dried out or brown.</li>
+                <li><strong>Stems and leaves:</strong> Leafy greens should have crisp, upright leaves. Drooping = moisture loss of 15–25%.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card full">
+          <div class="article-body">
+            <div class="article-tag">Buying Guide</div>
+            <div class="article-title">Crop-by-Crop Freshness Guide</div>
+            <div class="article-intro">Each vegetable has unique freshness indicators. Here's a visual reference for the most common produce on AgroHub.</div>
+            <div class="article-content">
+              <div class="freshness-grid">
+                <div class="fg-card"><div class="fg-emoji">🍅</div><div class="fg-name">Tomatoes</div><div class="fg-tip">Firm, deep red, smooth skin. Heavy for size = juicy. Avoid cracks.</div><span class="fg-badge green">Easy to check</span></div>
+                <div class="fg-card"><div class="fg-emoji">🧅</div><div class="fg-name">Onions</div><div class="fg-tip">Dry, papery outer skin. No soft spots or sprouting. Firm all around.</div><span class="fg-badge green">Easy to check</span></div>
+                <div class="fg-card"><div class="fg-emoji">🥔</div><div class="fg-name">Potatoes</div><div class="fg-tip">Firm, no green patches (solanine). Avoid sprouting — nutritional value drops 40%.</div><span class="fg-badge amber">Moderate</span></div>
+                <div class="fg-card"><div class="fg-emoji">🥕</div><div class="fg-name">Carrots</div><div class="fg-tip">Bright orange, firm. Tops should be fresh green if still attached.</div><span class="fg-badge green">Easy to check</span></div>
+                <div class="fg-card"><div class="fg-emoji">🥬</div><div class="fg-name">Leafy Greens</div><div class="fg-tip">Crisp, upright leaves with no yellowing. Smell fresh and slightly grassy.</div><span class="fg-badge red">Buy same day</span></div>
+                <div class="fg-card"><div class="fg-emoji">🧄</div><div class="fg-name">Garlic</div><div class="fg-tip">Hard bulbs, unbroken skin, no green shoots. Heavy per bulb = fresh.</div><span class="fg-badge green">Easy to check</span></div>
+              </div>
+              <div class="tips-box">
+                <div class="tb-title">✅ Pro Buying Tips from AgroHub Farmers</div>
+                <ul>
+                  <li>Buy from farmers who list harvest date — freshness is guaranteed when harvested within 48 hours</li>
+                  <li>Seasonal vegetables are always 20–40% cheaper AND fresher than off-season produce</li>
+                  <li>Slightly irregular shapes = natural growth = no synthetic growth hormones</li>
+                  <li>Smaller tomatoes and onions often have more intense flavour than oversized ones</li>
+                  <li>Mud on root vegetables = just harvested (good sign!). Washed = been stored</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- 2. STORAGE TIPS -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="section-block" id="storage-tips">
+        <div class="section-hd">
+          <div class="sec-icon b">📦</div>
+          <div><div class="sec-title">Store Onions & Potatoes the Right Way</div><div class="sec-sub">Reduce waste and save money with smart storage</div></div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#e8f5ef,#2e7d52)">
+            <span>📦</span>
+            <div class="img-caption">📍 Home storage, Maharashtra</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Storage Tips · Featured</div>
+            <div class="article-title">The Right and Wrong Way to Store Onions & Potatoes</div>
+            <div class="article-intro">Improper storage causes 30–40% of household produce waste in India. Onions stored incorrectly go soft within 3–5 days; stored correctly they last 2–3 months.</div>
+            <div class="article-content">
+              <div class="key-facts">
+                <div class="kf"><div class="kf-val">3 months</div><div class="kf-lab">Onions stored correctly</div></div>
+                <div class="kf"><div class="kf-val">4 months</div><div class="kf-lab">Potatoes in cool dark space</div></div>
+                <div class="kf"><div class="kf-val">40%</div><div class="kf-lab">Avoidable household waste</div></div>
+              </div>
+              <h4>Storage Guide by Vegetable</h4>
+              <div class="storage-grid">
+                <div class="storage-card"><div class="sg-emoji">🧅</div><div class="sg-info"><div class="sg-name">Onions</div><div class="sg-method">Cool, dry, well-ventilated space. Mesh bag or hanging net. Never refrigerate — moisture softens them. Keep away from potatoes (ethylene gas speeds spoilage).</div><div class="sg-shelf">✓ Shelf life: 2–3 months</div></div></div>
+                <div class="storage-card"><div class="sg-emoji">🥔</div><div class="sg-info"><div class="sg-name">Potatoes</div><div class="sg-method">Dark, cool area (10–15°C). Avoid light — triggers solanine (toxic green pigment). Paper bags or cardboard boxes. Never plastic bags.</div><div class="sg-shelf">✓ Shelf life: 3–4 months</div></div></div>
+                <div class="storage-card"><div class="sg-emoji">🍅</div><div class="sg-info"><div class="sg-name">Tomatoes</div><div class="sg-method">Room temperature until ripe. Never refrigerate unripe tomatoes — kills flavour compounds. Once cut, refrigerate and use within 2 days.</div><div class="sg-shelf">✓ Shelf life: 5–7 days at room temp</div></div></div>
+                <div class="storage-card"><div class="sg-emoji">🥬</div><div class="sg-info"><div class="sg-name">Leafy Greens</div><div class="sg-method">Wrap in a slightly damp cloth, place in fridge. Or stand in a glass of water like flowers. Wash only just before use, not before storing.</div><div class="sg-shelf">✓ Shelf life: 4–5 days in fridge</div></div></div>
+              </div>
+              <div class="warn-box">
+                <div class="wb-title">⚠ Common Storage Mistakes to Avoid</div>
+                <p>Never store onions and potatoes together — they release gases that accelerate each other's spoilage. Never put whole tomatoes in the fridge — temperatures below 13°C destroy the enzymes responsible for flavour and aroma. Plastic bags trap moisture and cause mould in most root vegetables.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- 3. MARKET INSIGHT -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="section-block" id="market-insight">
+        <div class="section-hd">
+          <div class="sec-icon c">💹</div>
+          <div><div class="sec-title">When to Buy Tomatoes for Maximum Savings</div><div class="sec-sub">Understanding seasonal price cycles in Indian markets</div></div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#eff6ff,#1e40af)">
+            <span>💹</span>
+            <div class="img-caption">📍 APMC Price Data, Maharashtra</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Market Insight · Featured</div>
+            <div class="article-title">Tomato Price Cycles: When to Buy, When to Wait</div>
+            <div class="article-intro">Tomato prices in Maharashtra follow a predictable seasonal pattern. Knowing the cycle can save you ₹30–50/kg and help you plan bulk purchases at peak freshness.</div>
+            <div class="article-content">
+              <div class="key-facts">
+                <div class="kf"><div class="kf-val">₹15–25</div><div class="kf-lab">Price in Feb–March</div></div>
+                <div class="kf"><div class="kf-val">₹80–120</div><div class="kf-lab">Price in June–July</div></div>
+                <div class="kf"><div class="kf-val">40% dip</div><div class="kf-lab">After Rabi harvest</div></div>
+              </div>
+              <h4>Annual Price Pattern (Nashik APMC)</h4>
+              <div class="price-chart">
+                <div class="pc-title">Average tomato price trend (₹/kg)</div>
+                <div class="pc-bars">
+                  <div class="pc-bar" style="height:30%;background:#22c55e" data-tip="Jan: ₹25">25</div>
+                  <div class="pc-bar" style="height:20%;background:#16a34a" data-tip="Feb: ₹18">18</div>
+                  <div class="pc-bar" style="height:18%;background:#16a34a" data-tip="Mar: ₹15">15</div>
+                  <div class="pc-bar" style="height:40%;background:#eab308" data-tip="Apr: ₹38">38</div>
+                  <div class="pc-bar" style="height:60%;background:#f97316" data-tip="May: ₹55">55</div>
+                  <div class="pc-bar" style="height:90%;background:#ef4444" data-tip="Jun: ₹85">85</div>
+                  <div class="pc-bar" style="height:100%;background:#dc2626" data-tip="Jul: ₹100">100</div>
+                  <div class="pc-bar" style="height:80%;background:#ef4444" data-tip="Aug: ₹75">75</div>
+                  <div class="pc-bar" style="height:50%;background:#f97316" data-tip="Sep: ₹48">48</div>
+                  <div class="pc-bar" style="height:35%;background:#eab308" data-tip="Oct: ₹32">32</div>
+                  <div class="pc-bar" style="height:28%;background:#22c55e" data-tip="Nov: ₹24">24</div>
+                  <div class="pc-bar" style="height:32%;background:#22c55e" data-tip="Dec: ₹28">28</div>
+                </div>
+                <div class="pc-labels"><span class="pc-label">Jan</span><span class="pc-label">Feb</span><span class="pc-label">Mar</span><span class="pc-label">Apr</span><span class="pc-label">May</span><span class="pc-label">Jun</span><span class="pc-label">Jul</span><span class="pc-label">Aug</span><span class="pc-label">Sep</span><span class="pc-label">Oct</span><span class="pc-label">Nov</span><span class="pc-label">Dec</span></div>
+                <div style="font-size:10px;color:var(--text-light);margin-top:5px;text-align:center">Green = Best buying months · Red = Avoid buying in bulk</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card full">
+          <div class="article-body">
+            <div class="article-tag">Market Insight</div>
+            <div class="article-title">Best Months to Buy Key Vegetables in Bulk</div>
+            <div class="article-content">
+              <table class="info-table">
+                <thead><tr><th>Vegetable</th><th>Best Buy Months</th><th>Avoid</th><th>Bulk Storage Tip</th></tr></thead>
+                <tbody>
+                  <tr><td>🍅 Tomatoes</td><td>Feb–March, Nov–Dec</td><td>June–July</td><td>Can be sun-dried or made into puree</td></tr>
+                  <tr><td>🧅 Onions</td><td>Feb–April (post-Rabi)</td><td>Sep–Oct</td><td>Store in mesh bags, lasts 3 months</td></tr>
+                  <tr><td>🥔 Potatoes</td><td>Feb–April</td><td>July–Aug</td><td>Dark cool room, lasts 4 months</td></tr>
+                  <tr><td>🥕 Carrots</td><td>Nov–Feb</td><td>Apr–Sep</td><td>Refrigerate, wrapped in damp cloth</td></tr>
+                  <tr><td>🌽 Maize</td><td>Aug–Oct (Kharif harvest)</td><td>Feb–Apr</td><td>Dry and store as flour</td></tr>
+                  <tr><td>🧄 Garlic</td><td>Mar–May</td><td>Sep–Nov</td><td>Braided rope, cool dry space</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- 4. ORGANIC BENEFITS -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="section-block" id="organic-benefits">
+        <div class="section-hd">
+          <div class="sec-icon d">🌿</div>
+          <div><div class="sec-title">Why Organic Produce Costs More</div><div class="sec-sub">Understanding the true value behind the price premium</div></div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#f3e8ff,#7c3aed)">
+            <span>🌿</span>
+            <div class="img-caption">📍 Organic farm, Pune district</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Organic Benefits · Featured</div>
+            <div class="article-title">Organic vs Conventional: What the Research Shows</div>
+            <div class="article-intro">Organic produce contains 20–30% higher concentrations of polyphenols, vitamin C, and antioxidants compared to conventionally grown counterparts. The price premium reflects real differences in farming cost and nutritional quality.</div>
+            <div class="article-content">
+              <div class="key-facts">
+                <div class="kf"><div class="kf-val">20–30%</div><div class="kf-lab">Higher antioxidants</div></div>
+                <div class="kf"><div class="kf-val">0</div><div class="kf-lab">Synthetic pesticides</div></div>
+                <div class="kf"><div class="kf-val">2–3×</div><div class="kf-lab">Higher farming labour cost</div></div>
+              </div>
+              <h4>Why Organic Costs More: The Real Breakdown</h4>
+              <table class="info-table">
+                <thead><tr><th>Factor</th><th>Conventional</th><th>Organic</th></tr></thead>
+                <tbody>
+                  <tr><td>Weed control</td><td>Chemical herbicide (₹800/acre)</td><td>Manual weeding (₹3,200/acre)</td></tr>
+                  <tr><td>Pest control</td><td>Synthetic pesticide (₹1,200/acre)</td><td>Neem/Bt/manual (₹2,400/acre)</td></tr>
+                  <tr><td>Certification</td><td>None</td><td>₹8,000–15,000/year</td></tr>
+                  <tr><td>Yield</td><td>Base 100%</td><td>Typically 75–85% of conventional</td></tr>
+                  <tr><td>Market price</td><td>Standard APMC rate</td><td>25–60% premium</td></tr>
+                </tbody>
+              </table>
+              <div class="tips-box">
+                <div class="tb-title">✅ How to Identify Genuine Organic Produce</div>
+                <ul>
+                  <li>Look for PGS-India (Participatory Guarantee System) or NPOP certification badge</li>
+                  <li>Organic produce often has slight imperfections — natural, not cosmetically perfect</li>
+                  <li>AgroHub farmer profiles show certification status for organic listings</li>
+                  <li>Ask for third-party soil test results — genuine organic farmers have them</li>
+                  <li>On AgroHub, organic listings are marked with 🍃 Organic badge and verified by admin</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- 5. SEASONAL EATING -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="section-block" id="seasonal-eating">
+        <div class="section-hd">
+          <div class="sec-icon e">🍎</div>
+          <div><div class="sec-title">Seasonal Vegetables by Month</div><div class="sec-sub">Eat in season for best taste, nutrition, and price</div></div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#fce7f3,#be185d)">
+            <span>🍎</span>
+            <div class="img-caption">📍 Seasonal harvest calendar, India</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Seasonal Eating · Featured</div>
+            <div class="article-title">India's Seasonal Produce Calendar</div>
+            <div class="article-intro">Buying seasonal produce means 30–50% lower prices, peak flavour, and maximum nutritional value. Out-of-season vegetables are grown in greenhouses or cold-stored — both reduce quality significantly.</div>
+            <div class="article-content">
+              <div class="key-facts">
+                <div class="kf"><div class="kf-val">30–50%</div><div class="kf-lab">Cost savings seasonal vs off-season</div></div>
+                <div class="kf"><div class="kf-val">2×</div><div class="kf-lab">Higher flavour compounds in season</div></div>
+                <div class="kf"><div class="kf-val">4 seasons</div><div class="kf-lab">Kharif, Rabi, Zaid, Perennial</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card full">
+          <div class="article-body">
+            <div class="article-tag">Seasonal Eating</div>
+            <div class="article-title">Month-by-Month Best Buys in Maharashtra</div>
+            <div class="article-content">
+              <div class="seasonal-table">
+                <div class="st-card"><div class="st-month">Jan–Feb</div><div class="st-crops">🥕 Carrots<br>🥬 Spinach<br>🌿 Fenugreek<br>🫛 Peas<br>🥦 Cauliflower<br>🥔 Potatoes</div></div>
+                <div class="st-card"><div class="st-month">Mar–Apr</div><div class="st-crops">🧅 Onions<br>🍅 Tomatoes<br>🧄 Garlic<br>🌽 Sweet Corn<br>🥭 Mangoes (early)</div></div>
+                <div class="st-card"><div class="st-month">May–Jun</div><div class="st-crops">🥭 Mangoes<br>🍇 Grapes<br>🌾 Wheat (stored)<br>🥒 Cucumber<br>🫘 Toor Dal</div></div>
+                <div class="st-card"><div class="st-month">Jul–Aug</div><div class="st-crops">🌽 Maize<br>🥬 Amaranth<br>🥒 Bottle Gourd<br>🍈 Bitter Gourd<br>🌿 Colocasia</div></div>
+                <div class="st-card"><div class="st-month">Sep–Oct</div><div class="st-crops">🍅 Tomatoes<br>🥬 Spinach<br>🌱 Coriander<br>🧅 Small Onions<br>🫘 Green Beans</div></div>
+                <div class="st-card"><div class="st-month">Nov–Dec</div><div class="st-crops">🥕 Carrots<br>🥦 Cauliflower<br>🌿 Methi<br>🥬 Lettuce<br>🫛 Peas (early)</div></div>
+              </div>
+              <div class="warn-box">
+                <div class="wb-title">⚠ Why Avoid Off-Season Produce?</div>
+                <p>Off-season produce is either greenhouse grown (higher pesticide use, lower vitamin content) or cold-stored for 2–6 months (enzymatic degradation reduces nutrients by 15–40%). Seasonal produce is harvested at peak ripeness and reaches you within 24–48 hours on AgroHub.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- 6. DIRECT FARMING -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="section-block" id="direct-farming">
+        <div class="section-hd">
+          <div class="sec-icon f">🤝</div>
+          <div><div class="sec-title">Benefits of Buying Directly from Farmers</div><div class="sec-sub">Why cutting out middlemen benefits everyone</div></div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#ecfdf5,#059669)">
+            <span>🤝</span>
+            <div class="img-caption">📍 AgroHub farmer network, India</div>
+          </div>
+          <div class="article-body">
+            <div class="article-tag">Direct Farming · Featured</div>
+            <div class="article-title">What Happens When You Buy Directly: The Full Chain</div>
+            <div class="article-intro">In traditional supply chains, produce passes through 3–5 middlemen before reaching you. Each adds 15–25% margin, so you pay 40–80% more than what the farmer receives. Direct buying eliminates this entirely.</div>
+            <div class="article-content">
+              <div class="savings-compare">
+                <div class="sc-card supermarket">
+                  <div class="sc-title" style="color:var(--red)">🏪 Supermarket / Retail</div>
+                  <div class="sc-row"><span class="sc-key">Farmer receives</span><span class="sc-val">₹15–20/kg</span></div>
+                  <div class="sc-row"><span class="sc-key">Commission agent</span><span class="sc-val">+₹5–8/kg</span></div>
+                  <div class="sc-row"><span class="sc-key">Wholesaler</span><span class="sc-val">+₹8–12/kg</span></div>
+                  <div class="sc-row"><span class="sc-key">Retail markup</span><span class="sc-val">+₹10–20/kg</span></div>
+                  <div class="sc-row" style="font-weight:700"><span class="sc-key">You pay</span><span class="sc-val" style="color:var(--red)">₹40–60/kg</span></div>
+                </div>
+                <div class="sc-card AgroHub">
+                  <div class="sc-title" style="color:var(--green)">🌿 AgroHub Direct</div>
+                  <div class="sc-row"><span class="sc-key">Farmer receives</span><span class="sc-val">₹28–35/kg</span></div>
+                  <div class="sc-row"><span class="sc-key">Middlemen</span><span class="sc-val">None</span></div>
+                  <div class="sc-row"><span class="sc-key">Platform fee</span><span class="sc-val">Minimal</span></div>
+                  <div class="sc-row"><span class="sc-key">Delivery</span><span class="sc-val">Direct to door</span></div>
+                  <div class="sc-row" style="font-weight:700"><span class="sc-key">You pay</span><span class="sc-val" style="color:var(--green)">₹28–38/kg</span></div>
+                </div>
+              </div>
+              <div class="tips-box">
+                <div class="tb-title">✅ Additional Benefits of Direct Buying</div>
+                <ul>
+                  <li>Full traceability — you know exactly which farm your food came from</li>
+                  <li>Fresher produce — harvested to order, not sitting in cold storage</li>
+                  <li>Supports farmer incomes directly — 70–80% of price goes to the grower</li>
+                  <li>Request specific growing practices (low pesticide, traditional varieties)</li>
+                  <li>Build relationships with trusted farmers for recurring orders</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:18px 22px;text-align:center">
+        <div style="font-size:12.5px;color:var(--text-mid);line-height:1.7">
+          📚 Content based on data from <strong>ICAR</strong>, <strong>eNAM APMC</strong>, <strong>FSSAI</strong>, and <strong>AgroHub farmer network</strong>.<br>
+          For produce-specific advice, contact <a href="/customer-helpandsupport" style="color:var(--saffron);font-weight:700">AgroHub Help & Support</a>.
+        </div>
+        <div style="margin-top:13px;display:flex;gap:11px;justify-content:center;flex-wrap:wrap">
+          <a href="/dashboard/customer" style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--saffron),var(--gold));color:#fff;padding:9px 18px;border-radius:10px;text-decoration:none;font-size:12.5px;font-weight:700">🏠 Back to Dashboard</a>
+          <a href="/customer-helpandsupport" style="display:inline-flex;align-items:center;gap:5px;background:var(--cream);color:var(--saffron);border:1.5px solid var(--border);padding:9px 18px;border-radius:10px;text-decoration:none;font-size:12.5px;font-weight:700">❓ Help & Support</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+function setTocActive(el) {
+  document.querySelectorAll('.toc-link').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('backTop');
+  btn.classList.toggle('visible', window.scrollY > 400);
+  const sections = document.querySelectorAll('.section-block');
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 90) current = s.id; });
+  document.querySelectorAll('.toc-link').forEach(t => {
+    t.classList.remove('active');
+    if (t.getAttribute('href') === '#' + current) t.classList.add('active');
+  });
+});
+
+function filterSections() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.section-block').forEach(s => {
+    s.style.display = (!q || s.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash;
+  if (hash) {
+    setTimeout(() => {
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({behavior:'smooth'});
+      const link = document.querySelector(`.toc-link[href="${hash}"]`);
+      if (link) setTocActive(link);
+    }, 300);
+  }
+});
+</script>
+</body>
+</html>

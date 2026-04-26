@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - AgroHub</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <!-- Background Pattern -->
+  <div class="login-background">
+    <div class="bg-pattern"></div>
+    <div class="bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="login-container">
+    
+    <!-- Left Side - Branding -->
+    <div class="login-left">
+      <div class="brand-section">
+        <div class="logo">
+          <img src="{{ url_for('static', filename='Assets/logo.png') }}" alt="AgroHub" style="height:52px; width:auto; ">
+        </div>
+        
+        <h1 class="brand-title">Welcome Back to the Future of Agriculture</h1>
+        
+        <p class="brand-description">
+          Connect with thousands of farmers, customers, and service providers. 
+          Trade crops, book transport, rent equipment—all in one secure platform.
+        </p>
+        
+        <div class="brand-features">
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div class="feature-text">
+              <strong>Secure Platform</strong>
+              <span>Bank-grade encryption</span>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div class="feature-text">
+              <strong>24/7 Support</strong>
+              <span>We're here to help</span>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div class="feature-text">
+              <strong>Fair Trading</strong>
+              <span>Direct market access</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="brand-stats">
+          <div class="stat-box">
+            <div class="stat-number">5000+</div>
+            <div class="stat-label">Active Users</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">₹50Cr+</div>
+            <div class="stat-label">Transactions</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Verified</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Side - Login Form -->
+    <div class="login-right">
+      <div class="login-card">
+        
+        <!-- Close Button (for modal use) -->
+        <a href="/" class="close-btn" title="Back to Home">
+  <span>←</span>
+</a>
+        
+        <!-- Form Header -->
+        <div class="form-header">
+          <h2>Sign In</h2>
+          <p>Choose your role and enter your credentials</p>
+        </div>
+        
+        <!-- Login Form -->
+        <form class="login-form" id="loginForm" novalidate>
+          
+          <!-- Role Selection -->
+          <div class="form-group">
+            <label class="form-label">I am a</label>
+            <div class="role-tabs">
+              <button type="button" class="role-tab active" data-role="farmer" onclick="selectRole('farmer', this)">
+                <div class="role-icon">👨‍🌾</div>
+                <span>Farmer</span>
+              </button>
+              
+              <button type="button" class="role-tab" data-role="customer" onclick="selectRole('customer', this)">
+                <div class="role-icon">🛒</div>
+                <span>Customer</span>
+              </button>
+              
+              <button type="button" class="role-tab" data-role="service_provider" onclick="selectRole('service_provider', this)">
+                <div class="role-icon">🚛</div>
+                <span>Service Provider</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Email/Phone Input -->
+          <div class="form-group">
+            <label class="form-label" for="loginId">Email or Phone Number</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📧</span>
+              <input 
+                type="text" 
+                id="loginId" 
+                class="form-input" 
+                placeholder="Enter your email or phone number"
+                required
+              >
+              <span class="input-status"></span>
+            </div>
+            <span class="input-error"></span>
+          </div>
+          
+          <!-- Password Input -->
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input 
+                type="password" 
+                id="password" 
+                class="form-input" 
+                placeholder="Enter your password"
+                required
+              >
+              <button type="button" class="password-toggle" onclick="togglePassword()" title="Show/Hide Password">
+                <span class="eye-icon">👁️</span>
+              </button>
+            </div>
+            <span class="input-error"></span>
+          </div>
+          
+          <!-- Remember Me & Forgot Password -->
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe">
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-text">Remember me</span>
+            </label>
+            
+            <a href="#" class="forgot-link" onclick="showForgotPanel(); return false;">
+              Forgot Password?
+            </a>
+          </div>
+          
+          <!-- Submit Button -->
+          <button type="submit" class="submit-btn">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-arrow">→</span>
+          </button>
+          
+          <!-- Divider -->
+          <!-- <div class="divider">
+            <span>or continue with</span>
+          </div> -->
+          
+          <!-- Social Login -->
+          <!-- <div class="social-login">
+            <button type="button" class="social-btn" onclick="socialLogin('google')">
+              <span class="social-icon">🔍</span>
+              <span>Google</span>
+            </button>
+            
+            <button type="button" class="social-btn" onclick="socialLogin('phone')">
+              <span class="social-icon">📱</span>
+              <span>Phone OTP</span>
+            </button>
+          </div> -->
+          
+          <!-- Sign Up Link -->
+          <div class="signup-prompt">
+            Don't have an account?
+            <a href="/signup" class="signup-link">Sign Up Now</a>
+          </div>
+          
+        </form>
+      </div>
+      
+      <!-- Trust Badges -->
+      <div class="trust-badges">
+        <div class="badge-item">
+          <span class="badge-icon">🔐</span>
+          <span>SSL Secured</span>
+        </div>
+        <div class="badge-item">
+          <span class="badge-icon">✓</span>
+          <span>Verified Platform</span>
+        </div>
+        <div class="badge-item">
+          <span class="badge-icon">🏆</span>
+          <span>Trusted by 5000+</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toastContainer"></div>
+
+  <!-- ══ FORGOT PASSWORD PANEL ══ -->
+  <div id="forgotOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
+    <div id="forgotPanel" style="background:#fff;border-radius:20px;padding:36px 32px 28px;width:min(440px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.3);position:relative;animation:fpIn .25s ease;">
+      <style>
+        @keyframes fpIn{from{transform:scale(.87);opacity:0}to{transform:scale(1);opacity:1}}
+        #forgotPanel .fp-role-group{display:flex;gap:8px;margin-bottom:0;}
+        #forgotPanel .fp-role-group input[type=radio]{display:none;}
+        #forgotPanel .fp-role-pill{flex:1;padding:9px 6px;border:2px solid #c8e6c9;border-radius:10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;color:#555;background:#fff;transition:all .2s;user-select:none;}
+        #forgotPanel .fp-role-pill i{display:block;font-size:17px;margin-bottom:2px;color:#6fa96f;}
+        #forgotPanel .fp-role-group input:checked+.fp-role-pill{background:#2e7d32;border-color:#2e7d32;color:#fff;}
+        #forgotPanel .fp-role-group input:checked+.fp-role-pill i{color:#fff;}
+        #forgotPanel .fp-input-wrap{position:relative;}
+        #forgotPanel .fp-input-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#6fa96f;font-size:14px;}
+        #forgotPanel .fp-input-wrap input{width:100%;padding:11px 14px 11px 36px;border:2px solid #c8e6c9;border-radius:10px;font-size:14px;}
+        #forgotPanel .fp-input-wrap input:focus{outline:none;border-color:#2e7d32;}
+        #forgotPanel .fp-btn{width:100%;padding:13px;background:linear-gradient(135deg,#6fa96f,#2e5d2e);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;}
+        #forgotPanel .fp-btn:hover{opacity:.9;}
+        #forgotPanel .fp-btn:disabled{background:#aaa;cursor:not-allowed;}
+        #forgotPanel .fp-msg{margin-top:12px;padding:12px 14px;border-radius:9px;font-size:13px;line-height:1.5;display:none;}
+        #forgotPanel .fp-msg.success{background:#e8f5e9;color:#1b5e20;border-left:4px solid #2e7d32;display:block;}
+        #forgotPanel .fp-msg.error{background:#ffebee;color:#c62828;border-left:4px solid #e53935;display:block;}
+        #forgotPanel .fp-close{position:absolute;top:13px;right:16px;background:none;border:none;font-size:20px;color:#aaa;cursor:pointer;line-height:1;}
+        #forgotPanel .fp-close:hover{color:#555;}
+        #forgotPanel label{display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:6px;}
+        #forgotPanel .fp-group{margin-bottom:16px;}
+        #forgotPanel h3{font-size:20px;color:#2e5d2e;margin:0 0 4px;}
+        #forgotPanel .fp-sub{color:#666;font-size:13px;margin-bottom:22px;line-height:1.5;}
+        #forgotPanel .fp-success-box{text-align:center;display:none;}
+        #forgotPanel .fp-success-box .fp-big{font-size:50px;margin-bottom:10px;}
+        #forgotPanel .fp-success-box h3{color:#2e7d32;}
+        #forgotPanel .fp-success-box p{color:#555;font-size:13px;margin-top:8px;line-height:1.6;}
+        #forgotPanel .fp-back-btn{margin-top:18px;background:none;border:none;color:#2e7d32;font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline;}
+      </style>
+
+      <button class="fp-close" onclick="hideForgotPanel()">✕</button>
+
+      <!-- Form view -->
+      <div id="fpFormView">
+        <div style="font-size:30px;margin-bottom:8px;">🔑</div>
+        <h3>Forgot Password?</h3>
+        <p class="fp-sub">Select your role and enter your registered email.<br>We'll send a secure reset link instantly.</p>
+
+        <div class="fp-group">
+          <label>Account Role *</label>
+          <div class="fp-role-group">
+            <input type="radio" name="fp_role" id="fp-farmer" value="farmer" checked>
+            <label for="fp-farmer" class="fp-role-pill"><i class="fa-solid fa-tractor"></i>Farmer</label>
+            <input type="radio" name="fp_role" id="fp-customer" value="customer">
+            <label for="fp-customer" class="fp-role-pill"><i class="fa-solid fa-user"></i>Customer</label>
+            <input type="radio" name="fp_role" id="fp-provider" value="service_provider">
+            <label for="fp-provider" class="fp-role-pill"><i class="fa-solid fa-briefcase"></i>Provider</label>
+          </div>
+        </div>
+
+        <div class="fp-group">
+          <label for="fpEmail">Registered Email *</label>
+          <div class="fp-input-wrap">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="fpEmail" placeholder="Enter your email address"/>
+          </div>
+        </div>
+
+        <button class="fp-btn" id="fpSendBtn" onclick="fpSendLink()">
+          <i class="fa-solid fa-paper-plane"></i> Send Reset Link
+        </button>
+
+        <div class="fp-msg" id="fpMsg"></div>
+      </div>
+
+      <!-- Success view -->
+      <div class="fp-success-box" id="fpSuccessView">
+        <div class="fp-big">📬</div>
+        <h3>Link Sent!</h3>
+        <p>A password reset link has been sent to<br><strong id="fpSentEmail"></strong></p>
+        <p style="margin-top:8px;">Check your inbox &amp; spam. Link expires in <strong>1 hour</strong>.</p>
+        <button class="fp-back-btn" onclick="fpResetView()">← Try a different email</button>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <script src="{{ url_for('static', filename='login.js') }}"></script>
+  <script>
+    // ── Forgot Password Panel ────────────────────────────────────
+    function showForgotPanel() {
+      document.getElementById('fpFormView').style.display   = 'block';
+      document.getElementById('fpSuccessView').style.display = 'none';
+      document.getElementById('fpMsg').className = 'fp-msg';
+      document.getElementById('fpEmail').value  = '';
+      document.getElementById('fpSendBtn').disabled = false;
+      document.getElementById('fpSendBtn').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Reset Link';
+      const ol = document.getElementById('forgotOverlay');
+      ol.style.display = 'flex';
+    }
+    function hideForgotPanel() {
+      document.getElementById('forgotOverlay').style.display = 'none';
+    }
+    function fpResetView() {
+      document.getElementById('fpFormView').style.display   = 'block';
+      document.getElementById('fpSuccessView').style.display = 'none';
+      document.getElementById('fpMsg').className = 'fp-msg';
+      document.getElementById('fpEmail').value  = '';
+      const btn = document.getElementById('fpSendBtn');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Reset Link';
+    }
+    function fpShowMsg(text, type) {
+      const el = document.getElementById('fpMsg');
+      el.className = 'fp-msg ' + type;
+      el.textContent = text;
+    }
+    async function fpSendLink() {
+      const email = document.getElementById('fpEmail').value.trim();
+      const role  = document.querySelector('input[name="fp_role"]:checked')?.value;
+      const btn   = document.getElementById('fpSendBtn');
+      document.getElementById('fpMsg').className = 'fp-msg';
+      if (!email) { fpShowMsg('Please enter your email address.', 'error'); return; }
+      if (!role)  { fpShowMsg('Please select your account role.', 'error'); return; }
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending…';
+      try {
+        const res  = await fetch('/api/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, role })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          document.getElementById('fpSentEmail').textContent = email;
+          document.getElementById('fpFormView').style.display    = 'none';
+          document.getElementById('fpSuccessView').style.display = 'block';
+        } else {
+          fpShowMsg(data.error || 'Something went wrong. Please try again.', 'error');
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Reset Link';
+        }
+      } catch {
+        fpShowMsg('Network error. Please check your connection.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Reset Link';
+      }
+    }
+    // Close on overlay click
+    document.getElementById('forgotOverlay').addEventListener('click', function(e) {
+      if (e.target === this) hideForgotPanel();
+    });
+    // Enter key in email field
+    document.getElementById('fpEmail').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') fpSendLink();
+    });
+  </script>
+</body>
+</html>

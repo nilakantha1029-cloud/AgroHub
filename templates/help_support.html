@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Help & Support – AgroHub</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='help_support.css') }}">
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/dashboard/farmer">
+    <div class="nav-logo-icon">🌾</div>
+    <div class="nav-logo-text"><span class="brand">AgroHub</span><span class="tagline">Farmer Platform</span></div>
+  </a>
+  <a class="nav-back" href="/dashboard/farmer">← Back to Dashboard</a>
+</nav>
+
+<div class="support-hero">
+  <h1>❓ Help & Support</h1>
+  <p>Find answers, submit tickets, and get help with your AgroHub farmer account</p>
+  <div class="hero-search">
+    <input type="text" id="faqSearch" placeholder="Search FAQs, e.g. 'how to list goods'…" oninput="filterFAQ()"/>
+    <button onclick="filterFAQ()">Search</button>
+  </div>
+</div>
+
+<div class="quick-contact">
+  <a class="qc-card" onclick="scrollToTicket()">
+    <div class="qc-icon">📝</div>
+    <div class="qc-label">Submit a Ticket</div>
+    <div class="qc-sub">We reply within 24 hours</div>
+  </a>
+  <a class="qc-card" href="mailto:support@AgroHub.in">
+    <div class="qc-icon">📧</div>
+    <div class="qc-label">Email Us</div>
+    <div class="qc-sub">support@AgroHub.in</div>
+  </a>
+  <a class="qc-card" href="tel:+911800001234">
+    <div class="qc-icon">📞</div>
+    <div class="qc-label">Call Support</div>
+    <div class="qc-sub">1800-001-2345 · Mon–Sat 9am–6pm</div>
+  </a>
+</div>
+
+<div class="page-content">
+
+  <!-- FAQ SECTION -->
+  <div class="section-header"><h2>📚 Frequently Asked Questions</h2></div>
+  <div class="cat-pills" id="catPills">
+    <span class="cat-pill active" onclick="filterByCategory('',this)">All</span>
+    <span class="cat-pill" onclick="filterByCategory('listings',this)">Listings</span>
+    <span class="cat-pill" onclick="filterByCategory('orders',this)">Orders</span>
+    <span class="cat-pill" onclick="filterByCategory('profile',this)">Profile</span>
+    <span class="cat-pill" onclick="filterByCategory('account',this)">Account</span>
+    <span class="cat-pill" onclick="filterByCategory('payments',this)">Payments</span>
+  </div>
+  <div class="faq-list" id="faqList">
+    <div style="text-align:center;padding:40px;color:var(--text-light)">Loading FAQs…</div>
+  </div>
+
+  <!-- SUBMIT TICKET -->
+  <div class="ticket-card" id="submitTicketCard">
+    <div class="ticket-hd"><span style="font-size:20px">📝</span><h3>Submit a Support Ticket</h3></div>
+    <div class="ticket-bd">
+      <form onsubmit="submitTicket(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="t_category">
+              <option value="general">General Query</option>
+              <option value="listings">Listings & Products</option>
+              <option value="orders">Orders & Shipping</option>
+              <option value="payments">Payments</option>
+              <option value="profile">Profile & Account</option>
+              <option value="technical">Technical Issue</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select class="form-select" id="t_priority">
+              <option value="low">Low – General question</option>
+              <option value="medium" selected>Medium – Normal issue</option>
+              <option value="high">High – Urgent problem</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject *</label>
+          <input class="form-input" id="t_subject" type="text" placeholder="Brief description of your issue" required maxlength="200"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message *</label>
+          <textarea class="form-textarea" id="t_message" placeholder="Describe your issue in detail. Include any order IDs, listing IDs, or error messages if applicable." required style="min-height:130px"></textarea>
+        </div>
+        <button type="submit" class="btn-primary" id="ticketSubmitBtn">📤 Submit Ticket</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MY TICKETS -->
+  <div class="section-header"><h2>🎫 My Support Tickets</h2><button onclick="loadTickets()" style="font-size:12px;color:var(--green-mid);background:none;border:none;cursor:pointer;font-weight:600">↻ Refresh</button></div>
+  <div class="ticket-card">
+    <div class="ticket-bd" id="myTicketsList" style="padding:0">
+      <div style="text-align:center;padding:40px;color:var(--text-light)">Loading your tickets…</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='help_support.js') }}"></script>
+</body>
+</html>

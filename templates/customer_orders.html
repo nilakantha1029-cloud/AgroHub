@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>AgroHub – My Orders</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='customer_orders.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="/dashboard/customer">
+    <div class="nav-logo-icon">🥬</div>
+    <div class="nav-logo-text">
+      <div class="brand">AgroHub</div>
+      <div class="sub">Farm to You</div>
+    </div>
+  </a>
+  <div class="nav-spacer"></div>
+  <a class="nav-back" href="/dashboard/customer">← Dashboard</a>
+  <div class="nav-profile">
+    <div class="nav-avatar" id="navAvatar">--</div>
+    <span class="nav-uname" id="navName">Loading…</span>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-inner">
+
+    <!-- HERO STRIP -->
+    <div class="page-hero">
+      <div class="hero-left">
+        <h1>📦 My Orders</h1>
+        <p>Complete history of all your purchases from AgroHub farmers</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-val" id="statTotal">—</div><div class="hstat-lab">Total Orders</div></div>
+        <div class="hstat"><div class="hstat-val" id="statDelivered">—</div><div class="hstat-lab">Delivered</div></div>
+        <div class="hstat"><div class="hstat-val" id="statSpent">—</div><div class="hstat-lab">Total Spent</div></div>
+      </div>
+    </div>
+
+    <!-- SUMMARY PILLS -->
+    <div class="summary-row" id="summaryRow" style="display:none">
+      <div class="sum-pill"><span class="sum-icon">⏳</span><div><div class="sum-val" id="sumPending">0</div><div class="sum-lab">Pending</div></div></div>
+      <div class="sum-pill"><span class="sum-icon">✅</span><div><div class="sum-val" id="sumAccepted">0</div><div class="sum-lab">Accepted</div></div></div>
+      <div class="sum-pill"><span class="sum-icon">🚚</span><div><div class="sum-val" id="sumShipped">0</div><div class="sum-lab">Shipped</div></div></div>
+      <div class="sum-pill"><span class="sum-icon">🎉</span><div><div class="sum-val" id="sumDelivered">0</div><div class="sum-lab">Delivered</div></div></div>
+      <div class="sum-pill"><span class="sum-icon">❌</span><div><div class="sum-val" id="sumRejected">0</div><div class="sum-lab">Rejected</div></div></div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <span style="font-size:16px">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search produce, farmer, order ID…" oninput="applyFilters()"/>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="status-filters">
+        <button class="sf s-all active" data-status="all" onclick="setStatusFilter(this)">All</button>
+        <button class="sf s-pending" data-status="pending" onclick="setStatusFilter(this)">⏳ Pending</button>
+        <button class="sf s-accepted" data-status="accepted" onclick="setStatusFilter(this)">✅ Accepted</button>
+        <button class="sf" data-status="ready_to_ship" onclick="setStatusFilter(this)">📦 Ready</button>
+        <button class="sf s-shipped" data-status="shipped" onclick="setStatusFilter(this)">🚚 Shipped</button>
+        <button class="sf s-delivered" data-status="delivered" onclick="setStatusFilter(this)">🎉 Delivered</button>
+        <button class="sf s-rejected" data-status="rejected" onclick="setStatusFilter(this)">❌ Rejected</button>
+      </div>
+      <div class="filter-divider"></div>
+      <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="price_high">Price: High → Low</option>
+        <option value="price_low">Price: Low → High</option>
+      </select>
+    </div>
+
+    <!-- ORDERS LIST -->
+    <div id="ordersContainer">
+      <!-- Loading shimmer -->
+      <div id="loadingShimmer" class="orders-list">
+        ${[1,2,3].map(() => `
+          <div class="loading-shimmer">
+            <div class="shimmer-img"></div>
+            <div class="shimmer-lines">
+              <div class="shimmer-line w40"></div>
+              <div class="shimmer-line w80"></div>
+              <div class="shimmer-line w60"></div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination" id="pagination" style="display:none"></div>
+
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='customer_orders.js') }}"></script>
+</body>
+</html>

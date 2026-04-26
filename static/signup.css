@@ -1,0 +1,422 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+
+/* ================= PAGE ================= */
+html,body{
+  min-height:100%;
+  /* overflow:hidden; */
+}
+
+body{
+  background:url("Assets/signup_bg.jpg") no-repeat center center;
+  background-size:cover;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+}
+
+/* ================= WRAPPER ================= */
+/* .page-wrapper{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+} */
+
+.page-wrapper{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  padding:20px 0;
+}
+
+
+/* ================= SIGNUP CARD ================= */
+.signup-container{
+  position:relative;
+
+  /* ⭐ RESPONSIVE HEIGHT FIX */
+  /* height:min(92vh,760px); */
+
+  width:min(520px,90vw);
+  margin-left:8%;
+
+  background:rgba(255,255,255,0.92);
+  border-radius:22px;
+  padding:32px 40px;
+
+  box-shadow:0 25px 50px rgba(0,0,0,0.25);
+
+  display:flex;
+  flex-direction:column;
+   max-height:95vh;
+  /* overflow:hidden; */
+}
+
+/* ================= FORM STRUCTURE ================= */
+.signup-form{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  overflow-y:auto;
+  scrollbar-width:none;
+}
+
+.signup-form::-webkit-scrollbar{
+  display:none;
+}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  flex:1;
+}
+
+/* ================= HEADINGS ================= */
+.title{
+  font-size:clamp(28px,2.5vw,36px);
+  color:#2e5d2e;
+}
+
+.subtitle{
+  margin-bottom:18px;
+  color:#555;
+}
+
+.section-label{
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+/* ================= ROLES ================= */
+.roles{
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.roles input{
+  display:none;
+}
+
+.role{
+  flex:1;
+  padding:10px;
+  border:2px solid #6fa96f;
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+  background:#fff;
+  font-size:14px;
+}
+
+.roles input:checked + .role{
+  background:#6fa96f;
+  color:#fff;
+}
+
+/* ================= ROW ================= */
+.row{
+  display:flex;
+  gap:10px;
+}
+
+.row .form-group{
+  flex:1;
+}
+
+/* ================= FORM GROUP ================= */
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+label{
+  margin-bottom:4px;
+  font-weight:600;
+  font-size:14px;
+}
+
+/* ================= INPUT ================= */
+input{
+  width:100%;
+  padding:9px 38px;
+  border-radius:8px;
+  border:2px solid #c7e0c7;
+  font-size:14px;
+}
+
+input:focus{
+  outline:none;
+  border-color:#6fa96f;
+}
+
+::placeholder{
+  color:#9aaa9a;
+}
+
+/* ================= ICON INPUT ================= */
+.icon-input{
+  position:relative;
+}
+
+.left-icon{
+  position:absolute;
+  top:34px;
+  left:12px;
+  color:#6fa96f;
+  font-size:14px;
+}
+
+/* ================= HELPER ================= */
+small{
+  font-size:11px;
+  color:#555;
+  margin-top:3px;
+}
+
+/* ================= TERMS ================= */
+.terms{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  font-size:13px;
+}
+
+.terms input{
+  width:auto;
+}
+
+.terms a{
+  color:#2e7d32;
+  font-weight:600;
+  text-decoration:none;
+}
+
+/* ================= BUTTON ================= */
+.signup-btn{
+  margin-top:auto;
+  padding:13px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#6fa96f,#2e5d2e);
+  color:#fff;
+  font-size:15px;
+  cursor:pointer;
+}
+
+/* ================= LOGIN TEXT ================= */
+.login-text{
+  text-align:center;
+  font-size:13px;
+}
+
+.login-text a{
+  color:#2e7d32;
+  font-weight:600;
+  text-decoration:none;
+}
+
+/* ================= BACK BUTTON ================= */
+.back-button{
+  position:absolute;
+  top:18px;
+  right:22px;
+  width:32px;
+  height:32px;
+}
+
+.back-button img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  transition:transform .2s;
+}
+
+.back-button img:hover{
+  transform:scale(1.1);
+}
+
+
+
+/* Eye-Icon(Password) and (ConfirmPassword) */
+.toggle-password{
+  position:absolute;
+  top:34px;
+  right:12px;
+  color:#6fa96f;
+  cursor:pointer;
+  font-size:14px;
+  z-index:2;
+}
+
+.icon-input input{
+  padding-right:40px;
+}
+
+/* ✅ Remove browser default password eye icon */
+
+/* Microsoft Edge / Internet Explorer */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* Chrome / Safari (WebKit browsers) */
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-textfield-decoration-container {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+
+
+/* ================= RESPONSIVE ================= */
+
+/* Laptop small */
+@media (max-width:1200px){
+  .signup-container{
+    margin-left:5%;
+  }
+}
+
+/* Tablet */
+@media (max-width:900px){
+
+  body{
+    justify-content:center;
+  }
+
+  .signup-container{
+    margin-left:0;
+    width:92%;
+    height:min(95vh,780px);
+    padding:28px;
+  }
+
+  .row{
+    flex-direction:column;
+  }
+}
+
+/* Mobile */
+@media (max-width:500px){
+
+  html,body{
+    overflow:auto;
+  }
+
+  .signup-container{
+    height:auto;
+    margin:20px;
+  }
+}
+
+
+    /* ── OTP Modal Overlay ── */
+    #otpOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    #otpOverlay.show { display: flex; }
+
+    #otpModal {
+      background: #fff;
+      border-radius: 20px;
+      padding: 36px 32px 28px;
+      width: min(400px, 92vw);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      position: relative;
+      animation: popIn .25s ease;
+    }
+    @keyframes popIn { from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
+
+    #otpModal .otp-icon   { font-size: 48px; margin-bottom: 10px; }
+    #otpModal h2          { color: #2e5d2e; font-size: 22px; margin-bottom: 6px; }
+    #otpModal .otp-sub    { color: #666; font-size: 13px; margin-bottom: 22px; line-height: 1.5; }
+    #otpModal .otp-email  { font-weight: 700; color: #2e7d32; }
+
+    /* ── 6 digit boxes ── */
+    .otp-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .otp-boxes input {
+      width: 44px;
+      height: 52px;
+      border: 2px solid #c8e6c9;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      color: #2e5d2e;
+      transition: border .2s;
+      padding: 0;
+    }
+    .otp-boxes input:focus { outline: none; border-color: #2e7d32; background: #f1f8f1; }
+    .otp-boxes input.filled { border-color: #2e7d32; background: #e8f5e9; }
+
+    /* ── timer ── */
+    .otp-timer { font-size: 13px; color: #888; margin-bottom: 16px; }
+    .otp-timer span { font-weight: 700; color: #e53935; }
+
+    /* ── buttons ── */
+    .otp-verify-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #6fa96f, #2e5d2e);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s;
+      margin-bottom: 12px;
+    }
+    .otp-verify-btn:hover   { opacity: .9; }
+    .otp-verify-btn:disabled{ background: #aaa; cursor: not-allowed; }
+
+    .otp-resend-btn {
+      background: none;
+      border: none;
+      color: #2e7d32;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .otp-resend-btn:disabled { color: #aaa; text-decoration: none; cursor: not-allowed; }
+
+    .otp-msg {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+    .otp-msg.error   { background: #ffebee; color: #c62828; display: block; }
+    .otp-msg.success { background: #e8f5e9; color: #1b5e20; display: block; }
+
+    .otp-close {
+      position: absolute;
+      top: 14px; right: 16px;
+      background: none; border: none;
+      font-size: 20px; color: #aaa; cursor: pointer;
+    }
+    .otp-close:hover { color: #555; }

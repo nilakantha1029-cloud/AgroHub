@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up - AgroHub</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='signup.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  
+</head>
+<body>
+
+<div class="page-wrapper">
+  <div class="signup-container">
+    <a href="/" class="back-button">
+      <img src="static/Assets/back_button_37286.png" alt="Back to Home">
+    </a>
+
+    <div class="signup-form">
+      <h1 class="title">SignUp</h1>
+      <p class="subtitle">Create your account to get started</p>
+
+      <label class="section-label">Select Role*</label>
+      <div class="roles">
+        <input type="radio" name="role" id="farmer" value="farmer" checked>
+        <label for="farmer" class="role"><i class="fa-solid fa-tractor"></i> Farmer</label>
+        <input type="radio" name="role" id="customer" value="customer">
+        <label for="customer" class="role"><i class="fa-solid fa-user"></i> Customer</label>
+        <input type="radio" name="role" id="provider" value="service_provider">
+        <label for="provider" class="role"><i class="fa-solid fa-briefcase"></i> Provider</label>
+      </div>
+
+      <form id="signupForm">
+        <div class="row">
+          <div class="form-group icon-input half">
+            <label>First Name*</label>
+            <i class="fa-solid fa-user left-icon"></i>
+            <input type="text" id="first_name" name="first_name" placeholder="Enter first name" required title="Only letters, max 20 characters">
+          </div>
+          <div class="form-group icon-input half">
+            <label>Last Name*</label>
+            <i class="fa-solid fa-user left-icon"></i>
+            <input type="text" id="last_name" name="last_name" placeholder="Enter last name" required title="Only letters, max 20 characters">
+          </div>
+        </div>
+
+        <div class="form-group icon-input">
+          <label>Email Address*</label>
+          <i class="fa-solid fa-envelope left-icon"></i>
+          <input type="email" id="email" name="email" placeholder="Enter email address" required title="Enter valid email like example@domain.com">
+        </div>
+
+        <div class="form-group icon-input">
+          <label>Password*</label>
+          <i class="fa-solid fa-lock left-icon"></i>
+          <input type="password" id="password" name="password" placeholder="Enter password" required>
+          <i class="fa-solid fa-eye toggle-password"></i>
+          <small>Min 8 characters, 1 uppercase, 1 number, 1 special character</small>
+        </div>
+
+        <div class="form-group icon-input">
+          <label>Confirm Password*</label>
+          <i class="fa-solid fa-lock left-icon"></i>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required>
+          <i class="fa-solid fa-eye toggle-password"></i>
+        </div>
+
+        <div class="terms">
+          <input type="checkbox" id="terms" name="terms" required>
+          <span>I agree to the <a href="/terms" id="termsLink">Terms & Conditions</a></span>
+        </div>
+
+        <button type="submit" class="signup-btn">Sign Up</button>
+
+        <p class="login-text">
+          Already have an account? <a href="/login" id="loginLink">Login here</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     OTP VERIFICATION MODAL
+══════════════════════════════════════ -->
+<div id="otpOverlay">
+  <div id="otpModal">
+    <button class="otp-close" onclick="closeOtpModal()" title="Cancel">✕</button>
+    <div class="otp-icon">📧</div>
+    <h2>Verify Your Email</h2>
+    <p class="otp-sub">
+      We sent a 6-digit OTP to<br>
+      <span class="otp-email" id="otpEmailLabel"></span><br>
+      Enter it below to complete your signup.
+    </p>
+
+    <div class="otp-boxes">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit" id="d0">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit" id="d1">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit" id="d2">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit" id="d3">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit" id="d4">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit" id="d5">
+    </div>
+
+    <div class="otp-timer">OTP expires in <span id="timerDisplay">05:00</span></div>
+
+    <button class="otp-verify-btn" id="verifyBtn" onclick="verifyOtp()">
+      <i class="fa-solid fa-circle-check"></i> Verify & Complete Signup
+    </button>
+
+    <button class="otp-resend-btn" id="resendBtn" onclick="resendOtp()" disabled>
+      Resend OTP
+    </button>
+
+    <div class="otp-msg" id="otpMsg"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ url_for('static', filename='signup.js') }}"></script>
+
+</body>
+</html>

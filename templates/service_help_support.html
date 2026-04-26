@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Help & Support – AgroHub Service Provider</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='service_help_support.css') }}">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/dashboard/service_provider">
+    <div class="nav-logo-icon">🛠️</div>
+    <div class="nav-logo-text"><span class="brand">AgroHub</span><span class="tagline">Service Provider</span></div>
+  </a>
+  <div class="nav-spacer"></div>
+  <a class="nav-back" href="/dashboard/service_provider">← Back to Dashboard</a>
+  &nbsp;&nbsp;
+  <div class="profile-wrap">
+    <div class="profile-btn">
+      <div class="profile-avatar" id="navAvatar"><span id="navInitials">SP</span></div>
+      <span class="profile-name" id="navName">Loading…</span>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="menu-title">Help & Support</div>
+  <div class="menu">
+    <a id="mn-faq" class="active" onclick="scrollTo('#faq-section')"><span class="m-icon">❓</span> FAQs</a>
+    <a id="mn-ticket" onclick="scrollToTicket()"><span class="m-icon">🎫</span> Raise a Ticket</a>
+    <a id="mn-tickets" onclick="scrollTo('#tickets-section')"><span class="m-icon">📋</span> My Tickets</a>
+    <a id="mn-contact" onclick="scrollTo('#contact-section')"><span class="m-icon">📞</span> Contact Us</a>
+    <a id="mn-videos" onclick="scrollTo('#video-section')"><span class="m-icon">🎥</span> Video Guides</a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="menu-title">Quick Links</div>
+  <div class="menu">
+    <a href="/dashboard/service_provider"><span class="m-icon">🏠</span> Dashboard</a>
+    <a href="/dashboard/service_provider" onclick=""><span class="m-icon">🚛</span> My Listings</a>
+    <a href="/dashboard/service_provider" onclick=""><span class="m-icon">📋</span> My Bookings</a>
+  </div>
+</aside>
+
+<main>
+
+  <!-- HERO -->
+  <div class="help-hero fade-up">
+    <h1>🛠️ How can we help you?</h1>
+    <p>Find answers to common questions about managing your listings, handling bookings, and growing your service business on AgroHub.</p>
+    <div class="search-hero">
+      <span>🔍</span>
+      <input type="text" placeholder="Search FAQs, topics, guides…" id="faqSearch" oninput="filterFaqs()"/>
+    </div>
+  </div>
+
+  <!-- STATUS BANNER -->
+  <div class="status-banner fade-up" style="animation-delay:.1s">
+    <div class="sb-dot"></div>
+    <div><div class="sb-text">All Systems Operational</div><div class="sb-sub">Platform running normally · Last checked just now</div></div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions fade-up" style="animation-delay:.15s">
+    <a class="qa-card" onclick="scrollToTicket()">
+      <div class="qa-icon">🎫</div>
+      <div class="qa-title">Raise a Ticket</div>
+      <div class="qa-sub">Get personalized help</div>
+    </a>
+    <a class="qa-card" onclick="scrollTo('#faq-section')">
+      <div class="qa-icon">❓</div>
+      <div class="qa-title">Browse FAQs</div>
+      <div class="qa-sub">Quick answers</div>
+    </a>
+    <a class="qa-card" href="tel:+911800123456">
+      <div class="qa-icon">📞</div>
+      <div class="qa-title">Call Support</div>
+      <div class="qa-sub">Mon–Sat 9AM–6PM</div>
+    </a>
+    <a class="qa-card" onclick="scrollTo('#video-section')">
+      <div class="qa-icon">🎥</div>
+      <div class="qa-title">Video Guides</div>
+      <div class="qa-sub">Step-by-step tutorials</div>
+    </a>
+  </div>
+
+  <!-- FAQ SECTION -->
+  <div id="faq-section" class="faq-wrap fade-up" style="animation-delay:.2s">
+    <div class="section-title">❓ Frequently Asked Questions</div>
+    <div class="faq-cats">
+      <button class="faq-cat active" onclick="setFaqCat('all',this)">All</button>
+      <button class="faq-cat" onclick="setFaqCat('listings',this)">📋 Listings</button>
+      <button class="faq-cat" onclick="setFaqCat('bookings',this)">📅 Bookings</button>
+      <button class="faq-cat" onclick="setFaqCat('payments',this)">💰 Payments</button>
+      <button class="faq-cat" onclick="setFaqCat('account',this)">👤 Account</button>
+      <button class="faq-cat" onclick="setFaqCat('general',this)">🌐 General</button>
+    </div>
+    <div id="faqList"></div>
+  </div>
+
+  <!-- TWO COL: TICKET FORM + MY TICKETS -->
+  <div class="two-col">
+
+    <!-- TICKET FORM -->
+    <div class="card fade-up" style="animation-delay:.25s" id="ticket-section">
+      <div class="card-hd"><h3>🎫 Raise a Support Ticket</h3></div>
+      <div class="card-bd">
+        <div class="ticket-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-select" id="t_category">
+                <option value="listings">📋 Listings</option>
+                <option value="bookings">📅 Bookings</option>
+                <option value="payments">💰 Payments</option>
+                <option value="technical">🔧 Technical Issue</option>
+                <option value="account">👤 Account</option>
+                <option value="general">🌐 General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select class="form-select" id="t_priority">
+                <option value="low">🟢 Low</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="high">🔴 High</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject <span style="color:var(--red)">*</span></label>
+            <input class="form-input" id="t_subject" type="text" placeholder="Briefly describe your issue…" maxlength="200"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message <span style="color:var(--red)">*</span></label>
+            <textarea class="form-textarea" id="t_message" placeholder="Describe your issue in detail. Include booking IDs, listing names, or any error messages…"></textarea>
+          </div>
+          <button class="btn-submit" onclick="submitTicket()">
+            <span>🚀</span> Submit Ticket
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY TICKETS -->
+    <div class="card fade-up" id="tickets-section" style="animation-delay:.3s">
+      <div class="card-hd"><h3>📋 My Tickets</h3><span id="ticketCountBadge" style="font-size:12px;color:var(--text-light)">Loading…</span></div>
+      <div class="card-bd">
+        <div id="ticketsList"><div style="text-align:center;padding:30px;color:var(--text-light)">Loading tickets…</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CONTACT SECTION -->
+  <div id="contact-section" class="fade-up" style="margin-bottom:28px;animation-delay:.3s">
+    <div class="section-title">📞 Contact Us</div>
+    <div class="contact-grid">
+      <a class="contact-card" href="tel:+911800123456">
+        <div class="cc-icon green">📞</div>
+        <div class="cc-text"><div class="cc-title">Phone Support</div><div class="cc-sub">1800-123-456 (Toll Free)<br>Mon–Sat · 9 AM to 6 PM IST</div></div>
+      </a>
+      <a class="contact-card" href="mailto:support.provider@AgroHub.in">
+        <div class="cc-icon blue">📧</div>
+        <div class="cc-text"><div class="cc-title">Email Support</div><div class="cc-sub">support.provider@AgroHub.in<br>Response within 24 hours</div></div>
+      </a>
+      <a class="contact-card" href="https://wa.me/911800123456">
+        <div class="cc-icon green">💬</div>
+        <div class="cc-text"><div class="cc-title">WhatsApp</div><div class="cc-sub">Chat with us on WhatsApp<br>Quick responses during business hours</div></div>
+      </a>
+      <a class="contact-card" href="#">
+        <div class="cc-icon amber">📱</div>
+        <div class="cc-text"><div class="cc-title">In-App Chat</div><div class="cc-sub">Chat directly from the app<br>Usually replies within 2 hours</div></div>
+      </a>
+    </div>
+  </div>
+
+  
+
+</main>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="{{ url_for('static', filename='service_help_support.js') }}"></script>
+</body>
+</html>

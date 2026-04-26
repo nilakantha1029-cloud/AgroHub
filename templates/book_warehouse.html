@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Book Storage – AgroHub</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='Assets/favicon.png') }}">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='book_warehouse.css') }}">
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/dashboard/farmer">
+    <div class="nav-logo-icon">🌾</div>
+    <div class="nav-logo-text"><span class="brand">AgroHub</span><span class="tagline">Farmer Platform</span></div>
+  </a>
+  <div class="nav-spacer"></div>
+  <a class="nav-back" href="/dashboard/farmer">← Dashboard</a>
+  <div class="profile-avatar" id="navAvatar"><span id="navInitials">--</span></div>
+</nav>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="menu-title">Services</div>
+  <div class="menu">
+    <a href="/book-vehicle"><span class="m-icon">🚛</span> Book Vehicle</a>
+    <a href="/rent-equipment"><span class="m-icon">🚜</span> Rent Equipment</a>
+    <a class="active" href="/book-warehouse"><span class="m-icon">🏭</span> Book Warehouse</a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="menu-title">Navigation</div>
+  <div class="menu">
+    <a href="/dashboard/farmer"><span class="m-icon">🏠</span> Dashboard</a>
+    <a href="/sellmygoods"><span class="m-icon">📦</span> Sell My Goods</a>
+    <a href="/help-support"><span class="m-icon">❓</span> Help & Support</a>
+  </div>
+</aside>
+
+<main>
+  <div class="page-hero">
+    <h1>🏭 Book Storage & Warehouse</h1>
+    <p>Safely store your harvested produce in cold storage units, dry warehouses, grain silos and vegetable bays. Pay per quintal per day — flexible and transparent pricing.</p>
+    <div class="hero-stats">
+      <div class="hs-item"><div class="hs-val" id="heroTotal">—</div><div class="hs-lbl">Facilities Listed</div></div>
+      <div class="hs-item"><div class="hs-val" id="heroAvail">—</div><div class="hs-lbl">Available</div></div>
+      <div class="hs-item"><div class="hs-val" id="heroCap">—</div><div class="hs-lbl">Total Capacity (qtl)</div></div>
+    </div>
+  </div>
+
+  <div class="filters-row">
+    <div class="search-wrap">🔍 <input type="text" id="searchInput" placeholder="Search facility name, location, APMC…" oninput="applyFilters()"/></div>
+    <button class="type-chip active" onclick="setType('all',this)">All</button>
+    <button class="type-chip" onclick="setType('Cold Storage (0-8°C)',this)">❄️ Cold Storage</button>
+    <button class="type-chip" onclick="setType('Dry Warehouse',this)">📦 Dry Warehouse</button>
+    <button class="type-chip" onclick="setType('Grain Silo',this)">🌾 Grain Silo</button>
+    <button class="type-chip" onclick="setType('Vegetable Bay',this)">🥦 Vegetable Bay</button>
+    <select class="filter-sel" id="sortSel" onchange="applyFilters()">
+      <option value="newest">Newest First</option>
+      <option value="price-low">Rate: Low → High</option>
+      <option value="price-high">Rate: High → Low</option>
+      <option value="capacity-high">Capacity: Largest First</option>
+    </select>
+  </div>
+
+  <div class="section-hd">
+    <div class="section-title">🏭 Available Storage Facilities</div>
+    <div class="section-count" id="resultsCount">Loading…</div>
+  </div>
+  <div class="storage-grid" id="storageGrid">
+    ${[1,2,3].map(()=>`<div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line lg skeleton"></div><div class="skel-line skeleton"></div><div class="skel-line sm skeleton"></div></div></div>`).join('')}
+  </div>
+
+  <div class="history-wrap">
+    <div class="history-hd">
+      <h3>📋 My Storage Booking History</h3>
+      <span id="historyCount" style="font-size:12px;color:var(--text-light)"></span>
+    </div>
+    <div id="historyBody"><div style="text-align:center;padding:40px;color:var(--text-light)">Loading history…</div></div>
+  </div>
+</main>
+</div>
+
+<!-- STORAGE BOOKING MODAL -->
+<div class="modal-overlay" id="storeModal">
+  <div class="modal">
+    <div class="modal-hd"><h2>🏭 Book This Storage</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="m-store-info" id="modalStoreInfo"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Check-in Date *</label>
+          <input class="form-input" id="sk_start" type="date" oninput="calcCost()"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estimated Duration *</label>
+          <select class="form-select" id="sk_days" onchange="calcCost()">
+            <option value="">Select…</option>
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+            <option value="30">30 days</option>
+            <option value="60">60 days</option>
+            <option value="90">90 days</option>
+            <option value="180">180 days</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Quantity to Store (quintals) *</label>
+        <input class="form-input" id="sk_qty" type="number" placeholder="e.g. 50" min="1" oninput="calcCost()"/>
+      </div>
+      <div id="costPreview" class="cost-preview"></div>
+      <div class="form-group">
+        <label class="form-label">Produce Type *</label>
+        <input class="form-input" id="sk_produce" type="text" placeholder="e.g. Onions, Wheat, Tomatoes, Potatoes…"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Additional Notes</label>
+        <textarea class="form-textarea" id="sk_notes" placeholder="Packaging type, special requirements, preferred temperature…"></textarea>
+      </div>
+      <div style="background:var(--cream);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--text-mid);line-height:1.6">
+        💡 The facility provider will confirm availability. You'll receive a notification once your booking is accepted. Actual cost may vary based on confirmed quantity.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-submit" id="submitBtn" onclick="submitStorage()">🏭 Send Booking Request</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<script src="{{ url_for('static', filename='book_warehouse.js') }}"></script>
+</body>
+</html>
