@@ -302,28 +302,76 @@ def reset_password():
 def signup_send_otp():
     try:
         data = request.get_json()
-        first_name=data.get('first_name','').strip(); last_name=data.get('last_name','').strip()
-        email=data.get('email','').strip().lower(); phone=data.get('phone','').strip() or None
-        password=data.get('password',''); role=data.get('role','farmer').lower().replace('-','_')
-        if role not in ['farmer','customer','service_provider']: return jsonify({'error':'Invalid role'}),400
-        if not all([first_name,last_name,email,password]): return jsonify({'error':'All fields are required'}),400
-        if len(first_name)>20 or len(last_name)>20: return jsonify({'error':'Name max 20 characters'}),400
-        if not validate_email(email): return jsonify({'error':'Invalid email format'}),400
-        if phone and not validate_phone(phone): return jsonify({'error':'Invalid phone number'}),400
+
+        first_name = data.get('first_name','').strip()
+        last_name  = data.get('last_name','').strip()
+        email      = data.get('email','').strip().lower()
+        phone      = data.get('phone','').strip() or None
+        password   = data.get('password','')
+        role       = data.get('role','farmer').lower().replace('-','_')
+
+        if role not in ['farmer','customer','service_provider']:
+            return jsonify({'error':'Invalid role'}),400
+
+        if not all([first_name,last_name,email,password]):
+            return jsonify({'error':'All fields are required'}),400
+
+        if len(first_name)>20 or len(last_name)>20:
+            return jsonify({'error':'Name max 20 characters'}),400
+
+        if not validate_email(email):
+            return jsonify({'error':'Invalid email format'}),400
+
+        if phone and not validate_phone(phone):
+            return jsonify({'error':'Invalid phone number'}),400
+
         ok,msg = validate_password(password)
-        if not ok: return jsonify({'error':msg}),400
+        if not ok:
+            return jsonify({'error':msg}),400
+
         conn = get_connection()
-        if dict_row(conn.execute("SELECT id FROM users WHERE email=?",(email,)).fetchone()):
-            conn.close(); return jsonify({'error':'Email already registered'}),409
-        if phone and dict_row(conn.execute("SELECT id FROM users WHERE phone=?",(phone,)).fetchone()):
-            conn.close(); return jsonify({'error':'Phone already registered'}),409
+        cur = conn.cursor()
+
+        # Check email
+        cur.execute("SELECT id FROM users WHERE email=%s",(email,))
+        if cur.fetchone():
+            cur.close()
+            conn.close()
+            return jsonify({'error':'Email already registered'}),409
+
+        # Check phone
+        if phone:
+            cur.execute("SELECT id FROM users WHERE phone=%s",(phone,))
+            if cur.fetchone():
+                cur.close()
+                conn.close()
+                return jsonify({'error':'Phone already registered'}),409
+
+        cur.close()
         conn.close()
+
         otp = str(random.randint(100000,999999))
-        _otp_store[email]={'otp':otp,'expires':time.time()+300,'user_data':{'first_name':first_name,'last_name':last_name,'email':email,'phone':phone,'password':password,'role':role}}
+
+        _otp_store[email] = {
+            'otp': otp,
+            'expires': time.time()+300,
+            'user_data': {
+                'first_name':first_name,
+                'last_name':last_name,
+                'email':email,
+                'phone':phone,
+                'password':password,
+                'role':role
+            }
+        }
+
         send_otp_email(app,email,first_name,otp)
+
         return jsonify({'success':True,'message':f'OTP sent to {email}'})
+
     except Exception as e:
-        print("Send OTP error:",e); return jsonify({'error':str(e)}),500
+        print("Send OTP error:",e)
+        return jsonify({'error':str(e)}),500
 
 @app.route('/api/signup/verify-otp', methods=['POST'])
 def signup_verify_otp():
