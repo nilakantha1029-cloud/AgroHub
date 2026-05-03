@@ -3,9 +3,12 @@
 #  All Flask-Mail logic lives here. Import send_* helpers into app.py
 # ══════════════════════════════════════════════════════════════════
 import os
+import threading
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 from datetime import datetime
+import socket
+socket.setdefaulttimeout(10)
 
 mail = Mail()
 
@@ -13,27 +16,27 @@ mail = Mail()
 #  Shared helper: send one e-mail
 # ──────────────────────────────────────────
 def _send(app, subject, recipients, html_body, text_body=""):
-    """
-    Low-level mailer. Returns True on success, False on failure.
-    Never raises — caller decides what to do.
-    """
-    try:
-        with app.app_context():
-            msg = Message(
-                subject=subject,
-                sender=(
-                    os.getenv("MAIL_DEFAULT_SENDER_NAME", "AgroHub"),
-                    os.getenv("MAIL_DEFAULT_SENDER", os.getenv("MAIL_USERNAME", ""))
-                ),
-                recipients=recipients,
-                html=html_body,
-                body=text_body or "Please view this email in an HTML-capable client."
-            )
-            mail.send(msg)
-        return True
-    except Exception as e:
-        print(f"[EMAIL ERROR] {subject} → {recipients}: {e}")
-        return False
+    def _do_send():
+        try:
+            with app.app_context():
+                msg = Message(
+                    subject=subject,
+                    sender=(
+                        os.getenv("MAIL_DEFAULT_SENDER_NAME", "AgroHub"),
+                        os.getenv("MAIL_DEFAULT_SENDER", os.getenv("MAIL_USERNAME", ""))
+                    ),
+                    recipients=recipients,
+                    html=html_body,
+                    body=text_body or "Please view this email in an HTML-capable client."
+                )
+                mail.send(msg)
+            print(f"[EMAIL OK] {subject} → {recipients}")
+        except Exception as e:
+            print(f"[EMAIL ERROR] {subject} → {recipients}: {e}")
+
+    thread = threading.Thread(target=_do_send, daemon=True)
+    thread.start()
+    return True
 
 
 # ──────────────────────────────────────────
