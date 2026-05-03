@@ -31,7 +31,7 @@ def _send(app, subject, recipients, html_body, text_body=""):
                 )
                 mail.send(msg)
             print(f"[EMAIL OK] {subject} → {recipients}")
-         except Exception as e:
+        except Exception as e:
             print(f"[EMAIL ERROR] {subject} → {recipients}: {type(e).__name__}: {e}")
 
     thread = threading.Thread(target=_do_send, daemon=True)
