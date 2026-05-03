@@ -98,7 +98,7 @@ def validate_password(password):
 def push_notification(user_id, message, notif_type='info'):
     try:
         conn = get_connection()
-        cur = conn.cursor()
+        cur = get_cursor(conn)
         cur.execute(
             "INSERT INTO notifications (user_id, message, type) VALUES (%s, %s, %s)",
             (user_id, message, notif_type)
@@ -1170,7 +1170,7 @@ def notif_unread_count():
     conn = get_connection()
     cur  = conn.cursor()
     cur.execute(
-        "SELECT COUNT(*) FROM notifications WHERE user_id=%s AND is_read=0",
+        "SELECT COUNT(*) FROM notifications WHERE user_id=%s AND is_read=FALSE",
         (session['user_id'],)
     )
     count = cur.fetchone()[0]

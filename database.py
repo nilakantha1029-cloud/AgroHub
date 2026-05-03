@@ -6,17 +6,20 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def get_connection():
-    return psycopg2.connect(DATABASE_URL)
+    conn = psycopg2.connect(DATABASE_URL)
+    return conn
+
+
+def get_cursor(conn):
+    return conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 
 def dict_row(row):
-    if row is None:
-        return None
-    return dict(row)
+    return row if row else None
 
 
 def dict_rows(rows):
-    return [dict(r) for r in rows]
+    return rows if rows else []
 
 
 def init_db():
