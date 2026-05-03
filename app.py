@@ -475,7 +475,7 @@ def signup_verify_otp():
             cur.close(); conn.close()
             return jsonify({'error': 'No OTP found for this email. Please request a new one.'}), 400
 
-        db_otp, user_data_json, expires_at = entry[0], entry[1], entry[2]
+        db_otp, user_data_json, expires_at = entry['otp'], entry['user_data'], entry['expires_at']
 
         if datetime.utcnow() > expires_at.replace(tzinfo=None):
             cur.execute("DELETE FROM otp_store WHERE email=%s", (email,))
@@ -500,7 +500,7 @@ def signup_verify_otp():
             "VALUES (%s, %s, %s, %s, %s, %s) RETURNING id",
             (ud['role'], ud['first_name'], ud['last_name'], ud['email'], ud['phone'], hashed)
         )
-        user_id = cur.fetchone()[0]
+        user_id = cur.fetchone()['id']
         cur.execute("DELETE FROM otp_store WHERE email=%s", (email,))
         conn.commit(); cur.close(); conn.close()
 
@@ -525,7 +525,7 @@ def signup_resend_otp():
             cur.close(); conn.close()
             return jsonify({'error': 'Session expired. Please start signup again.'}), 400
 
-        ud  = json.loads(entry[0])
+        ud  = json.loads(entry['user_data'])
         otp = str(random.randint(100000, 999999))
 
         cur.execute("""
