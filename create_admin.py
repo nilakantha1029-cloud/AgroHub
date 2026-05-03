@@ -1,16 +1,15 @@
-"""
-create_admin.py — Create an Admin Account for AgroHub
-Run: python create_admin.py
-"""
-import sqlite3
+import psycopg2
 import bcrypt
 import os
+from dotenv import load_dotenv
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'agrohub.db')
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def create_admin():
-    if not os.path.exists(DB_PATH):
-        print("❌ agrohub.db not found. Run the main app first.")
+    if not DATABASE_URL:
+        print("❌ DATABASE_URL environment variable not set.")
         return
 
     print()
@@ -26,22 +25,26 @@ def create_admin():
 
     hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
-    conn = sqlite3.connect(DB_PATH)
     try:
-        conn.execute(
-            "INSERT INTO admin_users (name, email, password_hash) VALUES (?,?,?)",
+        conn = psycopg2.connect(DATABASE_URL)
+        conn.autocommit = False
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO admin_users (name, email, password_hash) VALUES (%s, %s, %s)",
             (name, email, hashed)
         )
         conn.commit()
+        cur.close()
+        conn.close()
         print()
         print("✅ Admin account created successfully!")
         print(f"   Email    : {email}")
         print(f"   Password : {password}")
-        print(f"   Login at : http://127.0.0.1:5000/admin")
-    except sqlite3.IntegrityError:
+        print(f"   Login at : https://agrohub-xav9.onrender.com/admin")
+    except psycopg2.errors.UniqueViolation:
         print("❌ That email is already registered as admin.")
-    finally:
-        conn.close()
+    except Exception as e:
+        print(f"❌ Error: {e}")
 
 if __name__ == '__main__':
     create_admin()
