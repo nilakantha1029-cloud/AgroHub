@@ -1830,30 +1830,37 @@ def admin_save_market_prices():
 def landing_stats():
     try:
         conn = get_connection()
-        cur  = conn.cursor()
+        cur  = conn.cursor(cursor_factory=RealDictCursor)
+
         cur.execute(
-            "SELECT SUM(CASE WHEN role='farmer' THEN 1 ELSE 0 END) AS active_farmers, "
+            "SELECT "
+            "SUM(CASE WHEN role='farmer' THEN 1 ELSE 0 END) AS active_farmers, "
             "SUM(CASE WHEN role='customer' THEN 1 ELSE 0 END) AS total_customers, "
-            "SUM(CASE WHEN role='service_provider' THEN 1 ELSE 0 END) AS total_providers FROM users"
+            "SUM(CASE WHEN role='service_provider' THEN 1 ELSE 0 END) AS total_providers "
+            "FROM users"
         )
-        users = dict_row(cur.fetchone())
+        users = cur.fetchone() or {}
+
         cur.execute("SELECT COUNT(*) AS total FROM orders")
-        orders = cur.fetchone()
+        orders = cur.fetchone() or {}
+
         cur.execute(
-            "SELECT SUM(CASE WHEN service_type='storage' AND status='available' THEN 1 ELSE 0 END) AS storage_units, "
+            "SELECT "
+            "SUM(CASE WHEN service_type='storage' AND status='available' THEN 1 ELSE 0 END) AS storage_units, "
             "SUM(CASE WHEN service_type='equipment' AND status='available' THEN 1 ELSE 0 END) AS equipment_units, "
             "SUM(CASE WHEN service_type='transport' AND status='available' THEN 1 ELSE 0 END) AS transport_units "
             "FROM service_listings"
         )
-        services = dict_row(cur.fetchone())
+        services = cur.fetchone() or {}
+
         cur.close(); conn.close()
         return jsonify({
-            'active_farmers':   int(users['active_farmers'] or 0),
-            'total_customers':  int(users['total_customers'] or 0),
-            'total_orders':     int(orders[0] or 0),
-            'storage_units':    int(services['storage_units'] or 0),
-            'equipment_units':  int(services['equipment_units'] or 0),
-            'transport_units':  int(services['transport_units'] or 0)
+            'active_farmers':  int(users.get('active_farmers')  or 0),
+            'total_customers': int(users.get('total_customers') or 0),
+            'total_orders':    int(orders.get('total')          or 0),
+            'storage_units':   int(services.get('storage_units')   or 0),
+            'equipment_units': int(services.get('equipment_units') or 0),
+            'transport_units': int(services.get('transport_units') or 0)
         })
     except Exception as e:
         print("Landing stats error:", e)
