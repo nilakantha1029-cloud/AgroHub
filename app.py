@@ -447,7 +447,9 @@ def signup_send_otp():
                 'password': password, 'role': role
             }
         }
-        send_otp_email(app, email, first_name, otp)
+        email_sent = send_otp_email(app, email, first_name, otp)
+        if not email_sent:
+            print(f"[WARN] OTP email failed for {email}, but OTP stored. OTP: {otp}")
         return jsonify({'success': True, 'message': f'OTP sent to {email}'})
     except Exception as e:
         print("Send OTP error:", e); return jsonify({'error': str(e)}), 500
