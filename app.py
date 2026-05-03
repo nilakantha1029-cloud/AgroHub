@@ -2023,5 +2023,27 @@ def admin_delete_contact(cid):
     return jsonify({'success': True})
 
 
+
+@app.route('/setup-admin-once')
+def setup_admin():
+    import bcrypt
+    from database import get_connection
+    name     = "Admin"
+    email    = "nmietcom52r@gmail.com"      # ← change this
+    password = "Nmietcom@5218"    # ← change this
+    hashed   = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    try:
+        conn = get_connection()
+        cur  = conn.cursor()
+        cur.execute(
+            "INSERT INTO admin_users (name, email, password_hash) VALUES (%s,%s,%s)",
+            (name, email, hashed)
+        )
+        conn.commit(); cur.close(); conn.close()
+        return "✅ Admin created! DELETE THIS ROUTE NOW."
+    except Exception as e:
+        return f"❌ Error: {e}"
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=10000)
