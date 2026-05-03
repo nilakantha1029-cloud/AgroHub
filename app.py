@@ -2057,7 +2057,7 @@ def setup_admin():
 @app.route('/test-email')
 def test_email():
     from email_service import _send
-    result = _send(app, "Test Email", ["supp0rt.agr0l0gix@gmail.com"], "<h1>Test</h1>")
+    result = _send(app, "AgroHub Test", ["poojahegde1029@gmail.com"], "<h1>OTP Test Works</h1>")
     return jsonify({'sent': result})
 
 
