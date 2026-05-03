@@ -2052,6 +2052,13 @@ def setup_admin():
         return "✅ Admin created! DELETE THIS ROUTE NOW."
     except Exception as e:
         return f"❌ Error: {e}"
+    
+
+@app.route('/test-email')
+def test_email():
+    from email_service import _send
+    result = _send(app, "Test Email", ["supp0rt.agr0l0gix@gmail.com"], "<h1>Test</h1>")
+    return jsonify({'sent': result})
 
 
 if __name__ == '__main__':
