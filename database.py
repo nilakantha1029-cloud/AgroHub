@@ -260,6 +260,17 @@ def init_db():
     )
     """)
 
+
+    # OTP STORE
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS otp_store (
+        email       TEXT PRIMARY KEY,
+        otp         TEXT NOT NULL,
+        user_data   TEXT NOT NULL,
+        expires_at  TIMESTAMP NOT NULL
+    )
+    """)
+
     conn.commit()
     cur.close()
     conn.close()

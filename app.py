@@ -423,64 +423,76 @@ def signup_send_otp():
 
         conn = get_connection()
         cur  = conn.cursor()
-
         cur.execute("SELECT id FROM users WHERE email=%s", (email,))
         if cur.fetchone():
             cur.close(); conn.close()
             return jsonify({'error': 'Email already registered'}), 409
-
         if phone:
             cur.execute("SELECT id FROM users WHERE phone=%s", (phone,))
             if cur.fetchone():
                 cur.close(); conn.close()
                 return jsonify({'error': 'Phone already registered'}), 409
 
-        cur.close(); conn.close()
-
         otp = str(random.randint(100000, 999999))
-        _otp_store[email] = {
-            'otp': otp,
-            'expires': time.time() + 300,
-            'user_data': {
-                'first_name': first_name, 'last_name': last_name,
-                'email': email, 'phone': phone,
-                'password': password, 'role': role
-            }
-        }
+        import json
+        user_data_json = json.dumps({
+            'first_name': first_name, 'last_name': last_name,
+            'email': email, 'phone': phone,
+            'password': password, 'role': role
+        })
+        cur.execute("""
+            INSERT INTO otp_store (email, otp, user_data, expires_at)
+            VALUES (%s, %s, %s, NOW() + INTERVAL '5 minutes')
+            ON CONFLICT (email) DO UPDATE
+                SET otp = EXCLUDED.otp,
+                    user_data = EXCLUDED.user_data,
+                    expires_at = EXCLUDED.expires_at
+        """, (email, otp, user_data_json))
+        conn.commit(); cur.close(); conn.close()
+
         email_sent = send_otp_email(app, email, first_name, otp)
         if not email_sent:
-            print(f"[WARN] OTP email failed for {email}, but OTP stored. OTP: {otp}")
+            print(f"[WARN] OTP email failed for {email}. OTP: {otp}")
         return jsonify({'success': True, 'message': f'OTP sent to {email}'})
     except Exception as e:
         print("Send OTP error:", e); return jsonify({'error': str(e)}), 500
 
-
 @app.route('/api/signup/verify-otp', methods=['POST'])
 def signup_verify_otp():
     try:
+        import json
+        from datetime import datetime
         data  = request.get_json()
         email = data.get('email', '').strip().lower()
         otp   = data.get('otp', '').strip()
 
-        entry = _otp_store.get(email)
-        if not entry:
-            return jsonify({'error': 'No OTP found for this email. Please request a new one.'}), 400
-        if time.time() > entry['expires']:
-            del _otp_store[email]
-            return jsonify({'error': 'OTP has expired. Please request a new one.'}), 400
-        if entry['otp'] != otp:
-            return jsonify({'error': 'Incorrect OTP. Please try again.'}), 400
-
-        ud     = entry['user_data']
-        hashed = bcrypt.hashpw(ud['password'].encode(), bcrypt.gensalt()).decode()
-
         conn = get_connection()
         cur  = conn.cursor()
+        cur.execute("SELECT otp, user_data, expires_at FROM otp_store WHERE email=%s", (email,))
+        entry = cur.fetchone()
+
+        if not entry:
+            cur.close(); conn.close()
+            return jsonify({'error': 'No OTP found for this email. Please request a new one.'}), 400
+
+        db_otp, user_data_json, expires_at = entry[0], entry[1], entry[2]
+
+        if datetime.utcnow() > expires_at.replace(tzinfo=None):
+            cur.execute("DELETE FROM otp_store WHERE email=%s", (email,))
+            conn.commit(); cur.close(); conn.close()
+            return jsonify({'error': 'OTP has expired. Please request a new one.'}), 400
+
+        if db_otp != otp:
+            cur.close(); conn.close()
+            return jsonify({'error': 'Incorrect OTP. Please try again.'}), 400
+
+        ud     = json.loads(user_data_json)
+        hashed = bcrypt.hashpw(ud['password'].encode(), bcrypt.gensalt()).decode()
 
         cur.execute("SELECT id FROM users WHERE email=%s", (ud['email'],))
         if cur.fetchone():
-            cur.close(); conn.close()
-            del _otp_store[email]
+            cur.execute("DELETE FROM otp_store WHERE email=%s", (email,))
+            conn.commit(); cur.close(); conn.close()
             return jsonify({'error': 'Email already registered'}), 409
 
         cur.execute(
@@ -489,31 +501,43 @@ def signup_verify_otp():
             (ud['role'], ud['first_name'], ud['last_name'], ud['email'], ud['phone'], hashed)
         )
         user_id = cur.fetchone()[0]
+        cur.execute("DELETE FROM otp_store WHERE email=%s", (email,))
         conn.commit(); cur.close(); conn.close()
 
-        del _otp_store[email]
         send_welcome_email(app, ud['email'], ud['first_name'], ud['role'])
         return jsonify({'success': True, 'user_id': user_id, 'role': ud['role']}), 201
     except Exception as e:
         print("Verify OTP error:", e); return jsonify({'error': str(e)}), 500
 
-
 @app.route('/api/signup/resend-otp', methods=['POST'])
 def signup_resend_otp():
     try:
+        import json
         data  = request.get_json()
         email = data.get('email', '').strip().lower()
-        entry = _otp_store.get(email)
+
+        conn = get_connection()
+        cur  = conn.cursor()
+        cur.execute("SELECT user_data FROM otp_store WHERE email=%s", (email,))
+        entry = cur.fetchone()
+
         if not entry:
+            cur.close(); conn.close()
             return jsonify({'error': 'Session expired. Please start signup again.'}), 400
+
+        ud  = json.loads(entry[0])
         otp = str(random.randint(100000, 999999))
-        entry['otp']     = otp
-        entry['expires'] = time.time() + 300
-        send_otp_email(app, email, entry['user_data']['first_name'], otp)
+
+        cur.execute("""
+            UPDATE otp_store SET otp=%s, expires_at=NOW() + INTERVAL '5 minutes'
+            WHERE email=%s
+        """, (otp, email))
+        conn.commit(); cur.close(); conn.close()
+
+        send_otp_email(app, email, ud['first_name'], otp)
         return jsonify({'success': True, 'message': 'New OTP sent!'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 # ── market prices ─────────────────────────────────────────────────────────────
 
 @app.route('/api/market-prices', methods=['GET'])
