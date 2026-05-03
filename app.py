@@ -39,7 +39,7 @@ app = Flask(__name__, static_folder='static')
 app.secret_key = os.getenv('agriconnect_secret', os.getenv('SECRET_KEY', 'change-this-in-production'))
 CORS(app, supports_credentials=True)
 app.config.update(
-    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SAMESITE="None",
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SECURE=False
 )
@@ -98,7 +98,7 @@ def validate_password(password):
 def push_notification(user_id, message, notif_type='info'):
     try:
         conn = get_connection()
-        cur = get_cursor(conn)
+        cur = conn.cursor(cursor_factory=RealDictCursor)
         cur.execute(
             "INSERT INTO notifications (user_id, message, type) VALUES (%s, %s, %s)",
             (user_id, message, notif_type)
@@ -265,8 +265,6 @@ def signup():
     except Exception as e:
         print("Signup error:", e); return jsonify({'error': str(e)}), 500
 
-
-from psycopg2.extras import RealDictCursor
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -758,7 +756,7 @@ def get_faq():
     conn = get_connection()
     cur  = conn.cursor()
     cur.execute(
-        "SELECT * FROM faq WHERE is_active=1 AND (role=%s OR role='all') ORDER BY sort_order ASC, id ASC",
+        "SELECT * FROM faq WHERE is_active=TRUE AND (role=%s OR role='all') ORDER BY sort_order ASC, id ASC",
         (role,)
     )
     faqs = dict_rows(cur.fetchall())
@@ -1183,7 +1181,7 @@ def mark_notifications_read():
     if 'user_id' not in session: return jsonify({'error': 'Unauthorized'}), 401
     conn = get_connection()
     cur  = conn.cursor()
-    cur.execute("UPDATE notifications SET is_read=1 WHERE user_id=%s", (session['user_id'],))
+    cur.execute("UPDATE notifications SET is_read=TRUE WHERE user_id=%s", (session['user_id'],))
     conn.commit(); cur.close(); conn.close()
     return jsonify({'success': True})
 
@@ -1703,7 +1701,7 @@ def admin_create_faq():
     cur  = conn.cursor()
     cur.execute(
         "INSERT INTO faq (question, answer, category, role, sort_order, is_active) "
-        "VALUES (%s,%s,%s,%s,%s,1)",
+        "VALUES (%s,%s,%s,%s,%s,TRUE)",
         (data['question'], data['answer'], data.get('category', 'general'),
          data.get('role', 'all'), data.get('sort_order', 0))
     )
@@ -1764,7 +1762,7 @@ def admin_broadcast():
 
     for uid in user_ids:
         cur.execute(
-            "INSERT INTO notifications (user_id, message, type, is_read) VALUES (%s,%s,%s,0)",
+            "INSERT INTO notifications (user_id, message, type, is_read) VALUES (%s,%s,%s,FALSE)",
             (uid, message, ntype)
         )
     conn.commit()
@@ -1894,7 +1892,7 @@ def add_address():
         cur  = conn.cursor()
 
         if is_default:
-            cur.execute("UPDATE user_addresses SET is_default=0 WHERE user_id=%s", (session['user_id'],))
+            cur.execute("UPDATE user_addresses SET is_default=FALSE WHERE user_id=%s", (session['user_id'],))
         cur.execute("SELECT COUNT(*) FROM user_addresses WHERE user_id=%s", (session['user_id'],))
         if cur.fetchone()[0] == 0:
             is_default = True
@@ -1920,7 +1918,7 @@ def set_default_address(addr_id):
     try:
         conn = get_connection()
         cur  = conn.cursor()
-        cur.execute("UPDATE user_addresses SET is_default=0 WHERE user_id=%s", (session['user_id'],))
+        cur.execute("UPDATE user_addresses SET is_default=FALSE WHERE user_id=%s", (session['user_id'],))
         cur.execute(
             "UPDATE user_addresses SET is_default=1 WHERE id=%s AND user_id=%s",
             (addr_id, session['user_id'])
@@ -1954,7 +1952,7 @@ def delete_address(addr_id):
             )
             remaining = cur.fetchone()
             if remaining:
-                cur.execute("UPDATE user_addresses SET is_default=1 WHERE id=%s", (remaining[0],))
+                cur.execute("UPDATE user_addresses SET is_default=TRUE WHERE id=%s", (remaining[0],))
         conn.commit(); cur.close(); conn.close()
         return jsonify({'success': True})
     except Exception as e:
@@ -2010,7 +2008,7 @@ def admin_get_contacts():
 def admin_mark_contact_read(cid):
     conn = get_connection()
     cur  = conn.cursor()
-    cur.execute("UPDATE contact_messages SET is_read=1 WHERE id=%s", (cid,))
+    cur.execute("UPDATE contact_messages SET is_read=TRUE WHERE id=%s", (cid,))
     conn.commit(); cur.close(); conn.close()
     return jsonify({'success': True})
 
