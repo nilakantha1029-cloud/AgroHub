@@ -41,7 +41,7 @@ CORS(app, supports_credentials=True)
 app.config.update(
     SESSION_COOKIE_SAMESITE="None",
     SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SECURE=False
+    SESSION_COOKIE_SECURE=TRUE
 )
 
 init_mail(app)
