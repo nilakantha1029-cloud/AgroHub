@@ -1,7 +1,3 @@
-# ══════════════════════════════════════════════════════════════════
-#  AgroHub — Email Service  (email_service.py)
-#  All Flask-Mail logic lives here. Import send_* helpers into app.py
-# ══════════════════════════════════════════════════════════════════
 import os
 import threading
 from flask_mail import Mail, Message
@@ -18,19 +14,23 @@ mail = Mail()
 def _send(app, subject, recipients, html_body, text_body=""):
     def _do_send():
         try:
-            with app.app_context():
-                msg = Message(
+            import sendgrid
+            from sendgrid.helpers.mail import Mail as SGMail
+
+            sg  = sendgrid.SendGridAPIClient(api_key=os.getenv("SENDGRID_API_KEY"))
+            sender_email = os.getenv("SENDGRID_SENDER_EMAIL", os.getenv("MAIL_USERNAME", ""))
+            sender_name  = os.getenv("MAIL_DEFAULT_SENDER_NAME", "AgroHub")
+
+            for recipient in recipients:
+                msg = SGMail(
+                    from_email=(sender_email, sender_name),
+                    to_emails=recipient,
                     subject=subject,
-                    sender=(
-                        os.getenv("MAIL_DEFAULT_SENDER_NAME", "AgroHub"),
-                        os.getenv("MAIL_DEFAULT_SENDER", os.getenv("MAIL_USERNAME", ""))
-                    ),
-                    recipients=recipients,
-                    html=html_body,
-                    body=text_body or "Please view this email in an HTML-capable client."
+                    html_content=html_body
                 )
-                mail.send(msg)
-            print(f"[EMAIL OK] {subject} → {recipients}")
+                response = sg.send(msg)
+                print(f"[EMAIL OK] {subject} → {recipient} | Status: {response.status_code}")
+
         except Exception as e:
             print(f"[EMAIL ERROR] {subject} → {recipients}: {type(e).__name__}: {e}")
 
