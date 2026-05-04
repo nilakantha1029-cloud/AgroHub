@@ -257,7 +257,8 @@ def signup():
             "VALUES (%s, %s, %s, %s, %s, %s) RETURNING id",
             (role, first_name, last_name, email, phone, hashed)
         )
-        user_id = cur.fetchone()[0]
+        row = cur.fetchone()
+        user_id = row[0] if isinstance(row, (list, tuple)) else row['id']
         conn.commit(); cur.close(); conn.close()
 
         send_welcome_email(app, email, first_name, role)
@@ -826,7 +827,7 @@ def create_ticket():
             "VALUES (%s, %s, %s, %s, %s) RETURNING id",
             (session['user_id'], subject, category, message, priority)
         )
-        ticket_id = cur.fetchone()[0]
+        ticket_id = cur.fetchone()['id']
         conn.commit(); cur.close(); conn.close()
 
         push_notification(session['user_id'],
@@ -1068,8 +1069,7 @@ def place_order():
         "total_price, delivery_address) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
         (session['user_id'], farmer_id, listing_id, quantity, listing['price'], total_price, delivery)
     )
-    row = cur.fetchone()
-    order_id = row[0] if isinstance(row, (list, tuple)) else row["id"]
+    order_id = cur.fetchone()['id']
     cur.execute(
         "INSERT INTO notifications (user_id, message, type) VALUES (%s,%s,'info')",
         (farmer_id, f"🛒 New order #{order_id}: {listing['produce']} — {quantity} kg from {customer_name}. Total: ₹{total_price:,.0f}")
@@ -1198,7 +1198,7 @@ def notif_unread_count():
         "SELECT COUNT(*) FROM notifications WHERE user_id=%s AND is_read=FALSE",
         (session['user_id'],)
     )
-    count = cur.fetchone()[0]
+    count = cur.fetchone()['count']
     cur.close(); conn.close()
     return jsonify({'count': count})
 
@@ -1253,7 +1253,7 @@ def create_service_listing():
              int(data.get('min_days') or 1), data.get('location', ''), data.get('status', 'available'),
              data.get('features', '[]'), data.get('description', ''), data.get('image_urls', '[]'))
         )
-        new_id = cur.fetchone()[0]
+        new_id = cur.fetchone()['id']
         conn.commit(); cur.close(); conn.close()
         push_notification(session['user_id'],
             f"✅ New service listed: {data.get('name', '')} ({data.get('service_type', '').capitalize()})", 'success')
@@ -1456,7 +1456,7 @@ def create_service_booking():
             (listing_id, session['user_id'], booking_date or None, duration_days,
              quantity, location, notes, amount)
         )
-        booking_id = cur.fetchone()[0]
+        booking_id = cur.fetchone()['id']
         cur.execute(
             "INSERT INTO notifications (user_id, message, type) VALUES (%s,%s,'info')",
             (listing['user_id'],
@@ -1785,7 +1785,7 @@ def admin_broadcast():
             cur.execute("SELECT id FROM users WHERE role IN ('customer','service_provider')"); rows = cur.fetchall()
         else:
             cur.execute("SELECT id FROM users WHERE role=%s", (target,)); rows = cur.fetchall()
-        for row in rows: user_ids.add(row[0])
+        for row in rows: user_ids.add(row['id'])
 
     for uid in user_ids:
         cur.execute(
@@ -1845,7 +1845,7 @@ def admin_save_market_prices():
         for u in users:
             cur.execute(
                 "INSERT INTO notifications (user_id, message, type) VALUES (%s,%s,'info')",
-                (u[0], notif_message)
+                (u['id'], notif_message)
             )
         conn.commit(); cur.close(); conn.close()
         return jsonify({'success': True, 'notified': len(users)})
@@ -1926,9 +1926,9 @@ def add_address():
         cur  = conn.cursor()
 
         if is_default:
-            cur.execute("UPDATE user_addresses SET is_default=FALSE WHERE user_id=%s", (session['user_id'],))
+            cur.execute("UPDATE user_addresses SET is_default=TRUE WHERE user_id=%s", (session['user_id'],))
         cur.execute("SELECT COUNT(*) FROM user_addresses WHERE user_id=%s", (session['user_id'],))
-        if cur.fetchone()[0] == 0:
+        if cur.fetchone()['count'] == 0:
             is_default = True
 
         cur.execute(
@@ -1939,7 +1939,7 @@ def add_address():
              data.get('district', '').strip() or None, data.get('pincode', '').strip() or None,
              state, is_default)
         )
-        new_id = cur.fetchone()[0]
+        new_id = cur.fetchone()['id']
         conn.commit(); cur.close(); conn.close()
         return jsonify({'success': True, 'id': new_id}), 201
     except Exception as e:
@@ -1954,7 +1954,7 @@ def set_default_address(addr_id):
         cur  = conn.cursor()
         cur.execute("UPDATE user_addresses SET is_default=FALSE WHERE user_id=%s", (session['user_id'],))
         cur.execute(
-            "UPDATE user_addresses SET is_default=1 WHERE id=%s AND user_id=%s",
+            "UPDATE user_addresses SET is_default=TRUE WHERE id=%s AND user_id=%s",
             (addr_id, session['user_id'])
         )
         conn.commit(); cur.close(); conn.close()
@@ -2016,7 +2016,7 @@ def submit_contact():
             "INSERT INTO contact_messages (name, email, role, message) VALUES (%s,%s,%s,%s) RETURNING id",
             (name, email, role, message)
         )
-        contact_id = cur.fetchone()[0]
+        contact_id = cur.fetchone()['id']
         conn.commit(); cur.close(); conn.close()
 
         send_contact_confirmation_email(app, email, name, message)
