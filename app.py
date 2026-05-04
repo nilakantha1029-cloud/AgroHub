@@ -1068,7 +1068,8 @@ def place_order():
         "total_price, delivery_address) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id",
         (session['user_id'], farmer_id, listing_id, quantity, listing['price'], total_price, delivery)
     )
-    order_id = cur.fetchone()[0]
+    row = cur.fetchone()
+    order_id = row[0] if isinstance(row, (list, tuple)) else row["id"]
     cur.execute(
         "INSERT INTO notifications (user_id, message, type) VALUES (%s,%s,'info')",
         (farmer_id, f"🛒 New order #{order_id}: {listing['produce']} — {quantity} kg from {customer_name}. Total: ₹{total_price:,.0f}")
