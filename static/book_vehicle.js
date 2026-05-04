@@ -68,8 +68,8 @@ function applyFilters() {
     return mt && ms;
   });
 
-  if (sort==='price-low')       data.sort((a,b)=>a.price-b.price);
-  else if (sort==='price-high') data.sort((a,b)=>b.price-a.price);
+  if (sort==='price-low')       data.sort((a,b)=>a.per_km-b.per_km);
+  else if (sort==='price-high') data.sort((a,b)=>b.per_km-a.per_km);
   else if (sort==='capacity-high') data.sort((a,b)=>parseFloat(b.capacity||0)-parseFloat(a.capacity||0));
   else data.sort((a,b)=>(b.created_at||0)-(a.created_at||0));
 
@@ -119,7 +119,7 @@ function renderVehicles(data) {
           <div class="spec-item"><div class="spec-lbl">Routes</div><div class="spec-val" style="font-size:11px">${(v.routes||'Any route').substring(0,20)}</div></div>
         </div>
         <div class="vc-footer">
-          <div><div class="vc-price">₹${Number(v.price||0).toLocaleString('en-IN')}</div><div class="vc-price-unit">per trip</div></div>
+          <div><div class="vc-price">₹${Number(v.per_km||0).toLocaleString('en-IN')}</div><div class="vc-price-unit">per KM</div></div>
           <button class="btn-book" ${!isAvail?'disabled':''} onclick="event.stopPropagation();openBookModal('${v.id}')">
             ${isAvail ? '📋 Book Now' : '⛔ Unavailable'}
           </button>
@@ -140,7 +140,7 @@ function openBookModal(id) {
     <div>
       <div class="mvi-name">${v.name}</div>
       <div class="mvi-sub">${v.sub_type||''} · 📍 ${v.location||'—'} · ⚡ ${v.capacity||'—'} ton</div>
-      <div class="mvi-price">₹${Number(v.price||0).toLocaleString('en-IN')} <span style="font-size:12px;color:var(--text-light);font-family:'DM Sans',sans-serif">per trip</span></div>
+      <div class="mvi-price">₹${Number(v.per_km||0).toLocaleString('en-IN')} <span style="font-size:12px;color:var(--text-light);font-family:'DM Sans',sans-serif">per KM</span></div>
     </div>`;
   document.getElementById('bookModal').classList.add('active');
 }
@@ -181,7 +181,7 @@ async function submitBooking() {
         quantity:     qty || 1,
         location:     `${pickup} → ${drop}`,
         notes:        notes,
-        amount:       selectedVehicle.price
+        amount:       selectedVehicle.per_km
       })
     });
     if (res.ok) {
